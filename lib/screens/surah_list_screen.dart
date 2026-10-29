@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/surah_data.dart';
+import 'surah_reader_screen.dart';
 
 class SurahListScreen extends StatelessWidget {
   const SurahListScreen({super.key});
@@ -28,6 +29,14 @@ class SurahListScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SurahReaderScreen(surah: s),
+                  ),
+                );
+              },
               leading: CircleAvatar(
                 backgroundColor: const Color(0xFFD4AF37), // gold
                 child: Text(
