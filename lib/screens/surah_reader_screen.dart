@@ -1,41 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:quran_flutter/quran_flutter.dart'
+hide Surah;   // ← add "hide Surah"
 import '../data/surah_data.dart';
 
 class SurahReaderScreen extends StatelessWidget {
   final Surah surah;
   const SurahReaderScreen({super.key, required this.surah});
 
-  // Temporary sample text for Al-Fatihah
-  // Later we will load the FULL Quran from a JSON file
-  static const Map<String, String> fatihah = {
-    "1": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ|In the name of Allah, the Most Gracious, the Most Merciful",
-    "2": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ|All praise is due to Allah, Lord of the worlds",
-    "3": "الرَّحْمَٰنِ الرَّحِيمِ|The Most Gracious, the Most Merciful",
-    "4": "مَالِكِ يَوْمِ الدِّينِ|Master of the Day of Judgment",
-    "5": "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ|You alone we worship, and You alone we ask for help",
-    "6": "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ|Guide us along the Straight Path",
-    "7": "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ|The path of those You have blessed",
-  };
-
   @override
   Widget build(BuildContext context) {
-    final entries = fatihah.entries.toList();
+    // Load REAL Quran text — Arabic + English, works offline!
+    final arabicVerses = Quran.getSurahVersesAsList(surah.number);
+    final englishVerses =
+        Quran.getSurahVersesAsList(surah.number, language: QuranLanguage.english);
 
     return Scaffold(
       backgroundColor: const Color(0xFF0D3B2E),
       appBar: AppBar(
         backgroundColor: const Color(0xFF0D3B2E),
         elevation: 0,
-        title: Text(surah.nameEnglish),
+        title: Text("${surah.nameEnglish} • ${surah.nameArabic}"),
         centerTitle: true,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: entries.length,
+        itemCount: arabicVerses.length,
         itemBuilder: (context, index) {
-          final parts = entries[index].value.split("|");
-          final arabic = parts[0];
-          final translation = parts[1];
+          final arabic = arabicVerses[index].text;
+          final english = englishVerses[index].text;
 
           return Container(
             margin: const EdgeInsets.only(bottom: 16),
@@ -48,34 +40,24 @@ class SurahReaderScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Ayah number badge
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: CircleAvatar(
-                    radius: 14,
-                    backgroundColor: const Color(0xFFD4AF37),
-                    child: Text(
-                      entries[index].key,
-                      style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
+                CircleAvatar(
+                  radius: 14,
+                  backgroundColor: const Color(0xFFD4AF37),
+                  child: Text(
+                    "${index + 1}",
+                    style: const TextStyle(
+                        fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 12),
-                // Arabic text — right aligned, like real Mushaf
                 Text(
                   arabic,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    height: 2.0, // line spacing for beautiful reading
-                    color: Colors.white,
-                  ),
+                  style: const TextStyle(fontSize: 26, height: 2.0, color: Colors.white),
                 ),
                 const SizedBox(height: 12),
-                // Translation
                 Text(
-                  translation,
-                  textAlign: TextAlign.left,
+                  english,
                   style: const TextStyle(
                     fontSize: 16,
                     color: Color(0xFFD4AF37),
