@@ -1,73 +1,306 @@
 import 'package:flutter/material.dart';
-import 'package:quran_flutter/quran_flutter.dart'
-hide Surah;   // ← add "hide Surah"
+import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 import '../data/surah_data.dart';
 
-class SurahReaderScreen extends StatelessWidget {
+class SurahReaderScreen extends StatefulWidget {
   final Surah surah;
   const SurahReaderScreen({super.key, required this.surah});
 
   @override
+  State<SurahReaderScreen> createState() => _SurahReaderScreenState();
+}
+
+class _SurahReaderScreenState extends State<SurahReaderScreen> {
+  int currentPage = 0;
+  bool showTranslation = false; // Arabic Only = false
+  static const int ayahsPerPage = 10;
+
+  @override
   Widget build(BuildContext context) {
-    // Load REAL Quran text — Arabic + English, works offline!
+    final surah = widget.surah;
+
+    // Load REAL Quran text — Arabic + English
     final arabicVerses = Quran.getSurahVersesAsList(surah.number);
     final englishVerses =
         Quran.getSurahVersesAsList(surah.number, language: QuranLanguage.english);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF0D3B2E),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF0D3B2E),
-        elevation: 0,
-        title: Text("${surah.nameEnglish} • ${surah.nameArabic}"),
-        centerTitle: true,
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: arabicVerses.length,
-        itemBuilder: (context, index) {
-          final arabic = arabicVerses[index].text;
-          final english = englishVerses[index].text;
+    final totalPages = (surah.ayahs / ayahsPerPage).ceil();
+    final startAyah = currentPage * ayahsPerPage;
+    final endAyah = (startAyah + ayahsPerPage) > surah.ayahs
+        ? surah.ayahs
+        : startAyah + ayahsPerPage;
 
-          return Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF14532D),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFD4AF37), width: 0.5),
-            ),
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0F0D),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0A0F0D),
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          // ── 1. Header: name, number, Arabic, ayah count ──
+          SliverToBoxAdapter(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CircleAvatar(
-                  radius: 14,
-                  backgroundColor: const Color(0xFFD4AF37),
-                  child: Text(
-                    "${index + 1}",
-                    style: const TextStyle(
-                        fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(height: 12),
                 Text(
-                  arabic,
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(fontSize: 26, height: 2.0, color: Colors.white),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  english,
+                  surah.nameEnglish,
                   style: const TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFFD4AF37),
-                    fontStyle: FontStyle.italic,
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
                   ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Surah ${surah.number}",
+                  style: const TextStyle(color: Colors.grey, fontSize: 15),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  surah.nameArabic,
+                  style: const TextStyle(
+                    color: Color(0xFF22C55E),
+                    fontSize: 34,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "${surah.ayahs} Ayahs • ${surah.isMakki ? 'makki' : 'madinah'}",
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+                // thin green divider
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  height: 1,
+                  color: const Color(0xFF1E3A2A),
                 ),
               ],
             ),
-          );
-        },
+          ),
+
+          // ── 2. Arabic Only / Arabic + Translation toggle ──
+          SliverToBoxAdapter(
+            child: Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF111A16),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: const Color(0xFF22332B)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _toggleButton("Arabic Only", !showTranslation, () {
+                      setState(() => showTranslation = false);
+                    }),
+                    _toggleButton("Arabic + Translation", showTranslation, () {
+                      setState(() => showTranslation = true);
+                    }),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // ── 3. Pagination bar ──
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF111A16),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF22332B)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Previous
+                  GestureDetector(
+                    onTap: currentPage > 0
+                        ? () => setState(() => currentPage--)
+                        : null,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.chevron_left,
+                          color: currentPage > 0
+                              ? const Color(0xFF22C55E)
+                              : Colors.grey.shade700,
+                          size: 20,
+                        ),
+                        Text(
+                          " Previous",
+                          style: TextStyle(
+                            color: currentPage > 0
+                                ? const Color(0xFF22C55E)
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Page info
+                  Column(
+                    children: [
+                      Text(
+                        "Page ${currentPage + 1} of $totalPages",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        "Ayahs ${startAyah + 1} - $endAyah",
+                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  // Next
+                  GestureDetector(
+                    onTap: currentPage < totalPages - 1
+                        ? () => setState(() => currentPage++)
+                        : null,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Next ",
+                          style: TextStyle(
+                            color: currentPage < totalPages - 1
+                                ? const Color(0xFF22C55E)
+                                : Colors.grey.shade700,
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right,
+                          color: currentPage < totalPages - 1
+                              ? const Color(0xFF22C55E)
+                              : Colors.grey.shade700,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // ── 4. Bismillah (for surahs 2-8, 10-114) ──
+          if (surah.number != 1 && surah.number != 9)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Text(
+                  "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF22C55E),
+                    fontSize: 28,
+                    height: 1.8,
+                  ),
+                ),
+              ),
+            ),
+
+          // ── 5. Ayah cards ──
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final ayahIndex = startAyah + index;
+                if (ayahIndex >= surah.ayahs) return null;
+
+                final arabic = arabicVerses[ayahIndex].text;
+                final english = englishVerses[ayahIndex].text;
+
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF111A16),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFF22332B)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Arabic with green ayah number ﴿N﴾
+                      RichText(
+                        textAlign: TextAlign.right,
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            height: 2.0,
+                          ),
+                          children: [
+                            TextSpan(text: arabic),
+                            TextSpan(
+                              text: " ﴿${ayahIndex + 1}﴾",
+                              style: const TextStyle(
+                                color: Color(0xFF22C55E),
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Translation (only if toggle is on)
+                      if (showTranslation) ...[
+                        const SizedBox(height: 14),
+                        Container(
+                          height: 1,
+                          color: const Color(0xFF1E3A2A),
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          english,
+                          style: const TextStyle(
+                            color: Color(0xFF22C55E),
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic,
+                            height: 1.6,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                );
+              },
+              childCount: endAyah - startAyah,
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 30)),
+        ],
+      ),
+    );
+  }
+
+  Widget _toggleButton(String label, bool active, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: active ? const Color(0xFF16A34A) : Colors.transparent,
+          borderRadius: BorderRadius.circular(9),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: active ? Colors.white : Colors.grey,
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+          ),
+        ),
       ),
     );
   }
