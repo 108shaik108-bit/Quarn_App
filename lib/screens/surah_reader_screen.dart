@@ -226,7 +226,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               ),
             ),
 
-          // ── 5. FIX 1+2: ONE flowing page card, text vertically centered ──
+          // ── 5. Page card: flowing (Arabic Only) OR verse-by-verse (with translation) ──
           SliverToBoxAdapter(
             child: Container(
               margin: const EdgeInsets.fromLTRB(16, 8, 16, 20),
@@ -236,60 +236,77 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: const Color(0xFF22332B)),
               ),
-              child: Column(
-                children: [
-                  // Arabic — flows continuously, verse 2 follows verse 1
-                  Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: RichText(
-                      textAlign: TextAlign.justify,
-                      text: TextSpan(
-                        style: const TextStyle(
-                          fontSize: 24,
-                          height: 2.2, // comfortable Mushaf line spacing
-                        ),
-                        children: arabicSpans,
-                      ),
-                    ),
-                  ),
-                  // Translation — each verse as its own flowing paragraph below
-                  if (showTranslation) ...[
-                    const SizedBox(height: 20),
-                    Container(height: 1, color: const Color(0xFF1E3A2A)),
-                    const SizedBox(height: 20),
-                    ...List.generate(endAyah - startAyah, (i) {
-                      final ayahIndex = startAyah + i;
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              child: showTranslation
+                  ? Column(
+                      // ── Verse-by-verse: Arabic → translation → next verse ──
+                      children: List.generate(endAyah - startAyah, (i) {
+                        final ayahIndex = startAyah + i;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              "${ayahIndex + 1}. ",
-                              style: const TextStyle(
-                                color: Color(0xFF22C55E),
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                englishVerses[ayahIndex].text,
-                                style: const TextStyle(
-                                  color: Color(0xFF9CA3AF),
-                                  fontSize: 15,
-                                  height: 1.6,
-                                  fontStyle: FontStyle.italic,
+                            // Arabic verse (right-aligned, flows naturally)
+                            Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: RichText(
+                                textAlign: TextAlign.right,
+                                text: TextSpan(
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    height: 2.0,
+                                    color: Colors.white,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                        text: "${arabicVerses[ayahIndex].text} "),
+                                    TextSpan(
+                                      text: "﴿${ayahIndex + 1}﴾",
+                                      style: const TextStyle(
+                                        color: Color(0xFF22C55E),
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
+                            const SizedBox(height: 10),
+                            // Its translation directly below
+                            Text(
+                              englishVerses[ayahIndex].text,
+                              style: const TextStyle(
+                                color: Color(0xFF9CA3AF),
+                                fontSize: 15,
+                                height: 1.6,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            // Divider between verses (not after the last one)
+                            if (i < endAyah - startAyah - 1) ...[
+                              const SizedBox(height: 16),
+                              Container(
+                                height: 1,
+                                color: const Color(0xFF1E3A2A),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
                           ],
+                        );
+                      }),
+                    )
+                  // ── Arabic Only: one continuous flowing Mushaf text ──
+                  : Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: RichText(
+                        textAlign: TextAlign.justify,
+                        text: TextSpan(
+                          style: const TextStyle(
+                            fontSize: 24,
+                            height: 2.2,
+                          ),
+                          children: arabicSpans,
                         ),
-                      );
-                    }),
-                  ],
-                ],
-              ),
+                      ),
+                    ),
             ),
           ),
         ],

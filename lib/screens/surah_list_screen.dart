@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/surah_data.dart';
+import '../data/surah_meanings.dart';
+import '../data/juz_data.dart';
 import 'surah_reader_screen.dart';
 
 class SurahListScreen extends StatefulWidget {
@@ -15,16 +17,28 @@ class _SurahListScreenState extends State<SurahListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final q = searchQuery.toLowerCase();
+
     // Filter surahs by search
-    final filtered = surahs.where((s) {
-      final q = searchQuery.toLowerCase();
+    final filteredSurahs = surahs.where((s) {
       return s.nameEnglish.toLowerCase().contains(q) ||
           s.nameArabic.contains(searchQuery) ||
           "${s.number}".contains(q);
     }).toList();
 
+    // Filter juz cards (a juz matches if any surah inside matches the search)
+    final filteredJuzNumbers = List.generate(30, (i) => i + 1).where((juz) {
+      if (q.isEmpty) return true;
+      return juzSurahs[juz - 1].any((num) {
+        final s = surahs[num - 1];
+        return s.nameEnglish.toLowerCase().contains(q) ||
+            s.nameArabic.contains(searchQuery) ||
+            "$num".contains(q);
+      });
+    }).toList();
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0F0D), // dark background
+      backgroundColor: const Color(0xFF0A0F0D),
       body: CustomScrollView(
         slivers: [
           // ── 1. Green gradient hero header ──
@@ -121,38 +135,25 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ),
           ),
 
-          // ── 4. Grid of surahs ──
+          // ── 4. Surah grid OR Juz cards ──
           if (showSurahs)
             SliverGrid(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 400, // 2 columns on phones, more on wide screens
+                maxCrossAxisExtent: 400,
                 mainAxisExtent: 90,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
               ),
               delegate: SliverChildBuilderDelegate(
-                (context, index) => _surahCard(filtered[index]),
-                childCount: filtered.length,
+                (context, index) => _surahCard(filteredSurahs[index]),
+                childCount: filteredSurahs.length,
               ),
             )
           else
-            // Juz tab — simple list of 30 juz (full data comes later)
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF111A16),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFF22332B)),
-                  ),
-                  child: Text(
-                    "Juz ${index + 1}",
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-                childCount: 30,
+                (context, index) => _juzCard(filteredJuzNumbers[index]),
+                childCount: filteredJuzNumbers.length,
               ),
             ),
 
@@ -162,7 +163,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
     );
   }
 
-  // Green pill tab button
+  // ── Green pill tab button ──
   Widget _tabButton(String label, bool active, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -184,15 +185,10 @@ class _SurahListScreenState extends State<SurahListScreen> {
     );
   }
 
-  // Dark surah card matching the website
+  // ── Surah card (Surahs tab) ──
   Widget _surahCard(Surah s) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SurahReaderScreen(surah: s)),
-        );
-      },
+      onTap: () => _openSurah(s),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
@@ -202,7 +198,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
         ),
         child: Row(
           children: [
-            // Number box
             Container(
               width: 38,
               height: 38,
@@ -221,7 +216,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
               ),
             ),
             const SizedBox(width: 12),
-            // English name + info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,7 +238,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 ],
               ),
             ),
-            // Arabic name
             Text(
               s.nameArabic,
               style: const TextStyle(
@@ -256,6 +249,136 @@ class _SurahListScreenState extends State<SurahListScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  // ── BIG Juz card: "Juz N" + "Read Juz" + surah mini-chips ──
+  Widget _juzCard(int juzNumber) {
+    final surahNumbers = juzSurahs[juzNumber - 1];
+    // 2 chips per row: screen width - page margins - card padding - chip spacing
+    final chipWidth = (MediaQuery.of(context).size.width - 32 - 32 - 8) / 2;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111A16),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: const Color(0xFF22332B)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header: "Juz N" ...... "Read Juz"
+          Row(
+            children: [
+              Text(
+                "Juz $juzNumber",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => _openSurah(surahs[surahNumbers.first - 1]),
+                child: const Text(
+                  "Read Juz",
+                  style: TextStyle(
+                    color: Color(0xFF22C55E),
+                    fontSize: 14,
+                    decoration: TextDecoration.underline,
+                    decorationColor: Color(0xFF22C55E),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          // Mini surah chips in 2-column wrap
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: surahNumbers.map((num) {
+              final s = surahs[num - 1];
+              return GestureDetector(
+                onTap: () => _openSurah(s),
+                child: Container(
+                  width: chipWidth,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0C1411),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color(0xFF1C2B24)),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0F2E1F),
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: Text(
+                          "$num",
+                          style: const TextStyle(
+                            color: Color(0xFF22C55E),
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              s.nameEnglish,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              meanings[num - 1],
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        s.nameArabic,
+                        style: const TextStyle(
+                          color: Color(0xFF22C55E),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openSurah(Surah s) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SurahReaderScreen(surah: s)),
     );
   }
 }
