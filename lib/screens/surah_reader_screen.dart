@@ -30,6 +30,26 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         ? surah.ayahs
         : startAyah + ayahsPerPage;
 
+    // ── FIX 2: Build ONE flowing Arabic text (verses continue like a real Mushaf) ──
+    final arabicSpans = <TextSpan>[];
+    for (int i = startAyah; i < endAyah; i++) {
+      arabicSpans.add(
+        TextSpan(
+          text: "${arabicVerses[i].text} ",
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
+      arabicSpans.add(
+        TextSpan(
+          text: "﴿${i + 1}﴾ ",
+          style: const TextStyle(
+            color: Color(0xFF22C55E),
+            fontSize: 20,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0F0D),
       appBar: AppBar(
@@ -39,7 +59,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
       ),
       body: CustomScrollView(
         slivers: [
-          // ── 1. Header: name, number, Arabic, ayah count ──
+          // ── 1. Header ──
           SliverToBoxAdapter(
             child: Column(
               children: [
@@ -71,7 +91,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 20),
-                // thin green divider
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   height: 1,
@@ -120,7 +139,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Previous
                   GestureDetector(
                     onTap: currentPage > 0
                         ? () => setState(() => currentPage--)
@@ -145,7 +163,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                       ],
                     ),
                   ),
-                  // Page info
                   Column(
                     children: [
                       Text(
@@ -158,11 +175,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                       const SizedBox(height: 2),
                       Text(
                         "Ayahs ${startAyah + 1} - $endAyah",
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ],
                   ),
-                  // Next
                   GestureDetector(
                     onTap: currentPage < totalPages - 1
                         ? () => setState(() => currentPage++)
@@ -192,7 +209,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             ),
           ),
 
-          // ── 4. Bismillah (for surahs 2-8, 10-114) ──
+          // ── 4. Bismillah ──
           if (surah.number != 1 && surah.number != 9)
             const SliverToBoxAdapter(
               child: Padding(
@@ -209,75 +226,72 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               ),
             ),
 
-          // ── 5. Ayah cards ──
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final ayahIndex = startAyah + index;
-                if (ayahIndex >= surah.ayahs) return null;
-
-                final arabic = arabicVerses[ayahIndex].text;
-                final english = englishVerses[ayahIndex].text;
-
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF111A16),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFF22332B)),
+          // ── 5. FIX 1+2: ONE flowing page card, text vertically centered ──
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFF111A16),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFF22332B)),
+              ),
+              child: Column(
+                children: [
+                  // Arabic — flows continuously, verse 2 follows verse 1
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: RichText(
+                      textAlign: TextAlign.justify,
+                      text: TextSpan(
+                        style: const TextStyle(
+                          fontSize: 24,
+                          height: 2.2, // comfortable Mushaf line spacing
+                        ),
+                        children: arabicSpans,
+                      ),
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Arabic with green ayah number ﴿N﴾
-                      RichText(
-                        textAlign: TextAlign.right,
-                        text: TextSpan(
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            height: 2.0,
-                          ),
+                  // Translation — each verse as its own flowing paragraph below
+                  if (showTranslation) ...[
+                    const SizedBox(height: 20),
+                    Container(height: 1, color: const Color(0xFF1E3A2A)),
+                    const SizedBox(height: 20),
+                    ...List.generate(endAyah - startAyah, (i) {
+                      final ayahIndex = startAyah + i;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            TextSpan(text: arabic),
-                            TextSpan(
-                              text: " ﴿${ayahIndex + 1}﴾",
+                            Text(
+                              "${ayahIndex + 1}. ",
                               style: const TextStyle(
                                 color: Color(0xFF22C55E),
-                                fontSize: 20,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                englishVerses[ayahIndex].text,
+                                style: const TextStyle(
+                                  color: Color(0xFF9CA3AF),
+                                  fontSize: 15,
+                                  height: 1.6,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      // Translation (only if toggle is on)
-                      if (showTranslation) ...[
-                        const SizedBox(height: 14),
-                        Container(
-                          height: 1,
-                          color: const Color(0xFF1E3A2A),
-                        ),
-                        const SizedBox(height: 14),
-                        Text(
-                          english,
-                          style: const TextStyle(
-                            color: Color(0xFF22C55E),
-                            fontSize: 15,
-                            fontStyle: FontStyle.italic,
-                            height: 1.6,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                );
-              },
-              childCount: endAyah - startAyah,
+                      );
+                    }),
+                  ],
+                ],
+              ),
             ),
           ),
-
-          const SliverToBoxAdapter(child: SizedBox(height: 30)),
         ],
       ),
     );
