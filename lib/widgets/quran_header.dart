@@ -1,13 +1,14 @@
 
 
-import '../services/app_settings.dart';import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../services/app_settings.dart';
 
 class QuranHeader extends StatelessWidget {
-  const QuranHeader({super.key});
+  QuranHeader({super.key});
 
-  static const Color cream = Color(0xFFFFF3DC);
-  static const Color green = Color(0xFF07502D);
-  static const Color gold = Color(0xFFC49A45);
+  static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
+  static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
+  static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +44,14 @@ class QuranHeader extends StatelessWidget {
             child: Row(
               children: [
                 _headerButton(Icons.notifications_none),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 _headerButton(Icons.settings_outlined),
               ],
             ),
           ),
 
           // Quran title
-          const Positioned(
+          Positioned(
             top: 100,
             left: 12,
             right: 12,
@@ -112,13 +113,13 @@ class QuranHeader extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF9ED),
+        color: Color(0xFFFFF9ED),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
             color: Colors.brown.withOpacity(0.12),
             blurRadius: 8,
-            offset: const Offset(0, 3),
+            offset: Offset(0, 3),
           ),
         ],
       ),
