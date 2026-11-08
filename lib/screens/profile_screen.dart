@@ -56,12 +56,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: card,
-        title: const Text('Your name', style: TextStyle(color: green)),
+        title: Text('Your name', style: TextStyle(color: green)),
         content: TextField(
           controller: controller,
           autofocus: true,
           maxLength: 35,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'Enter your name',
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: gold),
@@ -71,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel', style: TextStyle(color: mutedGreen)),
+            child: Text('Cancel', style: TextStyle(color: mutedGreen)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -80,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             onPressed: () =>
                 Navigator.pop(dialogContext, controller.text.trim()),
-            child: const Text('Save'),
+            child: Text('Save'),
           ),
         ],
       ),
@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: card,
-        title: const Text('Quran translation', style: TextStyle(color: green)),
+        title: Text('Quran translation', style: TextStyle(color: green)),
         content: SizedBox(
           width: 320,
           height: 420,
@@ -117,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return ListTile(
                 title: Text(language.value),
                 trailing: isSelected
-                    ? const Icon(Icons.check_circle, color: green)
+                    ? Icon(Icons.check_circle, color: green)
                     : null,
                 onTap: () => Navigator.pop(dialogContext, language),
               );
@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (dialogContext) => SimpleDialog(
         backgroundColor: card,
-        title: const Text('Appearance', style: TextStyle(color: green)),
+        title: Text('Appearance', style: TextStyle(color: green)),
         children: [
           _themeOption(dialogContext, ThemeMode.light, 'Light'),
           _themeOption(dialogContext, ThemeMode.dark, 'Dark'),
@@ -175,12 +175,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: card,
-        title: Text(title, style: const TextStyle(color: green)),
-        content: Text(message, style: const TextStyle(height: 1.5)),
+        title: Text(title, style: TextStyle(color: green)),
+        content: Text(message, style: TextStyle(height: 1.5)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Close', style: TextStyle(color: green)),
+            child: Text('Close', style: TextStyle(color: green)),
           ),
         ],
       ),
@@ -196,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         backgroundColor: cream,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'My Profile',
           style: TextStyle(color: green, fontWeight: FontWeight.bold),
         ),
@@ -224,11 +224,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         width: 66,
                         height: 66,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           color: Color(0xFFE9EAB4),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.person_rounded,
                           color: green,
                           size: 38,
@@ -239,7 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'Assalamu Alaikum',
                               style: TextStyle(
                                 color: Color(0xFFE9D19A),
@@ -251,14 +251,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _displayName,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 4),
-                            const Text(
+                            Text(
                               'Your Quran journey',
                               style: TextStyle(color: Colors.white70),
                             ),
@@ -268,14 +268,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       IconButton(
                         tooltip: 'Edit name',
                         onPressed: _editName,
-                        icon: const Icon(Icons.edit_outlined,
+                        icon: Icon(Icons.edit_outlined,
                             color: Color(0xFFE9D19A)),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text(
+                Text(
                   'MY QURAN JOURNEY',
                   style: TextStyle(
                     color: mutedGreen,
@@ -305,7 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           Text(
                             '${(_readAyahCount / totalAyahs * 100).clamp(0, 100).toStringAsFixed(1)}%',
-                            style: const TextStyle(color: green, fontWeight: FontWeight.bold, fontSize: 18),
+                            style: TextStyle(color: green, fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                         ],
                       ),
@@ -316,13 +316,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           value: (_readAyahCount / totalAyahs).clamp(0, 1),
                           minHeight: 10,
                           backgroundColor: const Color(0xFFE9EAB4),
-                          valueColor: const AlwaysStoppedAnimation<Color>(green),
+                          valueColor: AlwaysStoppedAnimation<Color>(green),
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '$_readAyahCount of $totalAyahs ayahs visited in the reader',
-                        style: const TextStyle(color: mutedGreen, fontSize: 12),
+                        style: TextStyle(color: mutedGreen, fontSize: 12),
                       ),
                     ],
                   ),
@@ -351,7 +351,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                const Text(
+                Text(
                   'PERSONAL SETTINGS',
                   style: TextStyle(
                     color: mutedGreen,
@@ -389,7 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: _chooseAppearance,
                 ),
                 const SizedBox(height: 22),
-                const Text(
+                Text(
                   'ABOUT',
                   style: TextStyle(
                     color: mutedGreen,
@@ -413,7 +413,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Text(
                     'Version 1.0.0  •  $totalAyahs Quran ayahs',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: mutedGreen, fontSize: 12),
+                    style: TextStyle(color: mutedGreen, fontSize: 12),
                   ),
                 ),
               ],
@@ -443,7 +443,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 12),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: green,
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -451,7 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Text(
                 subtitle,
-                style: const TextStyle(color: mutedGreen, fontSize: 12),
+                style: TextStyle(color: mutedGreen, fontSize: 12),
               ),
             ],
           ),
@@ -472,7 +472,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       margin: const EdgeInsets.only(bottom: 9),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Color(0xFFEEDFC4)),
+        side: BorderSide(color: Color(0xFFEEDFC4)),
       ),
       child: ListTile(
         onTap: onTap,
@@ -488,13 +488,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         title: Text(
           title,
-          style: const TextStyle(color: green, fontWeight: FontWeight.w600),
+          style: TextStyle(color: green, fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
           subtitle,
-          style: const TextStyle(color: mutedGreen, fontSize: 12),
+          style: TextStyle(color: mutedGreen, fontSize: 12),
         ),
-        trailing: const Icon(Icons.chevron_right, color: gold),
+        trailing: Icon(Icons.chevron_right, color: gold),
       ),
     );
   }
