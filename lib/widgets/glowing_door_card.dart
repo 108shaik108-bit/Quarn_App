@@ -1,12 +1,13 @@
 
 
-import '../services/app_settings.dart';import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import '../services/app_settings.dart';
 
 class GlowingDoorCard extends StatefulWidget {
   final ValueChanged<String>? onSearch;
   final ValueChanged<int>? onTabChanged;
 
-  const GlowingDoorCard({
+  GlowingDoorCard({
     super.key,
     this.onSearch,
     this.onTabChanged,
@@ -19,10 +20,10 @@ class GlowingDoorCard extends StatefulWidget {
 class _GlowingDoorCardState extends State<GlowingDoorCard> {
   int selectedTab = 0;
 
-  static const Color green = Color(0xFF07502D);
-  static const Color darkGreen = Color(0xFF064426);
-  static const Color cream = Color(0xFFFFF5E2);
-  static const Color gold = Color(0xFFD7AC57);
+  static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
+  static Color get darkGreen => AppSettings.isDark ? Color(0xFF0B2117) : Color(0xFF064426);
+  static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
+  static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           BoxShadow(
             color: green.withOpacity(0.18),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -59,7 +60,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
             ),
           ),
           if (selectedTab != 2) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             SizedBox(
               height: 55,
               child: TextField(
@@ -107,7 +108,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           widget.onTabChanged?.call(index);
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
+          duration: Duration(milliseconds: 180),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected ? cream : Colors.transparent,
