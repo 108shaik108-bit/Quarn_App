@@ -8,7 +8,9 @@ class AppSettings {
 
   static final ValueNotifier<QuranLanguage> language =
       ValueNotifier<QuranLanguage>(QuranLanguage.english);
-  static bool get isDark => themeMode.value == ThemeMode.dark;\n\n  static final ValueNotifier<ThemeMode> themeMode =
+  static bool get isDark => themeMode.value == ThemeMode.dark;
+
+  static final ValueNotifier<ThemeMode> themeMode =
       ValueNotifier<ThemeMode>(ThemeMode.light);
 
   static Future<void> load() async {
