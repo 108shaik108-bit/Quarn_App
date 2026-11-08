@@ -144,7 +144,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
           ),
           const SizedBox(height: 14),
           Container(
-            constraints: const BoxConstraints(minHeight: 520),
+            height: 650,
             padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(34),
