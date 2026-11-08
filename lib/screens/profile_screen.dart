@@ -189,6 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context); // Rebuild this screen when the app theme changes.
     final totalAyahs = surahs.fold<int>(0, (sum, item) => sum + item.ayahs);
 
     return Scaffold(
