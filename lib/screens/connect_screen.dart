@@ -153,7 +153,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
           ),
           SizedBox(height: 14),
           Container(
-            height: 650,
             padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(34),
@@ -175,6 +174,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
               ],
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
@@ -226,45 +226,47 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     ),
                   ],
                 ),
-                Spacer(),
+                SizedBox(height: 28),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 38, horizontal: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Text(
                     _arabicText,
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 31,
-                      height: 2.0,
+                      fontSize: 29,
+                      height: 1.9,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                Spacer(),
+                SizedBox(height: 28),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Text(
                     _englishText,
                     textAlign: TextAlign.center,
+                    textDirection: AppSettings.language.value == 'ur'
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
-                      height: 1.55,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'serif',
+                      fontSize: 20,
+                      height: 1.8,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                SizedBox(height: 38),
+                SizedBox(height: 26),
                 SizedBox(
-                  height: 62,
+                  height: 58,
                   child: ElevatedButton.icon(
                     onPressed: _openSurah,
-                    icon: Icon(Icons.menu_book_rounded, size: 25),
+                    icon: Icon(Icons.menu_book_rounded, size: 24),
                     label: Text(
                       'Read in Quran',
-                      style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black.withOpacity(0.28),
