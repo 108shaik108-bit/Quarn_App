@@ -39,7 +39,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
     if (coordinates == null) return null;
 
     final params = CalculationMethod.karachi.getParameters()
-      ..madhab = Madhab.hanafi;
+      ..madhab = Madhab.shafi;
 
     return PrayerTimes(
       coordinates,
@@ -205,7 +205,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
 
           const SizedBox(height: 12),
           const Text(
-            'Calculation: Karachi • Asr: Hanafi',
+            'Calculation: Karachi • Asr: Standard (Ahl-e-Hadith)',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF52735F),
