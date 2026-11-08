@@ -7,7 +7,7 @@ import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
 class BookmarksScreen extends StatefulWidget {
-  BookmarksScreen({super.key});
+  const BookmarksScreen({super.key});
 
   @override
   State<BookmarksScreen> createState() => _BookmarksScreenState();
