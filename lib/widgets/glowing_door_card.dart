@@ -1,5 +1,6 @@
 
-import 'package:flutter/material.dart';
+
+import '../services/app_settings.dart';import 'package:flutter/material.dart';
 
 class GlowingDoorCard extends StatefulWidget {
   final ValueChanged<String>? onSearch;
@@ -63,7 +64,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
               height: 55,
               child: TextField(
                 onChanged: widget.onSearch,
-                style: const TextStyle(color: Colors.white, fontSize: 15),
+                style: TextStyle(color: Colors.white, fontSize: 15),
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   hintText: selectedTab == 0
@@ -73,18 +74,18 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                     color: Colors.white.withOpacity(0.8),
                     fontSize: 13,
                   ),
-                  prefixIcon: const Icon(Icons.search, color: Colors.white),
+                  prefixIcon: Icon(Icons.search, color: Colors.white),
                   filled: true,
                   fillColor: darkGreen,
                   contentPadding:
                       const EdgeInsets.symmetric(horizontal: 16),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: cream, width: 1.2),
+                    borderSide: BorderSide(color: cream, width: 1.2),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: gold, width: 1.5),
+                    borderSide: BorderSide(color: gold, width: 1.5),
                   ),
                 ),
               ),
