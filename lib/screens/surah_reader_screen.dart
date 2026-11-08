@@ -78,7 +78,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
     // Load REAL Quran text — Arabic + English
     final arabicVerses = Quran.getSurahVersesAsList(surah.number);
-    final translationLanguage = AppSettings.language.value;\n    final englishVerses = Quran.getSurahVersesAsList(\n      surah.number,\n      language: translationLanguage,\n    );
+    final translationLanguage = AppSettings.language.value;
+    final englishVerses = Quran.getSurahVersesAsList(
+      surah.number,
+      language: translationLanguage,
+    );
 
     final totalPages = (surah.ayahs / ayahsPerPage).ceil();
     final startAyah = currentPage * ayahsPerPage;
