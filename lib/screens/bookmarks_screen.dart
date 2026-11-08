@@ -57,6 +57,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context); // Rebuild this screen when the app theme changes.
     return Scaffold(
       backgroundColor: cream,
       appBar: AppBar(
