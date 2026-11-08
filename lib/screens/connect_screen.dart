@@ -8,16 +8,16 @@ import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
 class ConnectScreen extends StatefulWidget {
-  const ConnectScreen({super.key});
+  ConnectScreen({super.key});
 
   @override
   State<ConnectScreen> createState() => _ConnectScreenState();
 }
 
 class _ConnectScreenState extends State<ConnectScreen> {
-  static const Color cream = Color(0xFFFFF5E2);
-  static const Color green = Color(0xFF07502D);
-  static const Color gold = Color(0xFFC49A45);
+  static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
+  static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
+  static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
   late final int _surahNumber;
   late final int _ayahNumber;
@@ -132,7 +132,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
           Row(
             children: [
               Icon(Icons.wb_sunny_outlined, color: gold, size: 20),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 _dateLabel,
                 style: TextStyle(
@@ -143,7 +143,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           Container(
             height: 650,
             padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
@@ -162,7 +162,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 BoxShadow(
                   color: green.withOpacity(0.18),
                   blurRadius: 20,
-                  offset: const Offset(0, 9),
+                  offset: Offset(0, 9),
                 ),
               ],
             ),
@@ -185,7 +185,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                               fontFamily: 'serif',
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: 8),
                           Text(
                             '$_surahNumber:$_ayahNumber',
                             style: TextStyle(
@@ -194,7 +194,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 5),
+                          SizedBox(height: 5),
                           Text(
                             '${surah.nameEnglish} • ${surah.nameArabic}',
                             style: TextStyle(
@@ -210,7 +210,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       label: _isSaved ? 'Remove bookmark' : 'Save ayah',
                       onTap: _toggleBookmark,
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     _circleAction(
                       icon: Icons.share_outlined,
                       label: 'Copy to share',
@@ -218,7 +218,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     ),
                   ],
                 ),
-                const Spacer(),
+                Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 38, horizontal: 3),
                   child: Text(
@@ -233,7 +233,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     ),
                   ),
                 ),
-                const Spacer(),
+                Spacer(),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Text(
@@ -248,7 +248,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 38),
+                SizedBox(height: 38),
                 SizedBox(
                   height: 62,
                   child: ElevatedButton.icon(
@@ -271,7 +271,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
           Text(
             'A verse to reflect on every day',
             textAlign: TextAlign.center,
@@ -295,9 +295,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
       message: label,
       child: Material(
         color: Colors.black.withOpacity(0.24),
-        shape: const CircleBorder(),
+        shape: CircleBorder(),
         child: InkWell(
-          customBorder: const CircleBorder(),
+          customBorder: CircleBorder(),
           onTap: onTap,
           child: SizedBox(
             width: 54,
