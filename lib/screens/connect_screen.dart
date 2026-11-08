@@ -8,7 +8,7 @@ import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
 class ConnectScreen extends StatefulWidget {
-  ConnectScreen({super.key});
+  const ConnectScreen({super.key});
 
   @override
   State<ConnectScreen> createState() => _ConnectScreenState();
@@ -76,9 +76,16 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   Future<void> _shareAyah() async {
     final surah = surahs[_surahNumber - 1];
-    final text = 'Daily Ayah\n'
-        '${surah.nameEnglish} $_surahNumber:$_ayahNumber\n\n'
-        '$_arabicText\n\n$_englishText\n\nQuarn App';
+    final text = 'Daily Ayah
+'
+        '${surah.nameEnglish} $_surahNumber:$_ayahNumber
+
+'
+        '$_arabicText
+
+$_englishText
+
+Quarn App';
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
