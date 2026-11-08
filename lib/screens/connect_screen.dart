@@ -4,6 +4,7 @@ import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
+import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
 class ConnectScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
     _arabicText = Quran.getSurahVersesAsList(_surahNumber)[_ayahNumber - 1].text;
     _englishText = Quran.getSurahVersesAsList(
       _surahNumber,
-      language: QuranLanguage.english,
+      language: AppSettings.language.value,
     )[_ayahNumber - 1].text;
 
     _checkBookmark();
