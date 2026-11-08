@@ -3,6 +3,7 @@ import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
+import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
 class BookmarksScreen extends StatefulWidget {
@@ -128,7 +129,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
               final arabic = Quran.getSurahVersesAsList(bookmark.surahNumber);
               final english = Quran.getSurahVersesAsList(
                 bookmark.surahNumber,
-                language: QuranLanguage.english,
+                language: AppSettings.language.value,
               );
               final ayahIndex = bookmark.ayahNumber - 1;
 
