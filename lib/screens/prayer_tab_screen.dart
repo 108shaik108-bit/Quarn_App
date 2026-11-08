@@ -129,6 +129,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context); // Rebuild this screen when the app theme changes.
     final times = prayerTimes;
 
     return Padding(
