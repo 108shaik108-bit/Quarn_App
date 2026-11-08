@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:quran_flutter/quran_flutter.dart';
+
 import 'screens/surah_list_screen.dart';
+import 'services/app_settings.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // lets us load data before app starts
-  await Quran.initialize();                  // loads the full Quran into memory
+  WidgetsFlutterBinding.ensureInitialized();
+  await Quran.initialize();
+  await AppSettings.load();
   runApp(const QuranApp());
 }
 
@@ -13,10 +16,42 @@ class QuranApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Quran App',
-      home: SurahListScreen(),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: AppSettings.themeMode,
+      builder: (context, themeMode, _) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Quarn App',
+          themeMode: themeMode,
+          theme: ThemeData(
+            brightness: Brightness.light,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF07502D),
+              brightness: Brightness.light,
+            ),
+            scaffoldBackgroundColor: const Color(0xFFFFF5E2),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFFFFF5E2),
+              foregroundColor: Color(0xFF07502D),
+            ),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF07502D),
+              brightness: Brightness.dark,
+            ),
+            scaffoldBackgroundColor: const Color(0xFF101814),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF101814),
+              foregroundColor: Colors.white,
+            ),
+            useMaterial3: true,
+          ),
+          home: const SurahListScreen(),
+        );
+      },
     );
   }
 }
