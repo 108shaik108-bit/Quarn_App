@@ -82,7 +82,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ayah copied. You can now share it.')),
+      SnackBar(content: Text('Ayah copied. You can now share it.')),
     );
   }
 
@@ -117,7 +117,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
         backgroundColor: cream,
         elevation: 0,
         centerTitle: false,
-        title: const Text(
+        title: Text(
           'Connect',
           style: TextStyle(
             color: green,
@@ -131,11 +131,11 @@ class _ConnectScreenState extends State<ConnectScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.wb_sunny_outlined, color: gold, size: 20),
+              Icon(Icons.wb_sunny_outlined, color: gold, size: 20),
               const SizedBox(width: 8),
               Text(
                 _dateLabel,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Color(0xFF52735F),
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -149,7 +149,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
             padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(34),
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
@@ -176,7 +176,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Daily Ayah',
                             style: TextStyle(
                               color: Colors.white,
@@ -188,7 +188,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                           const SizedBox(height: 8),
                           Text(
                             '$_surahNumber:$_ayahNumber',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Color(0xFFE4E4E4),
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -197,7 +197,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                           const SizedBox(height: 5),
                           Text(
                             '${surah.nameEnglish} • ${surah.nameArabic}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Color(0xFFD8D8D8),
                               fontSize: 13,
                             ),
@@ -225,7 +225,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     _arabicText,
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 31,
                       height: 2.0,
@@ -239,7 +239,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   child: Text(
                     _englishText,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       height: 1.55,
@@ -253,8 +253,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   height: 62,
                   child: ElevatedButton.icon(
                     onPressed: _openSurah,
-                    icon: const Icon(Icons.menu_book_rounded, size: 25),
-                    label: const Text(
+                    icon: Icon(Icons.menu_book_rounded, size: 25),
+                    label: Text(
                       'Read in Quran',
                       style: TextStyle(fontSize: 21, fontWeight: FontWeight.w700),
                     ),
@@ -272,7 +272,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
             ),
           ),
           const SizedBox(height: 18),
-          const Text(
+          Text(
             'A verse to reflect on every day',
             textAlign: TextAlign.center,
             style: TextStyle(
