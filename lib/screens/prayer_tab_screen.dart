@@ -1,5 +1,6 @@
 
-import 'package:adhan/adhan.dart';
+
+import '../services/app_settings.dart';import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -153,7 +154,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
             ),
             child: Column(
               children: [
-                const Text(
+                Text(
                   'DAILY PRAYER TIMES',
                   style: TextStyle(
                     color: Color(0xFFE9D19A),
@@ -165,7 +166,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
                 const SizedBox(height: 7),
                 Text(
                   locationLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -175,7 +176,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
                 Text(
                   MaterialLocalizations.of(context)
                       .formatMediumDate(DateTime.now()),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Color(0xFFE9D19A),
                     fontSize: 13,
                   ),
@@ -199,12 +200,12 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
             const SizedBox(height: 12),
             Text(
               errorMessage!,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: Colors.red),
             ),
           ],
 
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Calculation: Karachi • Asr: Standard (Ahl-e-Hadith)',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -228,7 +229,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
+          Text(
             'Your location',
             style: TextStyle(
               color: green,
@@ -242,7 +243,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
             value: selectedCity,
             isExpanded: true,
             decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.location_city, color: green),
+              prefixIcon: Icon(Icons.location_city, color: green),
               filled: true,
               fillColor: cream,
               border: OutlineInputBorder(
@@ -268,13 +269,13 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
                     height: 18,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Icon(Icons.my_location),
+                : Icon(Icons.my_location),
             label: Text(
               isLoading ? 'Detecting location...' : 'Use my GPS location',
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: green,
-              side: const BorderSide(color: gold),
+              side: BorderSide(color: gold),
               padding: const EdgeInsets.symmetric(vertical: 13),
             ),
           ),
@@ -307,7 +308,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           Expanded(
             child: Text(
               name,
-              style: const TextStyle(
+              style: TextStyle(
                 color: green,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -317,7 +318,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           Text(
             arabic,
             textDirection: TextDirection.rtl,
-            style: const TextStyle(
+            style: TextStyle(
               color: gold,
               fontSize: 18,
             ),
@@ -325,7 +326,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           const SizedBox(width: 15),
           Text(
             formatTime(time),
-            style: const TextStyle(
+            style: TextStyle(
               color: green,
               fontSize: 16,
               fontWeight: FontWeight.bold,
