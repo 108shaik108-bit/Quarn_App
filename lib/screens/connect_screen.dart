@@ -116,6 +116,7 @@ Quarn App';
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context); // Rebuild this screen when the app theme changes.
     final surah = surahs[_surahNumber - 1];
 
     return Scaffold(
