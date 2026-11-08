@@ -406,9 +406,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   subtitle: 'A companion for your Quran journey',
                   onTap: () => _showInfo(
                     'About Quarn App',
-                    'Quarn App is being built to make Quran reading and daily Islamic practice simple and beautiful.
+                    '''
+                  Quarn App is being built to make Quran reading and daily Islamic practice simple and beautiful.
 
-Quran text and translations are provided through the app\'s Quran data package.',
+                  Quran text and translations are provided through the app's Quran data package.
+                  ''',
                   ),
                 ),
                 Padding(

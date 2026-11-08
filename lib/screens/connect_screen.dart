@@ -76,16 +76,16 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   Future<void> _shareAyah() async {
     final surah = surahs[_surahNumber - 1];
-    final text = 'Daily Ayah
-'
-        '${surah.nameEnglish} $_surahNumber:$_ayahNumber
+    final text = '''
+    Daily Ayah
+    ${surah.nameEnglish} $_surahNumber:$_ayahNumber
 
-'
-        '$_arabicText
+    $_arabicText
 
-$_englishText
+    $_englishText
 
-Quarn App';
+    Quarn App
+    ''';
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
