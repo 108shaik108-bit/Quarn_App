@@ -12,6 +12,7 @@ class QuranHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context); // Rebuild this screen when the app theme changes.
     return Container(
       width: double.infinity,
       height: 310,
