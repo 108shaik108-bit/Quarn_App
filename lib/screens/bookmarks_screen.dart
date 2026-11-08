@@ -39,9 +39,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     );
   }
 
-  void _openBookmark(QuranBookmark bookmark) {
+  Future<void> _openBookmark(QuranBookmark bookmark) async {
     final surah = surahs[bookmark.surahNumber - 1];
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => SurahReaderScreen(
@@ -50,6 +50,8 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
         ),
       ),
     );
+    if (!mounted) return;
+    setState(_refresh);
   }
 
   @override
