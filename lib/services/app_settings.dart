@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quran_flutter/quran_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppSettings {
   static const String _languageKey = 'quran_translation_language';
