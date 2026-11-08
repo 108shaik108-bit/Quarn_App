@@ -18,63 +18,66 @@ class GlowingDoorCard extends StatefulWidget {
 class _GlowingDoorCardState extends State<GlowingDoorCard> {
   bool showSurahs = true;
 
-  static const green = Color(0xFF07502D);
-  static const gold = Color(0xFFD7AC57);
-  static const cream = Color(0xFFFFF3DC);
+  static const Color green = Color(0xFF07502D);
+  static const Color deepGreen = Color(0xFF043D23);
+  static const Color gold = Color(0xFFD7AC57);
+  static const Color cream = Color(0xFFFFF3DC);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final compact = constraints.maxWidth < 520;
-        final doorHeight = compact ? 148.0 : 184.0;
+        final width = constraints.maxWidth.isFinite
+            ? constraints.maxWidth
+            : MediaQuery.of(context).size.width - 32;
+        final compact = width < 560;
+        final cardHeight = compact ? 174.0 : 210.0;
 
         return Container(
-          padding: EdgeInsets.all(compact ? 10 : 14),
+          width: double.infinity,
+          height: cardHeight,
+          padding: EdgeInsets.all(compact ? 10 : 16),
+          clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: green,
             borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: gold.withOpacity(0.55), width: 1),
+            border: Border.all(color: gold.withOpacity(0.65)),
             boxShadow: [
               BoxShadow(
-                color: green.withOpacity(0.20),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
+                color: green.withOpacity(0.18),
+                blurRadius: 12,
+                offset: const Offset(0, 5),
               ),
             ],
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                flex: compact ? 4 : 5,
-                child: SizedBox(
-                  height: doorHeight,
-                  child: CustomPaint(
-                    painter: GlowingDoorPainter(),
-                    child: const SizedBox.expand(),
-                  ),
+              SizedBox(
+                width: width * (compact ? 0.34 : 0.36),
+                child: CustomPaint(
+                  painter: GlowingDoorPainter(),
+                  child: const SizedBox.expand(),
                 ),
               ),
-              SizedBox(width: compact ? 8 : 14),
+              SizedBox(width: compact ? 8 : 16),
               Expanded(
-                flex: compact ? 6 : 7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    _tabSelector(compact),
+                    _buildTabs(compact),
                     SizedBox(height: compact ? 10 : 14),
-                    _searchField(compact),
+                    _buildSearch(compact),
                     if (!compact) ...[
-                      const SizedBox(height: 9),
+                      const SizedBox(height: 10),
                       const Text(
                         'Read  •  Reflect  •  Understand',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: gold,
-                          fontSize: 10,
-                          letterSpacing: 0.4,
+                          fontSize: 11,
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ],
@@ -88,54 +91,50 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
     );
   }
 
-  Widget _tabSelector(bool compact) {
+  Widget _buildTabs(bool compact) {
     return Container(
-      height: compact ? 40 : 46,
+      width: double.infinity,
+      height: compact ? 42 : 48,
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: const Color(0xFF043D23),
+        color: deepGreen,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: gold.withOpacity(0.35)),
+        border: Border.all(color: gold.withOpacity(0.55)),
       ),
       child: Row(
         children: [
-          _tabButton('Surahs', true, compact),
-          _tabButton('Juz', false, compact),
+          _buildTab('Surahs', true, compact),
+          _buildTab('Juz', false, compact),
         ],
       ),
     );
   }
 
-  Widget _tabButton(String title, bool isSurah, bool compact) {
+  Widget _buildTab(String label, bool isSurah, bool compact) {
     final selected = showSurahs == isSurah;
-
     return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(25),
-          onTap: () {
-            if (showSurahs == isSurah) return;
-            setState(() => showSurahs = isSurah);
-            widget.onTabChanged?.call(isSurah);
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: selected ? cream : Colors.transparent,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                title,
-                maxLines: 1,
-                style: TextStyle(
-                  color: selected ? green : Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: compact ? 12 : 14,
-                ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          if (showSurahs == isSurah) return;
+          setState(() => showSurahs = isSurah);
+          widget.onTabChanged?.call(isSurah);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? cream : Colors.transparent,
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: selected ? green : Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: compact ? 13 : 16,
               ),
             ),
           ),
@@ -144,42 +143,36 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
     );
   }
 
-  Widget _searchField(bool compact) {
+  Widget _buildSearch(bool compact) {
     return SizedBox(
+      width: double.infinity,
       height: compact ? 46 : 54,
       child: TextField(
         onChanged: widget.onSearch,
         style: TextStyle(color: Colors.white, fontSize: compact ? 12 : 14),
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-          hintText: showSurahs ? 'Search Surah...' : 'Search Juz...',
+          hintText: showSurahs ? 'Search surah by name or number...' : 'Search Juz...',
           hintStyle: TextStyle(
-            color: Colors.white.withOpacity(0.68),
-            fontSize: compact ? 10 : 12,
+            color: Colors.white.withOpacity(0.72),
+            fontSize: compact ? 10 : 13,
           ),
-          prefixIcon: Icon(
-            Icons.search,
-            color: gold,
-            size: compact ? 19 : 21,
-          ),
-          prefixIconConstraints: const BoxConstraints(
-            minWidth: 38,
-            minHeight: 40,
-          ),
+          prefixIcon: const Icon(Icons.search, color: gold),
+          prefixIconConstraints: const BoxConstraints(minWidth: 42),
           filled: true,
           fillColor: const Color(0xFF064426),
-          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: gold.withOpacity(0.65)),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: gold.withOpacity(0.75)),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide(color: gold.withOpacity(0.65)),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: gold.withOpacity(0.75)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: gold, width: 1.4),
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: gold, width: 1.5),
           ),
         ),
       ),
@@ -194,90 +187,70 @@ class GlowingDoorPainter extends CustomPainter {
     final doorWidth = size.width * 0.72;
     final left = center - doorWidth / 2;
     final right = center + doorWidth / 2;
-    final top = 18.0;
-    final bottom = size.height - 20;
+    final top = size.height * 0.08;
+    final bottom = size.height * 0.88;
 
-    final glowPaint = Paint()
-      ..shader = ui.Gradient.radial(
-        Offset(center, size.height * 0.57),
-        size.width * 0.75,
-        [
-          const Color(0xFFFFE8A3).withOpacity(0.65),
-          const Color(0xFFFFC45C).withOpacity(0.18),
-          Colors.transparent,
-        ],
-      );
     canvas.drawCircle(
-      Offset(center, size.height * 0.57),
-      size.width * 0.75,
-      glowPaint,
-    );
-
-    final doorPath = Path()
-      ..moveTo(left, bottom)
-      ..lineTo(left, top + doorWidth * 0.35)
-      ..quadraticBezierTo(left, top, center, top)
-      ..quadraticBezierTo(right, top, right, top + doorWidth * 0.35)
-      ..lineTo(right, bottom)
-      ..close();
-
-    canvas.drawPath(
-      doorPath,
+      Offset(center, size.height * 0.58),
+      size.width * 0.72,
       Paint()
-        ..shader = ui.Gradient.linear(
-          Offset(center, top),
-          Offset(center, bottom),
-          const [
-            Color(0xFFFFF1BF),
-            Color(0xFFFFC65C),
-            Color(0xFF9B5725),
+        ..shader = ui.Gradient.radial(
+          Offset(center, size.height * 0.58),
+          size.width * 0.72,
+          [
+            const Color(0xFFFFE8A3).withOpacity(0.8),
+            const Color(0xFFFFC45C).withOpacity(0.22),
+            Colors.transparent,
           ],
         ),
     );
 
+    final door = Path()
+      ..moveTo(left, bottom)
+      ..lineTo(left, top + doorWidth * 0.34)
+      ..quadraticBezierTo(left, top, center, top)
+      ..quadraticBezierTo(right, top, right, top + doorWidth * 0.34)
+      ..lineTo(right, bottom)
+      ..close();
+
     canvas.drawPath(
-      doorPath,
+      door,
       Paint()
-        ..color = const Color(0xFFE4BB67)
+        ..shader = ui.Gradient.linear(
+          Offset(center, top),
+          Offset(center, bottom),
+          const [Color(0xFFFFF0B8), Color(0xFFFFC65C), Color(0xFF9B5725)],
+        ),
+    );
+    canvas.drawPath(
+      door,
+      Paint()
+        ..color = gold
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 4,
+        ..strokeWidth = 3,
     );
 
-    final innerPath = Path()
-      ..moveTo(left + 8, bottom - 2)
-      ..lineTo(left + 8, top + doorWidth * 0.38)
-      ..quadraticBezierTo(left + 8, top + 8, center, top + 8)
-      ..quadraticBezierTo(right - 8, top + 8, right - 8, top + doorWidth * 0.38)
-      ..lineTo(right - 8, bottom - 2);
-
+    final inner = Path()
+      ..moveTo(left + 7, bottom)
+      ..lineTo(left + 7, top + doorWidth * 0.37)
+      ..quadraticBezierTo(left + 7, top + 7, center, top + 7)
+      ..quadraticBezierTo(right - 7, top + 7, right - 7, top + doorWidth * 0.37)
+      ..lineTo(right - 7, bottom);
     canvas.drawPath(
-      innerPath,
+      inner,
       Paint()
         ..color = const Color(0xFFFFE8A8)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5,
     );
 
-    final starPaint = Paint()
-      ..color = const Color(0xFF9B682B)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    canvas.drawCircle(Offset(center, top + 25), 5, starPaint);
-    canvas.drawLine(
-      Offset(center - 10, top + 25),
-      Offset(center + 10, top + 25),
-      starPaint,
-    );
-
-    final stepPaint = Paint()..color = const Color(0xFFD4A452);
-    for (int i = 0; i < 3; i++) {
-      final stepWidth = doorWidth + 12 + (i * 10);
-      final y = bottom + 3 + (i * 5);
+    final stepPaint = Paint()..color = gold;
+    for (var i = 0; i < 3; i++) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromCenter(
-            center: Offset(center, y),
-            width: stepWidth,
+            center: Offset(center, bottom + 4 + i * 5),
+            width: doorWidth + 12 + i * 10,
             height: 4,
           ),
           const Radius.circular(2),
