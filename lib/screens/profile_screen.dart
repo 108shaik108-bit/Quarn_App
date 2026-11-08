@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quran_flutter/quran_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
+import '../services/app_settings.dart';
+import '../services/quran_progress_service.dart';
 import 'bookmarks_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -22,6 +25,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   static const String _nameKey = 'profile_display_name';
   String _displayName = 'Quran Reader';
   int _bookmarkCount = 0;
+  int _readAyahCount = 0;
+  int _readingStreak = 0;
   bool _loading = true;
 
   @override
@@ -33,10 +38,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadProfile() async {
     final prefs = await SharedPreferences.getInstance();
     final bookmarks = await BookmarkService.getBookmarks();
+    final readCount = await QuranProgressService.getReadAyahCount();
+    final streak = await QuranProgressService.getReadingStreak();
     if (!mounted) return;
     setState(() {
       _displayName = prefs.getString(_nameKey) ?? 'Quran Reader';
       _bookmarkCount = bookmarks.length;
+      _readAyahCount = readCount;
+      _readingStreak = streak;
       _loading = false;
     });
   }
@@ -91,6 +100,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
       MaterialPageRoute(builder: (_) => const BookmarksScreen()),
     );
     await _loadProfile();
+  }
+
+  Future<void> _chooseLanguage() async {
+    final selected = await showDialog<QuranLanguage>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        backgroundColor: card,
+        title: const Text('Quran translation', style: TextStyle(color: green)),
+        children: QuranLanguage.values.map((language) {
+          final isSelected = language == AppSettings.language.value;
+          return SimpleDialogOption(
+            onPressed: () => Navigator.pop(dialogContext, language),
+            child: Row(
+              children: [
+                Expanded(child: Text(language.value)),
+                if (isSelected) const Icon(Icons.check_circle, color: green),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+    if (selected == null) return;
+    await AppSettings.setLanguage(selected);
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _chooseAppearance() async {
+    final selected = await showDialog<ThemeMode>(
+      context: context,
+      builder: (dialogContext) => SimpleDialog(
+        backgroundColor: card,
+        title: const Text('Appearance', style: TextStyle(color: green)),
+        children: [
+          _themeOption(dialogContext, ThemeMode.light, 'Light'),
+          _themeOption(dialogContext, ThemeMode.dark, 'Dark'),
+          _themeOption(dialogContext, ThemeMode.system, 'Use device setting'),
+        ],
+      ),
+    );
+    if (selected == null) return;
+    await AppSettings.setThemeMode(selected);
+    if (mounted) setState(() {});
+  }
+
+  Widget _themeOption(BuildContext dialogContext, ThemeMode mode, String label) {
+    return RadioListTile<ThemeMode>(
+      value: mode,
+      groupValue: AppSettings.themeMode.value,
+      activeColor: green,
+      title: Text(label),
+      onChanged: (value) => Navigator.pop(dialogContext, value),
+    );
+  }
+
+  String get _themeLabel {
+    switch (AppSettings.themeMode.value) {
+      case ThemeMode.light:
+        return 'Light theme';
+      case ThemeMode.dark:
+        return 'Dark theme';
+      case ThemeMode.system:
+        return 'Use device setting';
+    }
   }
 
   void _showInfo(String title, String message) {
@@ -208,14 +281,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(17),
+                  decoration: BoxDecoration(
+                    color: card,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: const Color(0xFFEEDFC4)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              'Quran reading progress',
+                              style: TextStyle(color: green, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Text(
+                            '${(_readAyahCount / totalAyahs * 100).clamp(0, 100).toStringAsFixed(1)}%',
+                            style: const TextStyle(color: green, fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: LinearProgressIndicator(
+                          value: (_readAyahCount / totalAyahs).clamp(0, 1),
+                          minHeight: 10,
+                          backgroundColor: const Color(0xFFE9EAB4),
+                          valueColor: const AlwaysStoppedAnimation<Color>(green),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '$_readAyahCount of $totalAyahs ayahs visited in the reader',
+                        style: const TextStyle(color: mutedGreen, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: _statCard(
-                        icon: Icons.menu_book_rounded,
-                        title: '114',
-                        subtitle: 'Surahs',
-                        tint: const Color(0xFFE9EAB4),
+                        icon: Icons.local_fire_department_rounded,
+                        title: '$_readingStreak',
+                        subtitle: 'Day streak',
+                        tint: const Color(0xFFFCE8D8),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -224,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: Icons.bookmark_rounded,
                         title: '$_bookmarkCount',
                         subtitle: 'Saved ayahs',
-                        tint: const Color(0xFFFCE8D8),
+                        tint: const Color(0xFFE9EAB4),
                         onTap: _openBookmarks,
                       ),
                     ),
@@ -259,20 +375,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _settingTile(
                   icon: Icons.translate_rounded,
                   title: 'Language',
-                  subtitle: 'English translation',
-                  onTap: () => _showInfo(
-                    'Language',
-                    'English translation is currently selected. More translation and interface language choices can be added in a future update.',
-                  ),
+                  subtitle: '${AppSettings.language.value.value} Quran translation',
+                  onTap: _chooseLanguage,
                 ),
                 _settingTile(
                   icon: Icons.palette_outlined,
                   title: 'Appearance',
-                  subtitle: 'Light theme',
-                  onTap: () => _showInfo(
-                    'Appearance',
-                    'Quarn App currently uses its cream, emerald and gold light theme. Theme switching can be added when the app-wide theme setting is ready.',
-                  ),
+                  subtitle: _themeLabel,
+                  onTap: _chooseAppearance,
                 ),
                 const SizedBox(height: 22),
                 const Text(
