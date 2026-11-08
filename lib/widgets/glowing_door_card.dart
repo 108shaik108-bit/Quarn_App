@@ -7,7 +7,7 @@ class GlowingDoorCard extends StatefulWidget {
   final ValueChanged<String>? onSearch;
   final ValueChanged<int>? onTabChanged;
 
-  GlowingDoorCard({
+  const GlowingDoorCard({
     super.key,
     this.onSearch,
     this.onTabChanged,
