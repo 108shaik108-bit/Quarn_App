@@ -109,12 +109,13 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ),
           ],
 
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 2, 16, 24),
-              child: _continueReadingCard(),
+          if (selectedContentTab != 2)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 2, 16, 24),
+                child: _continueReadingCard(),
+              ),
             ),
-          ),
         ],
       ),
       bottomNavigationBar: _bottomNavigationBar(),
