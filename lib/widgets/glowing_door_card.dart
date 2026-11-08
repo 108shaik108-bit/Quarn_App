@@ -27,6 +27,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context); // Rebuild this screen when the app theme changes.
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
