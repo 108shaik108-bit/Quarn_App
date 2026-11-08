@@ -237,77 +237,53 @@ class _SurahListScreenState extends State<SurahListScreen> {
 
   Widget _juzCard(int juzNumber) {
     final surahNumbers = juzSurahs[juzNumber - 1];
-    final chipWidth = (MediaQuery.of(context).size.width - 64) / 2;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: cardCream,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Color(0xFFF0D8A9)),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFF0D8A9)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Text(
-                'Juz $juzNumber',
-                style: TextStyle(
-                  color: green,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Spacer(),
-              TextButton(
-                onPressed: surahNumbers.isEmpty
-                    ? null
-                    : () => _openSurah(surahs[surahNumbers.first - 1]),
-                child: Text('Read Juz', style: TextStyle(color: green)),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: surahNumbers.map((number) {
-              final surah = surahs[number - 1];
-              return SizedBox(
-                width: chipWidth,
-                child: Material(
-                  color: Color(0xFFF4F0E5),
-                  borderRadius: BorderRadius.circular(10),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(10),
-                    onTap: () => _openSurah(surah),
-                    child: Padding(
-                      padding: const EdgeInsets.all(9),
-                      child: Row(
-                        children: [
-                          Text('$number', style: TextStyle(color: green, fontWeight: FontWeight.bold)),
-                          SizedBox(width: 7),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(surah.nameEnglish, maxLines: 1, overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: green, fontSize: 12, fontWeight: FontWeight.bold)),
-                                Text(meanings[number - 1], maxLines: 1, overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: mutedGreen, fontSize: 10)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Text(
+                  'Juz $juzNumber',
+                  style: TextStyle(
+                    color: green,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              );
-            }).toList(),
+                const Spacer(),
+                TextButton(
+                  onPressed: surahNumbers.isEmpty
+                      ? null
+                      : () => _openSurah(surahs[surahNumbers.first - 1]),
+                  child: Text('Read Juz', style: TextStyle(color: green)),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(height: 8),
+          if (surahNumbers.isNotEmpty)
+            GridView.count(
+              crossAxisCount: 2,
+              mainAxisExtent: 104,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              children: surahNumbers
+                  .map((number) => _surahCard(surahs[number - 1]))
+                  .toList(),
+            ),
         ],
       ),
     );
