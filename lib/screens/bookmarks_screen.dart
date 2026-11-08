@@ -7,17 +7,17 @@ import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
 class BookmarksScreen extends StatefulWidget {
-  const BookmarksScreen({super.key});
+  BookmarksScreen({super.key});
 
   @override
   State<BookmarksScreen> createState() => _BookmarksScreenState();
 }
 
 class _BookmarksScreenState extends State<BookmarksScreen> {
-  static const Color cream = Color(0xFFFFF5E2);
-  static const Color cardCream = Color(0xFFFFFAEF);
-  static const Color green = Color(0xFF07502D);
-  static const Color gold = Color(0xFFC49A45);
+  static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
+  static Color get cardCream => AppSettings.isDark ? Color(0xFF1B2922) : Color(0xFFFFFAEF);
+  static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
+  static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
   late Future<List<QuranBookmark>> _bookmarksFuture;
 
@@ -72,7 +72,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
         future: _bookmarksFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(color: green),
             );
           }
@@ -98,7 +98,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                         size: 48,
                       ),
                     ),
-                    const SizedBox(height: 18),
+                    SizedBox(height: 18),
                     Text(
                       'No bookmarks yet',
                       style: TextStyle(
@@ -107,7 +107,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       'Open any Surah and tap the bookmark icon beside an Ayah to save it here.',
                       textAlign: TextAlign.center,
@@ -122,7 +122,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
           return ListView.separated(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
             itemCount: bookmarks.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 10),
+            separatorBuilder: (_, __) => SizedBox(height: 10),
             itemBuilder: (context, index) {
               final bookmark = bookmarks[index];
               final surah = surahs[bookmark.surahNumber - 1];
@@ -143,7 +143,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color(0xFFF0D8A9)),
+                      border: Border.all(color: Color(0xFFF0D8A9)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -156,7 +156,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                                 vertical: 7,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE9EAB4),
+                                color: Color(0xFFE9EAB4),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
@@ -168,7 +168,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                                 ),
                               ),
                             ),
-                            const Spacer(),
+                            Spacer(),
                             IconButton(
                               tooltip: 'Remove bookmark',
                               onPressed: () => _remove(bookmark),
@@ -179,7 +179,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           arabic[ayahIndex].text,
                           textDirection: TextDirection.rtl,
@@ -190,7 +190,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                             height: 1.8,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           english[ayahIndex].text,
                           style: TextStyle(
@@ -199,8 +199,8 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                             height: 1.5,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Align(
+                        SizedBox(height: 8),
+                        Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             'Tap to open Ayah',
