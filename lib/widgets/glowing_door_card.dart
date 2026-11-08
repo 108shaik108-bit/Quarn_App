@@ -180,39 +180,61 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
   }
 }
 
+
 class GlowingDoorPainter extends CustomPainter {
   static const Color gold = Color(0xFFD7AC57);
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.width / 2;
-    final doorWidth = size.width * 0.72;
+
+    // Keep the doorway proportional to both width and height.
+    final doorWidth = size.width * 0.70;
     final left = center - doorWidth / 2;
     final right = center + doorWidth / 2;
-    final top = size.height * 0.08;
-    final bottom = size.height * 0.88;
 
+    final top = size.height * 0.08;
+    final bottom = size.height * 0.86;
+    final archHeight = size.height * 0.48;
+    final archBase = top + archHeight;
+
+    // Warm golden glow behind the doorway.
     canvas.drawCircle(
-      Offset(center, size.height * 0.58),
-      size.width * 0.72,
+      Offset(center, size.height * 0.55),
+      size.width * 0.48,
       Paint()
         ..shader = ui.Gradient.radial(
-          Offset(center, size.height * 0.58),
-          size.width * 0.72,
+          Offset(center, size.height * 0.55),
+          size.width * 0.48,
           [
-            const Color(0xFFFFE8A3).withOpacity(0.8),
-            const Color(0xFFFFC45C).withOpacity(0.22),
+            const Color(0xFFFFE8A3).withOpacity(0.85),
+            const Color(0xFFFFC45C).withOpacity(0.30),
             Colors.transparent,
           ],
           [0.0, 0.65, 1.0],
         ),
     );
 
+    // Main Islamic arch.
     final door = Path()
       ..moveTo(left, bottom)
-      ..lineTo(left, top + doorWidth * 0.34)
-      ..quadraticBezierTo(left, top, center, top)
-      ..quadraticBezierTo(right, top, right, top + doorWidth * 0.34)
+      ..lineTo(left, archBase)
+      ..cubicTo(
+        left,
+        top + archHeight * 0.30,
+        center - doorWidth * 0.28,
+        top,
+        center,
+        top,
+      )
+      ..cubicTo(
+        center + doorWidth * 0.28,
+        top,
+        right,
+        top + archHeight * 0.30,
+        right,
+        archBase,
+      )
       ..lineTo(right, bottom)
       ..close();
 
@@ -222,10 +244,16 @@ class GlowingDoorPainter extends CustomPainter {
         ..shader = ui.Gradient.linear(
           Offset(center, top),
           Offset(center, bottom),
-          const [Color(0xFFFFF0B8), Color(0xFFFFC65C), Color(0xFF9B5725)],
+          [
+            const Color(0xFFFFE9A6),
+            const Color(0xFFFFC45C),
+            const Color(0xFF9B5725),
+          ],
           [0.0, 0.55, 1.0],
         ),
     );
+
+    // Golden outer frame.
     canvas.drawPath(
       door,
       Paint()
@@ -234,12 +262,28 @@ class GlowingDoorPainter extends CustomPainter {
         ..strokeWidth = 3,
     );
 
+    // Inner decorative arch.
     final inner = Path()
       ..moveTo(left + 7, bottom)
-      ..lineTo(left + 7, top + doorWidth * 0.37)
-      ..quadraticBezierTo(left + 7, top + 7, center, top + 7)
-      ..quadraticBezierTo(right - 7, top + 7, right - 7, top + doorWidth * 0.37)
+      ..lineTo(left + 7, archBase)
+      ..cubicTo(
+        left + 7,
+        top + archHeight * 0.32,
+        center - doorWidth * 0.25,
+        top + 7,
+        center,
+        top + 7,
+      )
+      ..cubicTo(
+        center + doorWidth * 0.25,
+        top + 7,
+        right - 7,
+        top + archHeight * 0.32,
+        right - 7,
+        archBase,
+      )
       ..lineTo(right - 7, bottom);
+
     canvas.drawPath(
       inner,
       Paint()
@@ -248,14 +292,18 @@ class GlowingDoorPainter extends CustomPainter {
         ..strokeWidth = 1.5,
     );
 
+    // Three golden steps, kept inside the card.
     final stepPaint = Paint()..color = gold;
-    for (var i = 0; i < 3; i++) {
+
+    for (int i = 0; i < 3; i++) {
+      final stepY = bottom - 5 + i * 5;
+
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromCenter(
-            center: Offset(center, bottom + 4 + i * 5),
+            center: Offset(center, stepY),
             width: doorWidth + 12 + i * 10,
-            height: 4,
+            height: 3,
           ),
           const Radius.circular(2),
         ),
