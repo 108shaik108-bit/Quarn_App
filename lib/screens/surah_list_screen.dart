@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../services/app_settings.dart';
 import '../data/surah_data.dart';
 import '../data/surah_meanings.dart';
 import '../data/juz_data.dart';
@@ -153,13 +154,13 @@ class _SurahListScreenState extends State<SurahListScreen> {
               width: 43,
               height: 43,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: Color(0xFFE9EAB4),
                 shape: BoxShape.circle,
               ),
               child: Text(
                 '${surah.number}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: green,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -180,7 +181,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     textDirection: TextDirection.rtl,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Color(0xFF8B672D),
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
@@ -191,7 +192,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     surah.nameEnglish,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: green,
                       fontSize: 19,
                       fontWeight: FontWeight.bold,
@@ -210,13 +211,13 @@ class _SurahListScreenState extends State<SurahListScreen> {
               children: [
                 Text(
                   '${surah.ayahs}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color:  Color(0xFF8B672D),
                     fontSize: 19,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text(
+                Text(
                   'Ayahs',
                   style: TextStyle(
                     color: green,
@@ -252,7 +253,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
             children: [
               Text(
                 'Juz $juzNumber',
-                style: const TextStyle(
+                style: TextStyle(
                   color: green,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -263,7 +264,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 onPressed: surahNumbers.isEmpty
                     ? null
                     : () => _openSurah(surahs[surahNumbers.first - 1]),
-                child: const Text('Read Juz', style: TextStyle(color: green)),
+                child: Text('Read Juz', style: TextStyle(color: green)),
               ),
             ],
           ),
@@ -285,16 +286,16 @@ class _SurahListScreenState extends State<SurahListScreen> {
                       padding: const EdgeInsets.all(9),
                       child: Row(
                         children: [
-                          Text('$number', style: const TextStyle(color: green, fontWeight: FontWeight.bold)),
+                          Text('$number', style: TextStyle(color: green, fontWeight: FontWeight.bold)),
                           const SizedBox(width: 7),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(surah.nameEnglish, maxLines: 1, overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: green, fontSize: 12, fontWeight: FontWeight.bold)),
+                                    style: TextStyle(color: green, fontSize: 12, fontWeight: FontWeight.bold)),
                                 Text(meanings[number - 1], maxLines: 1, overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(color: mutedGreen, fontSize: 10)),
+                                    style: TextStyle(color: mutedGreen, fontSize: 10)),
                               ],
                             ),
                           ),
@@ -332,25 +333,25 @@ class _SurahListScreenState extends State<SurahListScreen> {
           Container(
             width: 64,
             height: 64,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Color(0xFFE9EAB4),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.menu_book_rounded, color: green, size: 37),
+            child: Icon(Icons.menu_book_rounded, color: green, size: 37),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Continue Reading',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: green, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),
-                const Text(
+                Text(
                   'Al-Fatihah  •  Start reading',
                   style: TextStyle(color: Colors.black87, fontSize: 12),
                 ),
@@ -396,7 +397,7 @@ Widget _bottomNavigationBar() {
     top: false,
     child: Container(
       padding: const EdgeInsets.fromLTRB(8, 9, 8, 8),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Color(0xFFFFFAEF),
         border: Border(
           top: BorderSide(color: Color(0xFFE8D7B7)),
