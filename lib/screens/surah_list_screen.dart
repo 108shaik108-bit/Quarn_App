@@ -6,7 +6,7 @@ import '../data/juz_data.dart';
 import '../widgets/quran_header.dart';
 import '../widgets/glowing_door_card.dart';
 import 'surah_reader_screen.dart';
-
+import 'prayer_tab_screen.dart';
 class SurahListScreen extends StatefulWidget {
   const SurahListScreen({super.key});
 
