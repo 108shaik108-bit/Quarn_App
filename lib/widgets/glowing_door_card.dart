@@ -215,74 +215,46 @@ class GlowingDoorPainter extends CustomPainter {
         ),
     );
 
-    // Main Islamic arch.
-    final door = Path()
-      ..moveTo(left, bottom)
-      ..lineTo(left, archBase)
-      ..cubicTo(
-        left,
-        top + archHeight * 0.30,
-        center - doorWidth * 0.28,
-        top,
-        center,
-        top,
-      )
-      ..cubicTo(
-        center + doorWidth * 0.28,
-        top,
-        right,
-        top + archHeight * 0.30,
-        right,
-        archBase,
-      )
-      ..lineTo(right, bottom)
-      ..close();
 
-    canvas.drawPath(
-      door,
-      Paint()
-        ..shader = ui.Gradient.linear(
-          Offset(center, top),
-          Offset(center, bottom),
-          [
-            const Color(0xFFFFE9A6),
-            const Color(0xFFFFC45C),
-            const Color(0xFF9B5725),
-          ],
-          [0.0, 0.55, 1.0],
-        ),
-    );
+// Main pointed Islamic arch.
+final spring = top + archHeight * 0.58;
 
-    // Golden outer frame.
-    canvas.drawPath(
-      door,
-      Paint()
-        ..color = gold
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3,
-    );
+final door = Path()
+  ..moveTo(left, bottom)
+  ..lineTo(left, spring)
+  ..quadraticBezierTo(
+    left,
+    top + archHeight * 0.18,
+    center,
+    top,
+  )
+  ..quadraticBezierTo(
+    right,
+    top + archHeight * 0.18,
+    right,
+    spring,
+  )
+  ..lineTo(right, bottom)
+  ..close();
 
-    // Inner decorative arch.
-    final inner = Path()
-      ..moveTo(left + 7, bottom)
-      ..lineTo(left + 7, archBase)
-      ..cubicTo(
-        left + 7,
-        top + archHeight * 0.32,
-        center - doorWidth * 0.25,
-        top + 7,
-        center,
-        top + 7,
-      )
-      ..cubicTo(
-        center + doorWidth * 0.25,
-        top + 7,
-        right - 7,
-        top + archHeight * 0.32,
-        right - 7,
-        archBase,
-      )
-      ..lineTo(right - 7, bottom);
+// Inner pointed decorative arch.
+final inner = Path()
+  ..moveTo(left + 7, bottom)
+  ..lineTo(left + 7, spring)
+  ..quadraticBezierTo(
+    left + 7,
+    top + archHeight * 0.22,
+    center,
+    top + 7,
+  )
+  ..quadraticBezierTo(
+    right - 7,
+    top + archHeight * 0.22,
+    right - 7,
+    spring,
+  )
+  ..lineTo(right - 7, bottom);
+
 
     canvas.drawPath(
       inner,
