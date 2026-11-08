@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../services/app_settings.dart';
 
 class QuranHeader extends StatelessWidget {
-  QuranHeader({super.key});
+  const QuranHeader({super.key});
 
   static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
   static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
