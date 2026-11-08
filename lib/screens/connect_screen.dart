@@ -93,6 +93,15 @@ class _ConnectScreenState extends State<ConnectScreen> {
     );
   }
 
+  void _openContinueReading() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SurahReaderScreen(surah: surahs.first),
+      ),
+    );
+  }
+
   void _openSurah() {
     Navigator.push(
       context,
@@ -289,6 +298,91 @@ class _ConnectScreenState extends State<ConnectScreen> {
               color: Color(0xFF52735F),
               fontSize: 14,
               fontStyle: FontStyle.italic,
+            ),
+          ),
+          SizedBox(height: 20),
+          _continueReadingCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget _continueReadingCard() {
+    final firstSurah = surahs.first;
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: AppSettings.isDark ? Color(0xFF1B2922) : Color(0xFFFFFAEF),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: AppSettings.isDark ? Color(0xFF405448) : Color(0xFFF0D8A9),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: green.withOpacity(0.10),
+            blurRadius: 9,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 58,
+            height: 58,
+            decoration: BoxDecoration(
+              color: AppSettings.isDark ? Color(0xFF304638) : Color(0xFFE9EAB4),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.menu_book_rounded, color: green, size: 33),
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Continue Reading',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: green,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  '${firstSurah.nameEnglish} • Start reading',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: AppSettings.isDark ? Color(0xFFB4C7BA) : Color(0xFF52735F),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: _openContinueReading,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: green,
+              foregroundColor: AppSettings.isDark ? Color(0xFF101814) : Colors.white,
+              elevation: 2,
+              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(28),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Resume'),
+                SizedBox(width: 3),
+                Icon(Icons.chevron_right, size: 19),
+              ],
             ),
           ),
         ],
