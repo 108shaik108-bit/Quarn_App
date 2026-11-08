@@ -12,7 +12,7 @@ import 'bookmarks_screen.dart';
 import 'connect_screen.dart';
 import 'profile_screen.dart';
 class SurahListScreen extends StatefulWidget {
-  const SurahListScreen({super.key});
+  SurahListScreen({super.key});
 
   @override
   State<SurahListScreen> createState() => _SurahListScreenState();
@@ -23,11 +23,11 @@ class _SurahListScreenState extends State<SurahListScreen> {
  int selectedContentTab = 0;
   int selectedNavIndex = 0;
 
-  static const Color cream = Color(0xFFFFF5E2);
-  static const Color cardCream = Color(0xFFFFFAEF);
-  static const Color green = Color(0xFF07502D);
-  static const Color mutedGreen = Color(0xFF52735F);
-  static const Color gold = Color(0xFFC49A45);
+  static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
+  static Color get cardCream => AppSettings.isDark ? Color(0xFF1B2922) : Color(0xFFFFFAEF);
+  static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
+  static Color get mutedGreen => AppSettings.isDark ? Color(0xFFB4C7BA) : Color(0xFF52735F);
+  static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
   @override
   Widget build(BuildContext context) {
@@ -73,14 +73,14 @@ class _SurahListScreenState extends State<SurahListScreen> {
 
           if (selectedContentTab == 0) ...[
             if (filteredSurahs.isEmpty)
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: _EmptySearchResult(),
               )
             else
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
                 sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisExtent: 104,
                     crossAxisSpacing: 10,
@@ -94,7 +94,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               ),
           ] else if (selectedContentTab == 1) ...[
             if (filteredJuzNumbers.isEmpty)
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: _EmptySearchResult(),
               )
             else
@@ -108,7 +108,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 ),
               ),
           ] else ...[
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: PrayerTabScreen(),
             ),
           ],
@@ -137,12 +137,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: const Color(0xFFF0D8A9)),
+            border: Border.all(color: Color(0xFFF0D8A9)),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF8B672D).withOpacity(0.10),
+                color: Color(0xFF8B672D).withOpacity(0.10),
                 blurRadius: 7,
-                offset: const Offset(0, 3),
+                offset: Offset(0, 3),
               ),
             ],
           ),
@@ -168,7 +168,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               ),
             ),
 
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
 
             // English and Arabic names
             Expanded(
@@ -187,7 +187,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                 const SizedBox(height: 13),
+                 SizedBox(height: 13),
                   Text(
                     surah.nameEnglish,
                     maxLines: 1,
@@ -202,7 +202,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               ),
             ),
 
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
 
             // Ayah count on the right
             Column(
@@ -244,7 +244,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
       decoration: BoxDecoration(
         color: cardCream,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF0D8A9)),
+        border: Border.all(color: Color(0xFFF0D8A9)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -259,7 +259,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               TextButton(
                 onPressed: surahNumbers.isEmpty
                     ? null
@@ -268,7 +268,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -277,7 +277,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               return SizedBox(
                 width: chipWidth,
                 child: Material(
-                  color: const Color(0xFFF4F0E5),
+                  color: Color(0xFFF4F0E5),
                   borderRadius: BorderRadius.circular(10),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(10),
@@ -287,7 +287,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                       child: Row(
                         children: [
                           Text('$number', style: TextStyle(color: green, fontWeight: FontWeight.bold)),
-                          const SizedBox(width: 7),
+                          SizedBox(width: 7),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,12 +319,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
       decoration: BoxDecoration(
         color: cardCream,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0xFFF0D8A9)),
+        border: Border.all(color: Color(0xFFF0D8A9)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF8B672D).withOpacity(0.10),
+            color: Color(0xFF8B672D).withOpacity(0.10),
             blurRadius: 9,
-            offset: const Offset(0, 3),
+            offset: Offset(0, 3),
           ),
         ],
       ),
@@ -339,7 +339,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ),
             child: Icon(Icons.menu_book_rounded, color: green, size: 37),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,7 +350,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: green, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: 5),
                 Text(
                   'Al-Fatihah  •  Start reading',
                   style: TextStyle(color: Colors.black87, fontSize: 12),
@@ -358,7 +358,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           ElevatedButton(
             onPressed: () => _openSurah(firstSurah),
             style: ElevatedButton.styleFrom(
@@ -368,7 +368,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Resume'),
@@ -419,7 +419,7 @@ Widget _bottomNavigationBar() {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ConnectScreen(),
+                            builder: (_) => ConnectScreen(),
                           ),
                         ).then((_) {
                           if (mounted) {
@@ -434,7 +434,7 @@ Widget _bottomNavigationBar() {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const BookmarksScreen(),
+                            builder: (_) => BookmarksScreen(),
                           ),
                         ).then((_) {
                           if (mounted) {
@@ -449,7 +449,7 @@ Widget _bottomNavigationBar() {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ProfileScreen(),
+                            builder: (_) => ProfileScreen(),
                           ),
                         ).then((_) {
                           if (mounted) {
@@ -467,20 +467,20 @@ Widget _bottomNavigationBar() {
                             content: Text(
                               '${labels[index]} section is coming soon.',
                             ),
-                            duration: const Duration(seconds: 1),
+                            duration: Duration(seconds: 1),
                           ),
                         );
                       }
                     },
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
+                      duration: Duration(milliseconds: 180),
                       padding: const EdgeInsets.symmetric(
                         vertical: 9,
                         horizontal: 3,
                       ),
                       decoration: BoxDecoration(
                         color: selected
-                            ? const Color(0xFFE9EAB4)
+                            ? Color(0xFFE9EAB4)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(22),
                       ),
@@ -490,17 +490,17 @@ Widget _bottomNavigationBar() {
                           Icon(
                             icons[index],
                             color: selected
-                                ? const Color(0xFF07502D)
+                                ? Color(0xFF07502D)
                                 : Colors.black87,
                             size: 29,
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             labels[index],
                             maxLines: 1,
                             style: TextStyle(
                               color: selected
-                                  ? const Color(0xFF07502D)
+                                  ? Color(0xFF07502D)
                                   : Colors.black87,
                               fontSize: 12,
                               fontWeight: selected
@@ -517,7 +517,7 @@ Widget _bottomNavigationBar() {
                   Container(
                     width: 1,
                     height: 52,
-                    color: const Color(0xFFC49A45),
+                    color: Color(0xFFC49A45),
                     margin: const EdgeInsets.symmetric(horizontal: 3),
                   ),
               ],
@@ -543,7 +543,7 @@ class _EmptySearchResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.all(32),
       child: Column(
         children: [
