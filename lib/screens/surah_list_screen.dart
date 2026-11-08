@@ -12,7 +12,7 @@ import 'bookmarks_screen.dart';
 import 'connect_screen.dart';
 import 'profile_screen.dart';
 class SurahListScreen extends StatefulWidget {
-  SurahListScreen({super.key});
+  const SurahListScreen({super.key});
 
   @override
   State<SurahListScreen> createState() => _SurahListScreenState();
