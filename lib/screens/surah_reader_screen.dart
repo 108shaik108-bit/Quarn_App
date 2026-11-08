@@ -25,7 +25,8 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
   void initState() {
     super.initState();
     currentPage = ((widget.initialAyah - 1) ~/ ayahsPerPage)
-        .clamp(0, (widget.surah.ayahs - 1) ~/ ayahsPerPage);
+        .clamp(0, (widget.surah.ayahs - 1) ~/ ayahsPerPage)
+        .toInt();
   }
 
   Future<void> _toggleAyahBookmark(int ayahNumber) async {
