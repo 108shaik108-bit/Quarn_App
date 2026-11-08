@@ -67,23 +67,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         ? surah.ayahs
         : startAyah + ayahsPerPage;
 
-    // Flowing Arabic text for "Arabic Only" mode
-    final arabicSpans = <TextSpan>[];
-    for (int i = startAyah; i < endAyah; i++) {
-      arabicSpans.add(
-        TextSpan(
-          text: "${arabicVerses[i].text} ",
-          style: const TextStyle(color: Colors.white),
-        ),
-      );
-      arabicSpans.add(
-        TextSpan(
-          text: "﴿${i + 1}﴾ ",
-          style: const TextStyle(color: Color(0xFF22C55E), fontSize: 20),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: const Color(0xFF0A0F0D),
       appBar: AppBar(
