@@ -1,5 +1,6 @@
 
-import 'package:flutter/material.dart';
+
+import '../services/app_settings.dart';import 'package:flutter/material.dart';
 
 class QuranHeader extends StatelessWidget {
   const QuranHeader({super.key});
@@ -13,7 +14,7 @@ class QuranHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 310,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: cream,
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(28),
