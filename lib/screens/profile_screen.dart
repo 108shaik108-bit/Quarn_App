@@ -105,21 +105,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _chooseLanguage() async {
     final selected = await showDialog<QuranLanguage>(
       context: context,
-      builder: (dialogContext) => SimpleDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: card,
         title: const Text('Quran translation', style: TextStyle(color: green)),
-        children: QuranLanguage.values.map((language) {
-          final isSelected = language == AppSettings.language.value;
-          return SimpleDialogOption(
-            onPressed: () => Navigator.pop(dialogContext, language),
-            child: Row(
-              children: [
-                Expanded(child: Text(language.value)),
-                if (isSelected) const Icon(Icons.check_circle, color: green),
-              ],
-            ),
-          );
-        }).toList(),
+        content: SizedBox(
+          width: 320,
+          height: 420,
+          child: ListView(
+            children: QuranLanguage.values.map((language) {
+              final isSelected = language == AppSettings.language.value;
+              return ListTile(
+                title: Text(language.value),
+                trailing: isSelected
+                    ? const Icon(Icons.check_circle, color: green)
+                    : null,
+                onTap: () => Navigator.pop(dialogContext, language),
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
     if (selected == null) return;
