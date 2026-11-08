@@ -57,8 +57,9 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
               ],
             ),
           ),
-          const SizedBox(height: 12),
-          SizedBox(
+          if (selectedTab != 2) ...[
+            const SizedBox(height: 12),
+            SizedBox(
             height: 55,
             child: TextField(
               onChanged: widget.onSearch,
@@ -88,7 +89,8 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                 ),
               ),
             ),
-          ),
+            ),
+          ],
         ],
       ),
     );
