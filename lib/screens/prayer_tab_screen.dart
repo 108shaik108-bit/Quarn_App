@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 class PrayerTabScreen extends StatefulWidget {
-  const PrayerTabScreen({super.key});
+  PrayerTabScreen({super.key});
 
   @override
   State<PrayerTabScreen> createState() => _PrayerTabScreenState();
 }
 
 class _PrayerTabScreenState extends State<PrayerTabScreen> {
-  static const Color green = Color(0xFF07502D);
-  static const Color cream = Color(0xFFFFF5E2);
-  static const Color gold = Color(0xFFC49A45);
+  static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
+  static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
+  static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
   final Map<String, Coordinates> cities = {
     'Ambattur': Coordinates(13.1143, 80.1548),
@@ -81,7 +81,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
       }
 
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
+        locationSettings: LocationSettings(
           accuracy: LocationAccuracy.high,
         ),
       );
@@ -137,7 +137,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _locationCard(),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
 
           Container(
             padding: const EdgeInsets.all(18),
@@ -148,7 +148,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
                 BoxShadow(
                   color: green.withOpacity(0.15),
                   blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
@@ -163,7 +163,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 7),
+                SizedBox(height: 7),
                 Text(
                   locationLabel,
                   style: TextStyle(
@@ -172,7 +172,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: 5),
                 Text(
                   MaterialLocalizations.of(context)
                       .formatMediumDate(DateTime.now()),
@@ -185,7 +185,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
             ),
           ),
 
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
 
           if (times != null) ...[
             _prayerRow('Fajr', 'الفجر', times.fajr, Icons.nightlight_round),
@@ -197,14 +197,14 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           ],
 
           if (errorMessage != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               errorMessage!,
               style: TextStyle(color: Colors.red),
             ),
           ],
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             'Calculation: Karachi • Asr: Standard (Ahl-e-Hadith)',
             textAlign: TextAlign.center,
@@ -222,9 +222,9 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFAEF),
+        color: Color(0xFFFFFAEF),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFF0D8A9)),
+        border: Border.all(color: Color(0xFFF0D8A9)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -237,7 +237,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
               fontSize: 16,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           DropdownButtonFormField<String>(
             value: selectedCity,
@@ -259,12 +259,12 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
             onChanged: selectCity,
           ),
 
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
 
           OutlinedButton.icon(
             onPressed: isLoading ? null : useCurrentLocation,
             icon: isLoading
-                ? const SizedBox(
+                ? SizedBox(
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(strokeWidth: 2),
@@ -297,14 +297,14 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
         vertical: 15,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFAEF),
+        color: Color(0xFFFFFAEF),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF0D8A9)),
+        border: Border.all(color: Color(0xFFF0D8A9)),
       ),
       child: Row(
         children: [
           Icon(icon, color: gold, size: 24),
-          const SizedBox(width: 13),
+          SizedBox(width: 13),
           Expanded(
             child: Text(
               name,
@@ -323,7 +323,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
               fontSize: 18,
             ),
           ),
-          const SizedBox(width: 15),
+          SizedBox(width: 15),
           Text(
             formatTime(time),
             style: TextStyle(
