@@ -4,8 +4,10 @@ import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../services/app_settings.dart';
+
 class PrayerTabScreen extends StatefulWidget {
-  PrayerTabScreen({super.key});
+  const PrayerTabScreen({super.key});
 
   @override
   State<PrayerTabScreen> createState() => _PrayerTabScreenState();
