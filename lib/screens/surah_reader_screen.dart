@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 import '../data/surah_data.dart';
+import '../services/bookmark_service.dart';
 
 class SurahReaderScreen extends StatefulWidget {
   final Surah surah;
-  const SurahReaderScreen({super.key, required this.surah});
+  final int initialAyah;
+  const SurahReaderScreen({
+    super.key,
+    required this.surah,
+    this.initialAyah = 1,
+  });
 
   @override
   State<SurahReaderScreen> createState() => _SurahReaderScreenState();
@@ -14,6 +20,36 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
   int currentPage = 0;
   bool showTranslation = false; // Arabic Only = false
   static const int ayahsPerPage = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    currentPage = ((widget.initialAyah - 1) ~/ ayahsPerPage)
+        .clamp(0, (widget.surah.ayahs - 1) ~/ ayahsPerPage);
+  }
+
+  Future<void> _toggleAyahBookmark(int ayahNumber) async {
+    await BookmarkService.toggle(widget.surah.number, ayahNumber);
+    if (mounted) setState(() {});
+  }
+
+  Widget _bookmarkButton(int ayahNumber) {
+    return FutureBuilder<bool>(
+      future: BookmarkService.isBookmarked(widget.surah.number, ayahNumber),
+      builder: (context, snapshot) {
+        final saved = snapshot.data ?? false;
+        return IconButton(
+          tooltip: saved ? 'Remove bookmark' : 'Bookmark this Ayah',
+          visualDensity: VisualDensity.compact,
+          onPressed: () => _toggleAyahBookmark(ayahNumber),
+          icon: Icon(
+            saved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+            color: const Color(0xFFC49A45),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -254,6 +290,10 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                   height: 1.6,
                                   fontStyle: FontStyle.italic),
                             ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: _bookmarkButton(ayahIndex + 1),
+                            ),
                             if (i < endAyah - startAyah - 1) ...[
                               const SizedBox(height: 16),
                               Container(
@@ -264,16 +304,36 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         );
                       }),
                     )
-                  : Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: RichText(
-                        textAlign: TextAlign.justify,
-                        text: TextSpan(
-                          style:
-                              const TextStyle(fontSize: 24, height: 2.2),
-                          children: arabicSpans,
-                        ),
-                      ),
+                  : Column(
+                      children: List.generate(endAyah - startAyah, (i) {
+                        final ayahIndex = startAyah + i;
+                        return Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: Text(
+                                      '${arabicVerses[ayahIndex].text} ﴿${ayahIndex + 1}﴾',
+                                      textAlign: TextAlign.justify,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        height: 2.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                _bookmarkButton(ayahIndex + 1),
+                              ],
+                            ),
+                            if (i < endAyah - startAyah - 1)
+                              const Divider(color: Color(0xFF1E3A2A)),
+                          ],
+                        );
+                      }),
                     ),
             ),
           ),
