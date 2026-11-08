@@ -181,6 +181,8 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
 }
 
 class GlowingDoorPainter extends CustomPainter {
+  static const Color gold = Color(0xFFD7AC57);
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = size.width / 2;
@@ -202,6 +204,7 @@ class GlowingDoorPainter extends CustomPainter {
             const Color(0xFFFFC45C).withOpacity(0.22),
             Colors.transparent,
           ],
+          [0.0, 0.65, 1.0],
         ),
     );
 
@@ -220,6 +223,7 @@ class GlowingDoorPainter extends CustomPainter {
           Offset(center, top),
           Offset(center, bottom),
           const [Color(0xFFFFF0B8), Color(0xFFFFC65C), Color(0xFF9B5725)],
+          [0.0, 0.55, 1.0],
         ),
     );
     canvas.drawPath(
