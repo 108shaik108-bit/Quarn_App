@@ -128,71 +128,87 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ],
           ),
           child: Row(
-            children: [
-              Container(
-                width: 43,
-                height: 43,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE9EAB4),
-                  shape: BoxShape.circle,
+     
+          children: [
+            // Surah number badge
+            Container(
+              width: 43,
+              height: 43,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE9EAB4),
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                '${surah.number}',
+                style: const TextStyle(
+                  color: green,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                child: Text(
-                  '${surah.number}',
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            // English and Arabic names
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    surah.nameArabic,
+                    textDirection: TextDirection.rtl,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xFF8B672D),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                 const SizedBox(height: 13),
+                  Text(
+                    surah.nameEnglish,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: green,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            // Ayah count on the right
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${surah.ayahs}',
                   style: const TextStyle(
-                    color: green,
-                    fontSize: 20,
+                    color:  Color(0xFF8B672D),
+                    fontSize: 19,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // English Surah name
-                    Text(
-                      surah.nameEnglish,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: green,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    // Arabic Surah name
-                    Text(
-                      surah.nameArabic,
-                      textDirection: TextDirection.rtl,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Color(0xFF8B672D),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-
-                    // Number of Ayahs
-                    Text(
-                      '${surah.ayahs} Ayahs',
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
+                const Text(
+                  'Ayahs',
+                  style: TextStyle(
+                    color: green,
+                    fontSize: 19,
+                  ),
                 ),
-
-              ),
-            ],
+              ],
+            ),
+          ],
+              
           ),
         ),
       ),
