@@ -114,13 +114,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ),
           ],
 
-          if (selectedContentTab != 2)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 2, 16, 24),
-                child: _continueReadingCard(),
-              ),
-            ),
         ],
       ),
       bottomNavigationBar: _bottomNavigationBar(),
@@ -288,77 +281,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
       ),
     );
   }
-
-  Widget _continueReadingCard() {
-    final firstSurah = surahs.first;
-    return Container(
-      padding: const EdgeInsets.all(13),
-      decoration: BoxDecoration(
-        color: cardCream,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Color(0xFFF0D8A9)),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF8B672D).withOpacity(0.10),
-            blurRadius: 9,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: Color(0xFFE9EAB4),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.menu_book_rounded, color: green, size: 37),
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Continue Reading',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: green, fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Al-Fatihah  •  Start reading',
-                  style: TextStyle(color: Colors.black87, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 8),
-          ElevatedButton(
-            onPressed: () => _openSurah(firstSurah),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: green,
-              foregroundColor: Colors.white,
-              elevation: 3,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Resume'),
-                SizedBox(width: 4),
-                Icon(Icons.chevron_right, size: 20),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
 
 Widget _bottomNavigationBar() {
   const labels = ['Home', 'Connect', 'Bookmarks', 'Profile'];
