@@ -365,7 +365,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                       children: [
                         GestureDetector(
                           onTap: currentPage > 0
-                              ? () => setState(() => currentPage--)
+                              ? () => _changePage(currentPage - 1)
                               : null,
                           child: Padding(
                             padding:
@@ -431,7 +431,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         ),
                         GestureDetector(
                           onTap: currentPage < totalPages - 1
-                              ? () => setState(() => currentPage++)
+                              ? () => _changePage(currentPage + 1)
                               : null,
                           child: Padding(
                             padding:
