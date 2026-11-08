@@ -31,6 +31,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Theme.of(context); // Rebuild this screen when the app theme changes.
     final query = searchQuery.trim().toLowerCase();
 
     final filteredSurahs = surahs.where((surah) {
