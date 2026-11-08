@@ -36,7 +36,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     if (!mounted) return;
     setState(_refresh);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Bookmark removed')),
+      SnackBar(content: Text('Bookmark removed')),
     );
   }
 
@@ -60,13 +60,13 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     return Scaffold(
       backgroundColor: cream,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'My Bookmarks',
           style: TextStyle(color: green, fontWeight: FontWeight.bold),
         ),
         backgroundColor: cream,
         elevation: 0,
-        iconTheme: const IconThemeData(color: green),
+        iconTheme: IconThemeData(color: green),
       ),
       body: FutureBuilder<List<QuranBookmark>>(
         future: _bookmarksFuture,
@@ -88,18 +88,18 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     Container(
                       width: 94,
                       height: 94,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Color(0xFFE9EAB4),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.bookmark_outline_rounded,
                         color: green,
                         size: 48,
                       ),
                     ),
                     const SizedBox(height: 18),
-                    const Text(
+                    Text(
                       'No bookmarks yet',
                       style: TextStyle(
                         color: green,
@@ -108,7 +108,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Open any Surah and tap the bookmark icon beside an Ayah to save it here.',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Color(0xFF52735F), height: 1.5),
@@ -161,7 +161,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                               ),
                               child: Text(
                                 '${surah.nameEnglish} • Ayah ${bookmark.ayahNumber}',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: green,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
@@ -172,7 +172,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                             IconButton(
                               tooltip: 'Remove bookmark',
                               onPressed: () => _remove(bookmark),
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.bookmark_remove_rounded,
                                 color: gold,
                               ),
@@ -184,7 +184,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                           arabic[ayahIndex].text,
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: green,
                             fontSize: 23,
                             height: 1.8,
@@ -193,7 +193,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                         const SizedBox(height: 8),
                         Text(
                           english[ayahIndex].text,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Color(0xFF52735F),
                             fontSize: 14,
                             height: 1.5,
