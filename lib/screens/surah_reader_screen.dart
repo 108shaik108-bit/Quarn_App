@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
+import '../services/app_settings.dart';
+import '../services/quran_progress_service.dart';
 
 class SurahReaderScreen extends StatefulWidget {
   final Surah surah;
@@ -27,6 +29,24 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     currentPage = ((widget.initialAyah - 1) ~/ ayahsPerPage)
         .clamp(0, (widget.surah.ayahs - 1) ~/ ayahsPerPage)
         .toInt();
+    _recordCurrentPage();
+  }
+
+  void _changePage(int page) {
+    setState(() => currentPage = page);
+    _recordCurrentPage();
+  }
+
+  Future<void> _recordCurrentPage() async {
+    final firstAyah = currentPage * ayahsPerPage + 1;
+    final lastAyah = (firstAyah + ayahsPerPage - 1)
+        .clamp(1, widget.surah.ayahs)
+        .toInt();
+    await QuranProgressService.recordReadPage(
+      widget.surah.number,
+      firstAyah,
+      lastAyah,
+    );
   }
 
   Future<void> _toggleAyahBookmark(int ayahNumber) async {
@@ -58,8 +78,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
     // Load REAL Quran text — Arabic + English
     final arabicVerses = Quran.getSurahVersesAsList(surah.number);
-    final englishVerses =
-        Quran.getSurahVersesAsList(surah.number, language: QuranLanguage.english);
+    final translationLanguage = AppSettings.language.value;\n    final englishVerses = Quran.getSurahVersesAsList(\n      surah.number,\n      language: translationLanguage,\n    );
 
     final totalPages = (surah.ayahs / ayahsPerPage).ceil();
     final startAyah = currentPage * ayahsPerPage;
@@ -158,7 +177,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 children: [
                   GestureDetector(
                     onTap: currentPage > 0
-                        ? () => setState(() => currentPage--)
+                        ? () => _changePage(currentPage - 1)
                         : null,
                     child: Row(
                       children: [
@@ -188,7 +207,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   ),
                   GestureDetector(
                     onTap: currentPage < totalPages - 1
-                        ? () => setState(() => currentPage++)
+                        ? () => _changePage(currentPage + 1)
                         : null,
                     child: Row(
                       children: [
