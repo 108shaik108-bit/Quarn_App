@@ -8,6 +8,7 @@ import '../widgets/glowing_door_card.dart';
 import 'surah_reader_screen.dart';
 import 'prayer_tab_screen.dart';
 import 'bookmarks_screen.dart';
+import 'connect_screen.dart';
 class SurahListScreen extends StatefulWidget {
   const SurahListScreen({super.key});
 
@@ -411,6 +412,21 @@ Widget _bottomNavigationBar() {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(22),
                     onTap: () {
+                      if (index == 1) {
+                        setState(() => selectedNavIndex = index);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ConnectScreen(),
+                          ),
+                        ).then((_) {
+                          if (mounted) {
+                            setState(() => selectedNavIndex = 0);
+                          }
+                        });
+                        return;
+                      }
+
                       if (index == 2) {
                         setState(() => selectedNavIndex = index);
                         Navigator.push(
