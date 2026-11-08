@@ -60,35 +60,34 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           if (selectedTab != 2) ...[
             const SizedBox(height: 12),
             SizedBox(
-            height: 55,
-            child: TextField(
-              onChanged: widget.onSearch,
-              style: const TextStyle(color: Colors.white, fontSize: 15),
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                hintText: selectedTab == 0
-                    ? 'Search surah by name or number...'
-                    : selectedTab == 1
-                        ? 'Search Juz...'
-                        : 'Prayer times coming soon...',
-                hintStyle: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 13,
-                ),
-                prefixIcon: const Icon(Icons.search, color: Colors.white),
-                filled: true,
-                fillColor: darkGreen,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: cream, width: 1.2),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: gold, width: 1.5),
+              height: 55,
+              child: TextField(
+                onChanged: widget.onSearch,
+                style: const TextStyle(color: Colors.white, fontSize: 15),
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  hintText: selectedTab == 0
+                      ? 'Search surah by name or number...'
+                      : 'Search Juz...',
+                  hintStyle: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 13,
+                  ),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white),
+                  filled: true,
+                  fillColor: darkGreen,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: const BorderSide(color: cream, width: 1.2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: const BorderSide(color: gold, width: 1.5),
+                  ),
                 ),
               ),
-            ),
             ),
           ],
         ],
