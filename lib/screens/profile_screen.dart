@@ -9,18 +9,18 @@ import '../services/quran_progress_service.dart';
 import 'bookmarks_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  static const Color cream = Color(0xFFFFF5E2);
-  static const Color card = Color(0xFFFFFAEF);
-  static const Color green = Color(0xFF07502D);
-  static const Color mutedGreen = Color(0xFF52735F);
-  static const Color gold = Color(0xFFC49A45);
+  static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
+  static Color get card => AppSettings.isDark ? Color(0xFF1B2922) : Color(0xFFFFFAEF);
+  static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
+  static Color get mutedGreen => AppSettings.isDark ? Color(0xFFB4C7BA) : Color(0xFF52735F);
+  static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
   static const String _nameKey = 'profile_display_name';
   String _displayName = 'Quran Reader';
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _openBookmarks() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const BookmarksScreen()),
+      MaterialPageRoute(builder: (_) => BookmarksScreen()),
     );
     await _loadProfile();
   }
@@ -202,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: green))
+          ? Center(child: CircularProgressIndicator(color: green))
           : ListView(
               padding: const EdgeInsets.fromLTRB(18, 8, 18, 28),
               children: [
@@ -215,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       BoxShadow(
                         color: green.withOpacity(0.14),
                         blurRadius: 14,
-                        offset: const Offset(0, 6),
+                        offset: Offset(0, 6),
                       ),
                     ],
                   ),
@@ -234,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           size: 38,
                         ),
                       ),
-                      const SizedBox(width: 15),
+                      SizedBox(width: 15),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,7 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontSize: 13,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               _displayName,
                               maxLines: 1,
@@ -257,7 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text(
                               'Your Quran journey',
                               style: TextStyle(color: Colors.white70),
@@ -274,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Text(
                   'MY QURAN JOURNEY',
                   style: TextStyle(
@@ -284,20 +284,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.all(17),
                   decoration: BoxDecoration(
                     color: card,
                     borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: const Color(0xFFEEDFC4)),
+                    border: Border.all(color: Color(0xFFEEDFC4)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Text(
                               'Quran reading progress',
                               style: TextStyle(color: green, fontWeight: FontWeight.bold),
@@ -309,17 +309,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: LinearProgressIndicator(
                           value: (_readAyahCount / totalAyahs).clamp(0, 1),
                           minHeight: 10,
-                          backgroundColor: const Color(0xFFE9EAB4),
+                          backgroundColor: Color(0xFFE9EAB4),
                           valueColor: AlwaysStoppedAnimation<Color>(green),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         '$_readAyahCount of $totalAyahs ayahs visited in the reader',
                         style: TextStyle(color: mutedGreen, fontSize: 12),
@@ -327,7 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
@@ -335,22 +335,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: Icons.local_fire_department_rounded,
                         title: '$_readingStreak',
                         subtitle: 'Day streak',
-                        tint: const Color(0xFFFCE8D8),
+                        tint: Color(0xFFFCE8D8),
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Expanded(
                       child: _statCard(
                         icon: Icons.bookmark_rounded,
                         title: '$_bookmarkCount',
                         subtitle: 'Saved ayahs',
-                        tint: const Color(0xFFE9EAB4),
+                        tint: Color(0xFFE9EAB4),
                         onTap: _openBookmarks,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Text(
                   'PERSONAL SETTINGS',
                   style: TextStyle(
@@ -360,7 +360,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 _settingTile(
                   icon: Icons.person_outline_rounded,
                   title: 'Personal information',
@@ -388,7 +388,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   subtitle: _themeLabel,
                   onTap: _chooseAppearance,
                 ),
-                const SizedBox(height: 22),
+                SizedBox(height: 22),
                 Text(
                   'ABOUT',
                   style: TextStyle(
@@ -398,7 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10),
                 _settingTile(
                   icon: Icons.info_outline_rounded,
                   title: 'About Quarn App',
@@ -440,7 +440,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(icon, color: green, size: 23),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 title,
                 style: TextStyle(
@@ -481,7 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: const Color(0xFFE9EAB4),
+            color: Color(0xFFE9EAB4),
             borderRadius: BorderRadius.circular(13),
           ),
           child: Icon(icon, color: green),
