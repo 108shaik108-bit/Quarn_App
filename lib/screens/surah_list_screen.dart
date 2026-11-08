@@ -7,6 +7,7 @@ import '../widgets/quran_header.dart';
 import '../widgets/glowing_door_card.dart';
 import 'surah_reader_screen.dart';
 import 'prayer_tab_screen.dart';
+import 'bookmarks_screen.dart';
 class SurahListScreen extends StatefulWidget {
   const SurahListScreen({super.key});
 
@@ -410,9 +411,24 @@ Widget _bottomNavigationBar() {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(22),
                     onTap: () {
-                      setState(() => selectedNavIndex = index);
+                      if (index == 2) {
+                        setState(() => selectedNavIndex = index);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const BookmarksScreen(),
+                          ),
+                        ).then((_) {
+                          if (mounted) {
+                            setState(() => selectedNavIndex = 0);
+                          }
+                        });
+                        return;
+                      }
 
-                      if (index != 0) {
+                      if (index == 0) {
+                        setState(() => selectedNavIndex = 0);
+                      } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -421,8 +437,6 @@ Widget _bottomNavigationBar() {
                             duration: const Duration(seconds: 1),
                           ),
                         );
-
-                        setState(() => selectedNavIndex = 0);
                       }
                     },
                     child: AnimatedContainer(
