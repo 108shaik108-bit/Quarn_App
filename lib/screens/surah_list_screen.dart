@@ -16,7 +16,7 @@ class SurahListScreen extends StatefulWidget {
 
 class _SurahListScreenState extends State<SurahListScreen> {
   String searchQuery = '';
-  bool showSurahs = true;
+ int selectedContentTab = 0;
   int selectedNavIndex = 0;
 
   static const Color cream = Color(0xFFFFF5E2);
@@ -57,12 +57,17 @@ class _SurahListScreenState extends State<SurahListScreen> {
               padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
               child: GlowingDoorCard(
                 onSearch: (value) => setState(() => searchQuery = value),
-                onTabChanged: (isSurah) => setState(() => showSurahs = isSurah),
+                onTabChanged: (index) {
+                  setState(() {
+                    selectedContentTab = index;
+                    searchQuery = '';
+                  });
+                },
               ),
             ),
           ),
 
-          if (showSurahs)
+         if (selectedContentTab == 0)
             if (filteredSurahs.isEmpty)
               const SliverToBoxAdapter(child: _EmptySearchResult())
             else
@@ -81,8 +86,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   ),
                 ),
               )
-          else
-            if (filteredJuzNumbers.isEmpty)
+              else if (selectedContentTab == 1)            if (filteredJuzNumbers.isEmpty)
               const SliverToBoxAdapter(child: _EmptySearchResult())
             else
               SliverPadding(
@@ -363,72 +367,110 @@ class _SurahListScreenState extends State<SurahListScreen> {
     );
   }
 
-  Widget _bottomNavigationBar() {
-    const labels = ['Home', 'Connect', 'Statistics', 'Profile'];
-    const icons = [
-      Icons.home_rounded,
-      Icons.favorite_border_rounded,
-      Icons.bar_chart_rounded,
-      Icons.person_outline_rounded,
-    ];
 
-    return SafeArea(
-      top: false,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(8, 9, 8, 8),
-        decoration: const BoxDecoration(
-          color: Color(0xFFFFFAEF),
-          border: Border(top: BorderSide(color: Color(0xFFE8D7B7))),
-        ),
-        child: Row(
-          children: List.generate(labels.length, (index) {
-            final selected = selectedNavIndex == index;
-            return Expanded(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(22),
-                onTap: () {
-                  setState(() => selectedNavIndex = index);
-                  if (index != 0) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('${labels[index]} section is coming soon.'),
-                        duration: const Duration(seconds: 1),
-                      ),
-                    );
-                    setState(() => selectedNavIndex = 0);
-                  }
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 3),
-                  decoration: BoxDecoration(
-                    color: selected ? const Color(0xFFE9EAB4) : Colors.transparent,
-                    borderRadius: BorderRadius.circular(22),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(icons[index], color: selected ? green : Colors.black87, size: 27),
-                      const SizedBox(height: 3),
-                      Text(
-                        labels[index],
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: selected ? green : Colors.black87,
-                          fontSize: 11,
-                          fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
+Widget _bottomNavigationBar() {
+  const labels = ['Home', 'Connect', 'Bookmarks', 'Profile'];
+
+  const icons = [
+    Icons.home_rounded,
+    Icons.favorite_border_rounded,
+    Icons.bookmark_rounded,
+    Icons.person_outline_rounded,
+  ];
+
+  return SafeArea(
+    top: false,
+    child: Container(
+      padding: const EdgeInsets.fromLTRB(8, 9, 8, 8),
+      decoration: const BoxDecoration(
+        color: Color(0xFFFFFAEF),
+        border: Border(
+          top: BorderSide(color: Color(0xFFE8D7B7)),
         ),
       ),
-    );
-  }
+      child: Row(
+        children: List.generate(labels.length, (index) {
+          final selected = selectedNavIndex == index;
+
+          return Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(22),
+                    onTap: () {
+                      setState(() => selectedNavIndex = index);
+
+                      if (index != 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${labels[index]} section is coming soon.',
+                            ),
+                            duration: const Duration(seconds: 1),
+                          ),
+                        );
+
+                        setState(() => selectedNavIndex = 0);
+                      }
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 9,
+                        horizontal: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: selected
+                            ? const Color(0xFFE9EAB4)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            icons[index],
+                            color: selected
+                                ? const Color(0xFF07502D)
+                                : Colors.black87,
+                            size: 29,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            labels[index],
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: selected
+                                  ? const Color(0xFF07502D)
+                                  : Colors.black87,
+                              fontSize: 12,
+                              fontWeight: selected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                if (index != 3)
+                  Container(
+                    width: 1,
+                    height: 52,
+                    color: const Color(0xFFC49A45),
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                  ),
+              ],
+            ),
+          );
+        }),
+      ),
+    ),
+  );
+}
+
 
   void _openSurah(Surah surah) {
     Navigator.push(

@@ -1,9 +1,9 @@
-import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 class GlowingDoorCard extends StatefulWidget {
   final ValueChanged<String>? onSearch;
-  final ValueChanged<bool>? onTabChanged;
+  final ValueChanged<int>? onTabChanged;
 
   const GlowingDoorCard({
     super.key,
@@ -16,274 +16,111 @@ class GlowingDoorCard extends StatefulWidget {
 }
 
 class _GlowingDoorCardState extends State<GlowingDoorCard> {
-  bool showSurahs = true;
+  int selectedTab = 0;
 
   static const Color green = Color(0xFF07502D);
-  static const Color deepGreen = Color(0xFF043D23);
+  static const Color darkGreen = Color(0xFF064426);
+  static const Color cream = Color(0xFFFFF5E2);
   static const Color gold = Color(0xFFD7AC57);
-  static const Color cream = Color(0xFFFFF3DC);
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth.isFinite
-            ? constraints.maxWidth
-            : MediaQuery.of(context).size.width - 32;
-        final compact = width < 560;
-        final cardHeight = compact ? 174.0 : 210.0;
-
-        return Container(
-          width: double.infinity,
-          height: cardHeight,
-          padding: EdgeInsets.all(compact ? 10 : 16),
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: green,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: gold.withOpacity(0.65)),
-            boxShadow: [
-              BoxShadow(
-                color: green.withOpacity(0.18),
-                blurRadius: 12,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                width: width * (compact ? 0.34 : 0.36),
-                child: CustomPaint(
-                  painter: GlowingDoorPainter(),
-                  child: const SizedBox.expand(),
-                ),
-              ),
-              SizedBox(width: compact ? 8 : 16),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    _buildTabs(compact),
-                    SizedBox(height: compact ? 10 : 14),
-                    _buildSearch(compact),
-                    if (!compact) ...[
-                      const SizedBox(height: 10),
-                      const Text(
-                        'Read  •  Reflect  •  Understand',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: gold,
-                          fontSize: 11,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildTabs(bool compact) {
     return Container(
-      width: double.infinity,
-      height: compact ? 42 : 48,
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: deepGreen,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: gold.withOpacity(0.55)),
+        color: green,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: gold.withOpacity(0.65)),
+        boxShadow: [
+          BoxShadow(
+            color: green.withOpacity(0.18),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Row(
+      child: Column(
         children: [
-          _buildTab('Surahs', true, compact),
-          _buildTab('Juz', false, compact),
+          Container(
+            height: 48,
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              color: darkGreen,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: gold.withOpacity(0.35)),
+            ),
+            child: Row(
+              children: [
+                _tab('Surahs', 0),
+                _tab('Juz', 1),
+                _tab('Prayer', 2),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 55,
+            child: TextField(
+              onChanged: widget.onSearch,
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                hintText: selectedTab == 0
+                    ? 'Search surah by name or number...'
+                    : selectedTab == 1
+                        ? 'Search Juz...'
+                        : 'Prayer times coming soon...',
+                hintStyle: TextStyle(
+                  color: Colors.white.withOpacity(0.8),
+                  fontSize: 13,
+                ),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                filled: true,
+                fillColor: darkGreen,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: const BorderSide(color: cream, width: 1.2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: const BorderSide(color: gold, width: 1.5),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildTab(String label, bool isSurah, bool compact) {
-    final selected = showSurahs == isSurah;
+  Widget _tab(String label, int index) {
+    final selected = selectedTab == index;
+
     return Expanded(
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
         onTap: () {
-          if (showSurahs == isSurah) return;
-          setState(() => showSurahs = isSurah);
-          widget.onTabChanged?.call(isSurah);
+          setState(() => selectedTab = index);
+          widget.onSearch?.call('');
+          widget.onTabChanged?.call(index);
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: selected ? cream : Colors.transparent,
-            borderRadius: BorderRadius.circular(26),
+            borderRadius: BorderRadius.circular(25),
           ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: selected ? green : Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: compact ? 13 : 16,
-              ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: selected ? green : Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
       ),
     );
   }
-
-  Widget _buildSearch(bool compact) {
-    return SizedBox(
-      width: double.infinity,
-      height: compact ? 46 : 54,
-      child: TextField(
-        onChanged: widget.onSearch,
-        style: TextStyle(color: Colors.white, fontSize: compact ? 12 : 14),
-        textAlignVertical: TextAlignVertical.center,
-        decoration: InputDecoration(
-          hintText: showSurahs ? 'Search surah by name or number...' : 'Search Juz...',
-          hintStyle: TextStyle(
-            color: Colors.white.withOpacity(0.72),
-            fontSize: compact ? 10 : 13,
-          ),
-          prefixIcon: const Icon(Icons.search, color: gold),
-          prefixIconConstraints: const BoxConstraints(minWidth: 42),
-          filled: true,
-          fillColor: const Color(0xFF064426),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: gold.withOpacity(0.75)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(color: gold.withOpacity(0.75)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: gold, width: 1.5),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-class GlowingDoorPainter extends CustomPainter {
-  static const Color gold = Color(0xFFD7AC57);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = size.width / 2;
-
-    // Keep the doorway proportional to both width and height.
-    final doorWidth = size.width * 0.70;
-    final left = center - doorWidth / 2;
-    final right = center + doorWidth / 2;
-
-    final top = size.height * 0.08;
-    final bottom = size.height * 0.86;
-    final archHeight = size.height * 0.48;
-    final archBase = top + archHeight;
-
-    // Warm golden glow behind the doorway.
-    canvas.drawCircle(
-      Offset(center, size.height * 0.55),
-      size.width * 0.48,
-      Paint()
-        ..shader = ui.Gradient.radial(
-          Offset(center, size.height * 0.55),
-          size.width * 0.48,
-          [
-            const Color(0xFFFFE8A3).withOpacity(0.85),
-            const Color(0xFFFFC45C).withOpacity(0.30),
-            Colors.transparent,
-          ],
-          [0.0, 0.65, 1.0],
-        ),
-    );
-
-
-// Main pointed Islamic arch.
-final spring = top + archHeight * 0.58;
-
-final door = Path()
-  ..moveTo(left, bottom)
-  ..lineTo(left, spring)
-  ..quadraticBezierTo(
-    left,
-    top + archHeight * 0.18,
-    center,
-    top,
-  )
-  ..quadraticBezierTo(
-    right,
-    top + archHeight * 0.18,
-    right,
-    spring,
-  )
-  ..lineTo(right, bottom)
-  ..close();
-
-// Inner pointed decorative arch.
-final inner = Path()
-  ..moveTo(left + 7, bottom)
-  ..lineTo(left + 7, spring)
-  ..quadraticBezierTo(
-    left + 7,
-    top + archHeight * 0.22,
-    center,
-    top + 7,
-  )
-  ..quadraticBezierTo(
-    right - 7,
-    top + archHeight * 0.22,
-    right - 7,
-    spring,
-  )
-  ..lineTo(right - 7, bottom);
-
-
-    canvas.drawPath(
-      inner,
-      Paint()
-        ..color = const Color(0xFFFFE8A8)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5,
-    );
-
-    // Three golden steps, kept inside the card.
-    final stepPaint = Paint()..color = gold;
-
-    for (int i = 0; i < 3; i++) {
-      final stepY = bottom - 5 + i * 5;
-
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromCenter(
-            center: Offset(center, stepY),
-            width: doorWidth + 12 + i * 10,
-            height: 3,
-          ),
-          const Radius.circular(2),
-        ),
-        stepPaint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
