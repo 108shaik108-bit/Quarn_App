@@ -148,10 +148,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
               ),
               const SizedBox(width: 10),
               Expanded(
+
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // English Surah name
                     Text(
                       surah.nameEnglish,
                       maxLines: 1,
@@ -162,19 +164,33 @@ class _SurahListScreenState extends State<SurahListScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     const SizedBox(height: 5),
+
+                    // Arabic Surah name
                     Text(
-                      surah.nameEnglish,
+                      surah.nameArabic,
+                      textDirection: TextDirection.rtl,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.black87, fontSize: 12),
+                      style: const TextStyle(
+                        color: Color(0xFF8B672D),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
+
+                    // Number of Ayahs
                     Text(
                       '${surah.ayahs} Ayahs',
-                      style: const TextStyle(color: Colors.black87, fontSize: 11),
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 11,
+                      ),
                     ),
                   ],
                 ),
+
               ),
             ],
           ),
