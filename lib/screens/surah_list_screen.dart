@@ -67,9 +67,11 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ),
           ),
 
-         if (selectedContentTab == 0)
+          if (selectedContentTab == 0) ...[
             if (filteredSurahs.isEmpty)
-              const SliverToBoxAdapter(child: _EmptySearchResult())
+              const SliverToBoxAdapter(
+                child: _EmptySearchResult(),
+              )
             else
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
@@ -85,9 +87,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     childCount: filteredSurahs.length,
                   ),
                 ),
+              ),
+          ] else if (selectedContentTab == 1) ...[
+            if (filteredJuzNumbers.isEmpty)
+              const SliverToBoxAdapter(
+                child: _EmptySearchResult(),
               )
-              else if (selectedContentTab == 1)            if (filteredJuzNumbers.isEmpty)
-              const SliverToBoxAdapter(child: _EmptySearchResult())
             else
               SliverPadding(
                 padding: const EdgeInsets.only(bottom: 18),
@@ -98,6 +103,11 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   ),
                 ),
               ),
+          ] else ...[
+            const SliverToBoxAdapter(
+              child: PrayerTabScreen(),
+            ),
+          ],
 
           SliverToBoxAdapter(
             child: Padding(
