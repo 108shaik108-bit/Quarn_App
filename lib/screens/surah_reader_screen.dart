@@ -90,7 +90,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         ? surah.ayahs
         : startAyah + ayahsPerPage;
 
-    final mushafMode = !showTranslation;
+    const mushafMode = true;
     const mushafPaper = Color(0xFFFFF8F0);
     const mushafInk = Color(0xFF241D18);
 
@@ -275,18 +275,20 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                 textAlign: TextAlign.right,
                                 text: TextSpan(
                                   style: const TextStyle(
-                                      fontSize: 24,
-                                      height: 2.0,
-                                      color: Colors.white),
+                                      fontSize: 27,
+                                      height: 2.15,
+                                      color: mushafInk,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 0),
                                   children: [
                                     TextSpan(
                                         text:
                                             "${arabicVerses[ayahIndex].text} "),
                                     TextSpan(
-                                      text: "﴿${ayahIndex + 1}﴾",
+                                      text: " ۝${_arabicDigits(ayahIndex + 1)}",
                                       style: const TextStyle(
-                                          color: Color(0xFF22C55E),
-                                          fontSize: 20),
+                                          color: Color(0xFFB18A68),
+                                          fontSize: 19),
                                     ),
                                   ],
                                 ),
@@ -296,10 +298,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             Text(
                               _useAllahTerminology(englishVerses[ayahIndex].text),
                               style: const TextStyle(
-                                  color: Color(0xFF9CA3AF),
-                                  fontSize: 15,
-                                  height: 1.6,
-                                  fontStyle: FontStyle.italic),
+                                  color: Color(0xFF655548),
+                                  fontSize: 16,
+                                  height: 1.8),
                             ),
                             Align(
                               alignment: Alignment.centerRight,
@@ -308,7 +309,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             if (i < endAyah - startAyah - 1) ...[
                               const SizedBox(height: 16),
                               Container(
-                                  height: 1, color: const Color(0xFF1E3A2A)),
+                                  height: 1, color: const Color(0xFFE4D4C3)),
                               const SizedBox(height: 16),
                             ],
                           ],
