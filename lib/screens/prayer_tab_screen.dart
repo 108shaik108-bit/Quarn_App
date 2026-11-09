@@ -408,7 +408,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           ),
           Text(
             _ringAdhanEnabled
-                ? 'Adhan is enabled. Choose which prayers should ring.'
+                ? 'Adhan is enabled. Choose which prayers should ring. Alarm audio may still sound in phone silent mode.'
                 : 'Muted by default. Turn on Ring Adhan when you want it.',
             style: TextStyle(color: Color(0xFF52735F), fontSize: 12),
           ),
