@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
@@ -111,7 +110,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 Text(
                   surah.nameEnglish,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: mushafMode ? mushafInk : Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.w800,
                   ),
@@ -119,7 +118,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 const SizedBox(height: 4),
                 Text(
                   "Surah ${surah.number}",
-                  style: const TextStyle(color: Colors.grey, fontSize: 15),
+                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 15),
                 ),
                 const SizedBox(height: 14),
                 Text(
@@ -133,13 +132,13 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 const SizedBox(height: 8),
                 Text(
                   "${surah.ayahs} Ayahs • ${surah.isMakki ? 'makki' : 'madinah'}",
-                  style: const TextStyle(color: Colors.grey, fontSize: 14),
+                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 20),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   height: 1,
-                  color: const Color(0xFF1E3A2A),
+                  color: mushafMode ? const Color(0xFFE4D4C3) : const Color(0xFF1E3A2A),
                 ),
               ],
             ),
@@ -207,11 +206,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                     children: [
                       Text("Page ${currentPage + 1} of $totalPages",
                           style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold)),
+                              color: mushafMode ? mushafInk : Colors.white, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 2),
                       Text("Ayahs ${startAyah + 1} - $endAyah",
                           style:
-                              const TextStyle(color: Colors.grey, fontSize: 12)),
+                              TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 12)),
                     ],
                   ),
                   GestureDetector(
