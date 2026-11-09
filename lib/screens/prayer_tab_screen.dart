@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/adhan_scheduler_service.dart';
 import '../services/app_settings.dart';
+import '../services/location_disclosure.dart';
 import 'qibla_finder_screen.dart';
 
 class PrayerTabScreen extends StatefulWidget {
@@ -218,6 +219,11 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           await Geolocator.checkPermission();
 
       if (permission == LocationPermission.denied) {
+        final consent = await LocationDisclosure.show(context);
+        if (!consent) {
+          if (mounted) setState(() => isLoading = false);
+          return;
+        }
         permission = await Geolocator.requestPermission();
       }
 
