@@ -109,7 +109,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               children: [
                 Text(
                   surah.nameEnglish,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: mushafMode ? mushafInk : Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.w800,
@@ -205,7 +205,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   Column(
                     children: [
                       Text("Page ${currentPage + 1} of $totalPages",
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: mushafMode ? mushafInk : Colors.white, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 2),
                       Text("Ayahs ${startAyah + 1} - $endAyah",
