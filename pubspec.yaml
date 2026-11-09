@@ -36,6 +36,8 @@ dependencies:
   geolocator: ^14.1.2
   shared_preferences: ^2.5.3
   audioplayers: ^6.8.1
+  alarm: ^5.15.0
+  permission_handler: ^13.0.2
 
   # Cupertino icons for the app
   cupertino_icons: ^1.0.8
