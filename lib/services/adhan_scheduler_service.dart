@@ -1,6 +1,8 @@
 import 'package:adhan/adhan.dart';
 import 'package:alarm/alarm.dart';
-import 'package:flutter/foundation.dart';
+import 'dart:io';
+
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Schedules a rolling 7-day set of prayer alarms.
@@ -26,6 +28,19 @@ class AdhanSchedulerService {
     'Maghrib': 'adhan_prayer_maghrib_enabled',
     'Isha': 'adhan_prayer_isha_enabled',
   };
+
+  static Future<void> requestPermissions() async {
+    final notificationStatus = await Permission.notification.request();
+    if (!notificationStatus.isGranted) {
+      throw Exception('Allow notifications to use Adhan alerts.');
+    }
+    if (Platform.isAndroid) {
+      final exactAlarmStatus = await Permission.scheduleExactAlarm.request();
+      if (!exactAlarmStatus.isGranted) {
+        throw Exception('Allow exact alarms so Adhan can ring at prayer time.');
+      }
+    }
+  }
 
   static Future<bool> isRingEnabled() async {
     final prefs = await SharedPreferences.getInstance();
@@ -124,7 +139,7 @@ class AdhanSchedulerService {
             assetAudioPath: audioAsset,
             loopAudio: false,
             vibrate: false,
-            warningNotificationOnKill: !kIsWeb,
+            warningNotificationOnKill: Platform.isIOS,
             androidFullScreenIntent: false,
             androidStopAlarmOnTermination: false,
             notificationSettings: NotificationSettings(
