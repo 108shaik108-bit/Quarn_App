@@ -301,15 +301,15 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Text(
                     _useAllahTerminology(_englishText),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.left,
                     textDirection: AppSettings.language.value == 'ur'
                         ? TextDirection.rtl
                         : TextDirection.ltr,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+                    style: const TextStyle(
+                      color: Color(0xFFF2EDE5),
+                      fontSize: 16,
                       height: 1.8,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),
