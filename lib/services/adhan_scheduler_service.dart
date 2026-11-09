@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:adhan/adhan.dart';
 import 'package:alarm/alarm.dart';
-import 'dart:io';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -150,6 +151,7 @@ class AdhanSchedulerService {
           ),
         );
         scheduledIds.add(id.toString());
+        await prefs.setStringList(_scheduledIdsKey, scheduledIds);
       }
     }
 
