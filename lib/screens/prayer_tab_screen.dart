@@ -96,6 +96,19 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
   }
 
   Future<void> _setRingAdhan(bool enabled) async {
+    if (enabled) {
+      try {
+        await AdhanSchedulerService.requestPermissions();
+      } catch (error) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.toString().replaceFirst('Exception: ', ''))),
+          );
+        }
+        return;
+      }
+    }
+
     setState(() => _ringAdhanEnabled = enabled);
     await AdhanSchedulerService.setRingEnabled(enabled);
     if (enabled) {
