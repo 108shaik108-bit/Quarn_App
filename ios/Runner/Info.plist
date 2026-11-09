@@ -12,7 +12,7 @@
 		<string>audio</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Your location is used to calculate accurate local prayer times.</string>
+	<string>Your location is used to calculate accurate local prayer times and Qibla direction.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
