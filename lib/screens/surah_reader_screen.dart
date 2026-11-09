@@ -502,7 +502,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
   String _useAllahTerminology(String translation) {
     return translation.replaceAllMapped(
-      RegExp(r"\\bGod('s)?\\b", caseSensitive: false),
+      RegExp(r"\bGod('s)?\b", caseSensitive: false),
       (match) {
         final original = match.group(0) ?? 'God';
         final suffix = original.toLowerCase().endsWith("'s") ? "'s" : '';
