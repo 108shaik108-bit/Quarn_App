@@ -6,6 +6,7 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../services/app_settings.dart';
+import '../services/location_disclosure.dart';
 import '../services/qibla_direction_service.dart';
 
 class QiblaFinderScreen extends StatefulWidget {
@@ -85,6 +86,11 @@ class _QiblaFinderScreenState extends State<QiblaFinderScreen> {
 
       var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
+        final consent = await LocationDisclosure.show(context);
+        if (!consent) {
+          if (mounted) setState(() => _isLoadingLocation = false);
+          return;
+        }
         permission = await Geolocator.requestPermission();
       }
       if (permission == LocationPermission.denied ||
