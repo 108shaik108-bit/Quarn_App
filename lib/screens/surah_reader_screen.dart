@@ -294,7 +294,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              englishVerses[ayahIndex].text,
+                              _useAllahTerminology(englishVerses[ayahIndex].text),
                               style: const TextStyle(
                                   color: Color(0xFF9CA3AF),
                                   fontSize: 15,
@@ -497,6 +497,19 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           const SliverToBoxAdapter(child: SizedBox(height: 30)),
         ],
       ),
+    );
+  }
+
+  String _useAllahTerminology(String translation) {
+    return translation.replaceAllMapped(
+      RegExp(r"\\bGod('s)?\\b", caseSensitive: false),
+      (match) {
+        final original = match.group(0) ?? 'God';
+        final suffix = original.toLowerCase().endsWith("'s") ? "'s" : '';
+        if (original == original.toUpperCase()) return 'ALLAH$suffix';
+        if (original.startsWith('g')) return 'allah$suffix';
+        return 'Allah$suffix';
+      },
     );
   }
 
