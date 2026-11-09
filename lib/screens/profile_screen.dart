@@ -6,7 +6,9 @@ import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
 import '../services/app_settings.dart';
 import '../services/quran_progress_service.dart';
+import '../services/local_data_service.dart';
 import 'bookmarks_screen.dart';
+import 'legal_document_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -168,6 +170,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case ThemeMode.system:
         return 'Use device setting';
     }
+  }
+
+  void _openLegalDocument(String title, List<({String heading, String body})> sections) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => LegalDocumentScreen(title: title, sections: sections),
+      ),
+    );
+  }
+
+  Future<void> _clearLocalData() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: card,
+        title: Text('Clear all local data?', style: TextStyle(color: green)),
+        content: const Text(
+          'This permanently removes your profile name, bookmarks, reading progress, saved location, prayer alarm preferences, and app settings from this device. Scheduled Adhan alarms will also be cancelled. This cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text('Cancel', style: TextStyle(color: mutedGreen)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Clear data', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    await LocalDataService.clearAll();
+    await AppSettings.load();
+    if (!mounted) return;
+    await _loadProfile();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Your local app data has been cleared.')),
+    );
   }
 
   void _showInfo(String title, String message) {
@@ -412,6 +456,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Quran text and translations are provided through the app's Quran data package.
                   ''',
                   ),
+                ),
+                SizedBox(height: 22),
+                Text(
+                  'PRIVACY & LEGAL',
+                  style: TextStyle(
+                    color: mutedGreen,
+                    fontSize: 12,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                _settingTile(
+                  icon: Icons.privacy_tip_outlined,
+                  title: 'Privacy Policy',
+                  subtitle: 'How the app handles your information',
+                  onTap: () => _openLegalDocument(
+                    'Privacy Policy',
+                    AppLegalContent.privacy,
+                  ),
+                ),
+                _settingTile(
+                  icon: Icons.description_outlined,
+                  title: 'Terms of Use',
+                  subtitle: 'Rules and important app information',
+                  onTap: () => _openLegalDocument(
+                    'Terms of Use',
+                    AppLegalContent.terms,
+                  ),
+                ),
+                _settingTile(
+                  icon: Icons.delete_outline_rounded,
+                  title: 'Clear My Local Data',
+                  subtitle: 'Erase saved profile, bookmarks and progress',
+                  onTap: _clearLocalData,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 18),
