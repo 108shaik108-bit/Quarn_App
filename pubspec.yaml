@@ -34,6 +34,7 @@ dependencies:
   quran_flutter: ^1.0.2
   adhan: ^2.0.0+1
   geolocator: ^14.1.2
+  flutter_compass: ^0.8.1
   shared_preferences: ^2.5.3
   audioplayers: ^6.8.1
   alarm: ^5.15.0
