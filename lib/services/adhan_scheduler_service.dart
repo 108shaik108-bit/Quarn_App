@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:adhan/adhan.dart';
 import 'package:alarm/alarm.dart';
 
@@ -31,11 +30,14 @@ class AdhanSchedulerService {
   };
 
   static Future<void> requestPermissions() async {
+    if (kIsWeb) {
+      throw UnsupportedError('Automatic Adhan alarms are available on Android and iOS, not Chrome.');
+    }
     final notificationStatus = await Permission.notification.request();
     if (!notificationStatus.isGranted) {
       throw Exception('Allow notifications to use Adhan alerts.');
     }
-    if (Platform.isAndroid) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
       final exactAlarmStatus = await Permission.scheduleExactAlarm.request();
       if (!exactAlarmStatus.isGranted) {
         throw Exception('Allow exact alarms so Adhan can ring at prayer time.');
@@ -67,6 +69,7 @@ class AdhanSchedulerService {
   }
 
   static Future<void> cancelScheduled() async {
+    if (kIsWeb) return;
     final prefs = await SharedPreferences.getInstance();
     final ids = prefs.getStringList(_scheduledIdsKey) ?? <String>[];
     for (final value in ids) {
@@ -85,6 +88,7 @@ class AdhanSchedulerService {
   static Future<void> refresh({
     required Coordinates coordinates,
   }) async {
+    if (kIsWeb) return;
     await cancelScheduled();
     if (!await isRingEnabled()) return;
 
@@ -140,7 +144,11 @@ class AdhanSchedulerService {
             assetAudioPath: audioAsset,
             loopAudio: false,
             vibrate: false,
-            warningNotificationOnKill: Platform.isIOS,
+            volumeSettings: const VolumeSettings.fixed(
+              volume: null,
+              volumeEnforced: false,
+            ),
+            warningNotificationOnKill: defaultTargetPlatform == TargetPlatform.iOS,
             androidFullScreenIntent: false,
             androidStopAlarmOnTermination: false,
             notificationSettings: NotificationSettings(
