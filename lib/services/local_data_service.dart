@@ -1,4 +1,3 @@
-import 'package:alarm/alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'adhan_scheduler_service.dart';
