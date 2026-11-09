@@ -61,6 +61,24 @@ class _ConnectScreenState extends State<ConnectScreen> {
     _checkBookmark();
   }
 
+  String _arabicDigits(int number) {
+    const digits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    return number.toString().split('').map((digit) => digits[int.parse(digit)]).join();
+  }
+
+  String _useAllahTerminology(String translation) {
+    return translation.replaceAllMapped(
+      RegExp(r"\bGod('s)?\b", caseSensitive: false),
+      (match) {
+        final original = match.group(0) ?? 'God';
+        final suffix = original.toLowerCase().endsWith("'s") ? "'s" : '';
+        if (original == original.toUpperCase()) return 'ALLAH$suffix';
+        if (original.startsWith('g')) return 'allah$suffix';
+        return 'Allah$suffix';
+      },
+    );
+  }
+
   Future<void> _checkBookmark() async {
     final saved = await BookmarkService.isBookmarked(_surahNumber, _ayahNumber);
     if (mounted) setState(() => _isSaved = saved);
@@ -253,17 +271,28 @@ class _ConnectScreenState extends State<ConnectScreen> {
                   ],
                 ),
                 SizedBox(height: 28),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Text(
-                    _arabicText,
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF8F0),
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(color: const Color(0xFFE4D4C3)),
+                  ),
+                  child: Directionality(
                     textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 29,
-                      height: 1.9,
-                      fontWeight: FontWeight.w600,
+                    child: Text(
+                      '$_arabicText  ۝${_arabicDigits(_ayahNumber)}',
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Color(0xFF241D18),
+                        fontSize: 37,
+                        height: 2.0,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0,
+                      ),
                     ),
                   ),
                 ),
@@ -271,7 +300,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 3),
                   child: Text(
-                    _englishText,
+                    _useAllahTerminology(_englishText),
                     textAlign: TextAlign.center,
                     textDirection: AppSettings.language.value == 'ur'
                         ? TextDirection.rtl
