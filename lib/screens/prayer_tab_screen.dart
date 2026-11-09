@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/adhan_scheduler_service.dart';
 import '../services/app_settings.dart';
+import 'qibla_finder_screen.dart';
 
 class PrayerTabScreen extends StatefulWidget {
   const PrayerTabScreen({super.key});
@@ -291,6 +292,8 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
         children: [
           _locationCard(),
           SizedBox(height: 12),
+          _qiblaFinderCard(),
+          SizedBox(height: 12),
           _adhanSettingsCard(),
           SizedBox(height: 18),
 
@@ -373,6 +376,70 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
     );
   }
 
+
+
+  Widget _qiblaFinderCard() {
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: () {
+        final coordinates = currentCoordinates ?? cities[selectedCity]!;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => QiblaFinderScreen(
+              initialLatitude: coordinates.latitude,
+              initialLongitude: coordinates.longitude,
+              locationLabel: locationLabel,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: AppSettings.isDark
+                ? [Color(0xFF203B2D), Color(0xFF14251C)]
+                : [Color(0xFF07502D), Color(0xFF0D6840)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: gold.withOpacity(0.65)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.explore_rounded, color: Color(0xFFE9D19A), size: 28),
+            ),
+            SizedBox(width: 13),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Qibla Finder',
+                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 3),
+                  Text(
+                    'Find the direction of the Kaaba',
+                    style: TextStyle(color: Color(0xFFE9D19A), fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFFE9D19A), size: 17),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _adhanSettingsCard() {
     return Container(
