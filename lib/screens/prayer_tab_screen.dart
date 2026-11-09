@@ -4,7 +4,9 @@ import 'package:adhan/adhan.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/adhan_scheduler_service.dart';
 import '../services/app_settings.dart';
 
 class PrayerTabScreen extends StatefulWidget {
@@ -39,6 +41,96 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
 
   final AudioPlayer _adhanPlayer = AudioPlayer();
   String? _playingPrayer;
+  bool _ringAdhanEnabled = false;
+  final Map<String, bool> _prayerAdhanEnabled = {
+    for (final prayer in AdhanSchedulerService.prayerNames) prayer: true,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAdhanPreferences();
+  }
+
+  Future<void> _loadAdhanPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedCity = prefs.getString('prayer_selected_city');
+    final latitude = prefs.getDouble('prayer_location_lat');
+    final longitude = prefs.getDouble('prayer_location_lon');
+    final enabled = await AdhanSchedulerService.isRingEnabled();
+
+    if (!mounted) return;
+    setState(() {
+      if (savedCity != null && cities.containsKey(savedCity)) {
+        selectedCity = savedCity;
+      }
+      if (latitude != null && longitude != null) {
+        currentCoordinates = Coordinates(latitude, longitude);
+        isGpsLocation = true;
+        locationLabel = 'Saved location';
+      }
+      _ringAdhanEnabled = enabled;
+    });
+
+    for (final prayer in AdhanSchedulerService.prayerNames) {
+      _prayerAdhanEnabled[prayer] =
+          await AdhanSchedulerService.isPrayerEnabled(prayer);
+    }
+    if (mounted) setState(() {});
+    if (enabled) {
+      await AdhanSchedulerService.refresh(
+        coordinates: currentCoordinates ?? cities[selectedCity]!,
+      );
+    }
+  }
+
+  Future<void> _saveLocationAndRefresh() async {
+    final prefs = await SharedPreferences.getInstance();
+    final coordinates = currentCoordinates ?? cities[selectedCity]!;
+    await prefs.setDouble('prayer_location_lat', coordinates.latitude);
+    await prefs.setDouble('prayer_location_lon', coordinates.longitude);
+    await prefs.setString('prayer_selected_city', selectedCity);
+    if (_ringAdhanEnabled) {
+      await AdhanSchedulerService.refresh(coordinates: coordinates);
+    }
+  }
+
+  Future<void> _setRingAdhan(bool enabled) async {
+    setState(() => _ringAdhanEnabled = enabled);
+    await AdhanSchedulerService.setRingEnabled(enabled);
+    if (enabled) {
+      try {
+        await AdhanSchedulerService.refresh(
+          coordinates: currentCoordinates ?? cities[selectedCity]!,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Adhan alarms enabled for the next 7 days.')),
+          );
+        }
+      } catch (error) {
+        if (mounted) {
+          setState(() => _ringAdhanEnabled = false);
+          await AdhanSchedulerService.setRingEnabled(false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not schedule Adhan: $error')),
+          );
+        }
+      }
+    } else {
+      await AdhanSchedulerService.cancelScheduled();
+    }
+  }
+
+  Future<void> _setPrayerAdhan(String prayer, bool enabled) async {
+    setState(() => _prayerAdhanEnabled[prayer] = enabled);
+    await AdhanSchedulerService.setPrayerEnabled(prayer, enabled);
+    if (_ringAdhanEnabled) {
+      await AdhanSchedulerService.refresh(
+        coordinates: currentCoordinates ?? cities[selectedCity]!,
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -141,6 +233,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
         locationLabel = 'Current GPS location';
         isLoading = false;
       });
+      await _saveLocationAndRefresh();
     } catch (e) {
       if (!mounted) return;
 
@@ -161,6 +254,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
       locationLabel = '$city, India';
       errorMessage = null;
     });
+    _saveLocationAndRefresh();
   }
 
   String formatTime(DateTime time) {
@@ -182,6 +276,8 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _locationCard(),
+          SizedBox(height: 12),
+          _adhanSettingsCard(),
           SizedBox(height: 18),
 
           Container(
@@ -258,6 +354,69 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
               fontSize: 12,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _adhanSettingsCard() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Color(0xFFFFFAEF),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Color(0xFFF0D8A9)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.volume_up_rounded, color: green),
+              SizedBox(width: 9),
+              Expanded(
+                child: Text(
+                  'Adhan alerts',
+                  style: TextStyle(
+                    color: green,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Switch(
+                value: _ringAdhanEnabled,
+                onChanged: _setRingAdhan,
+                activeColor: green,
+              ),
+            ],
+          ),
+          Text(
+            _ringAdhanEnabled
+                ? 'Adhan is enabled. Choose which prayers should ring.'
+                : 'Muted by default. Turn on Ring Adhan when you want it.',
+            style: TextStyle(color: Color(0xFF52735F), fontSize: 12),
+          ),
+          if (_ringAdhanEnabled) ...[
+            SizedBox(height: 8),
+            Divider(color: Color(0xFFE9D8B8), height: 1),
+            for (final prayer in AdhanSchedulerService.prayerNames)
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: Text(
+                  prayer,
+                  style: TextStyle(
+                    color: green,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                value: _prayerAdhanEnabled[prayer] ?? true,
+                activeColor: green,
+                onChanged: (value) => _setPrayerAdhan(prayer, value),
+              ),
+          ],
         ],
       ),
     );
