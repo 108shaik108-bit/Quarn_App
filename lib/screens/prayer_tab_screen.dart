@@ -123,6 +123,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
         }
       } catch (error) {
         if (mounted) {
+          await AdhanSchedulerService.cancelScheduled();
           setState(() => _ringAdhanEnabled = false);
           await AdhanSchedulerService.setRingEnabled(false);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -390,7 +391,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
               SizedBox(width: 9),
               Expanded(
                 child: Text(
-                  'Adhan alerts',
+                  'Ring Adhan',
                   style: TextStyle(
                     color: green,
                     fontSize: 16,
