@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
@@ -90,12 +91,16 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         ? surah.ayahs
         : startAyah + ayahsPerPage;
 
+    final mushafMode = !showTranslation;
+    const mushafPaper = Color(0xFFFFF8F0);
+    const mushafInk = Color(0xFF241D18);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0F0D),
+      backgroundColor: mushafMode ? mushafPaper : const Color(0xFF0A0F0D),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0F0D),
+        backgroundColor: mushafMode ? mushafPaper : const Color(0xFF0A0F0D),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: mushafMode ? mushafInk : Colors.white),
       ),
       body: CustomScrollView(
         slivers: [
@@ -147,9 +152,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 margin: const EdgeInsets.only(top: 20),
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF111A16),
+                  color: mushafMode ? const Color(0xFFF0E5D8) : const Color(0xFF111A16),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF22332B)),
+                  border: Border.all(color: mushafMode ? const Color(0xFFE4D4C3) : const Color(0xFF22332B)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -250,12 +255,12 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           // ═══ 5. The Quran page card ═══
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-              padding: const EdgeInsets.all(20),
+              margin: EdgeInsets.fromLTRB(mushafMode ? 10 : 16, 8, mushafMode ? 10 : 16, 20),
+              padding: EdgeInsets.symmetric(horizontal: mushafMode ? 18 : 20, vertical: mushafMode ? 28 : 20),
               decoration: BoxDecoration(
-                color: const Color(0xFF111A16),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF22332B)),
+                color: mushafMode ? mushafPaper : const Color(0xFF111A16),
+                borderRadius: BorderRadius.circular(mushafMode ? 2 : 12),
+                border: mushafMode ? null : Border.all(color: const Color(0xFF22332B)),
               ),
               child: showTranslation
                   ? Column(
@@ -311,36 +316,44 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         );
                       }),
                     )
-                  : Column(
-                      children: List.generate(endAyah - startAyah, (i) {
-                        final ayahIndex = startAyah + i;
-                        return Column(
+                  : Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: RichText(
+                        textAlign: TextAlign.justify,
+                        textDirection: TextDirection.rtl,
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: mushafInk,
+                            fontSize: 27,
+                            height: 2.15,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0,
+                          ),
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
+                            for (var i = startAyah; i < endAyah; i++) ...[
+                              TextSpan(text: '${arabicVerses[i].text} '),
+                              WidgetSpan(
+                                alignment: PlaceholderAlignment.middle,
+                                child: GestureDetector(
+                                  onTap: () => _toggleAyahBookmark(i + 1),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 2),
                                     child: Text(
-                                      '${arabicVerses[ayahIndex].text} ﴿${ayahIndex + 1}﴾',
-                                      textAlign: TextAlign.justify,
+                                      '۝${_arabicDigits(i + 1)}',
                                       style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        height: 2.0,
+                                        color: Color(0xFFB18A68),
+                                        fontSize: 19,
+                                        height: 1,
                                       ),
                                     ),
                                   ),
                                 ),
-                                _bookmarkButton(ayahIndex + 1),
-                              ],
-                            ),
-                            if (i < endAyah - startAyah - 1)
-                              const Divider(color: Color(0xFF1E3A2A)),
+                              ),
+                              const TextSpan(text: ' '),
+                            ],
                           ],
-                        );
-                      }),
+                        ),
+                      ),
                     ),
             ),
           ),
@@ -486,6 +499,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         ],
       ),
     );
+  }
+
+  String _arabicDigits(int number) {
+    const digits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    return number.toString().split('').map((digit) => digits[int.parse(digit)]).join();
   }
 
   // ═══ Helper: toggle pill button ═══
