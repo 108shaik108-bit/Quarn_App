@@ -1,6 +1,7 @@
 
 
 import 'package:adhan/adhan.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -35,6 +36,47 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
   bool isGpsLocation = false;
   bool isLoading = false;
   String? errorMessage;
+
+  final AudioPlayer _adhanPlayer = AudioPlayer();
+  String? _playingPrayer;
+
+  @override
+  void dispose() {
+    _adhanPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _toggleAdhan(String prayerName) async {
+    if (_playingPrayer == prayerName) {
+      await _adhanPlayer.stop();
+      if (mounted) setState(() => _playingPrayer = null);
+      return;
+    }
+
+    final asset = prayerName == 'Fajr'
+        ? 'audio/adhan_fajr.mp3'
+        : 'audio/adhan_other_prayers.mp3';
+
+    await _adhanPlayer.stop();
+    if (!mounted) return;
+    setState(() => _playingPrayer = prayerName);
+
+    try {
+      await _adhanPlayer.play(AssetSource(asset));
+      _adhanPlayer.onPlayerComplete.first.then((_) {
+        if (mounted && _playingPrayer == prayerName) {
+          setState(() => _playingPrayer = null);
+        }
+      });
+    } catch (error) {
+      if (mounted) {
+        setState(() => _playingPrayer = null);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not play Adhan: $error')),
+        );
+      }
+    }
+  }
 
   PrayerTimes? get prayerTimes {
     final coordinates = currentCoordinates ?? cities[selectedCity];
@@ -192,7 +234,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
 
           if (times != null) ...[
             _prayerRow('Fajr', 'الفجر', times.fajr, Icons.nightlight_round),
-            _prayerRow('Sunrise', 'الشروق', times.sunrise, Icons.wb_twilight),
+            _prayerRow('Sunrise', 'الشروق', times.sunrise, Icons.wb_twilight, enableAdhan: false),
             _prayerRow('Dhuhr', 'الظهر', times.dhuhr, Icons.wb_sunny_outlined),
             _prayerRow('Asr', 'العصر', times.asr, Icons.wb_cloudy_outlined),
             _prayerRow('Maghrib', 'المغرب', times.maghrib, Icons.wb_twilight),
@@ -291,8 +333,9 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
     String name,
     String arabic,
     DateTime time,
-    IconData icon,
-  ) {
+    IconData icon, {
+    bool enableAdhan = true,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 9),
       padding: const EdgeInsets.symmetric(
@@ -335,6 +378,17 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          if (enableAdhan) ...[
+            SizedBox(width: 8),
+            IconButton(
+              tooltip: _playingPrayer == name ? 'Stop Adhan preview' : 'Play Adhan preview',
+              onPressed: () => _toggleAdhan(name),
+              icon: Icon(
+                _playingPrayer == name ? Icons.stop_circle : Icons.volume_up_rounded,
+                color: gold,
+              ),
+            ),
+          ],
         ],
       ),
     );
