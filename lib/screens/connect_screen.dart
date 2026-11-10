@@ -401,7 +401,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     SizedBox(width: 10),
                     _circleAction(
                       icon: Icons.share_outlined,
-                      label: 'Copy to share',
+                      label: 'Share as WhatsApp Status',
                       onTap: _shareAyah,
                     ),
                   ],
