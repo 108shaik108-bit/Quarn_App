@@ -1,5 +1,7 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 
 import '../data/surah_data.dart';
@@ -25,6 +27,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
   late final String _arabicText;
   late final String _englishText;
   bool _isSaved = false;
+  final GlobalKey _shareCardKey = GlobalKey();
   late Future<({int surah, int ayah})?> _continueReadingFuture;
 
   @override
@@ -97,21 +100,154 @@ class _ConnectScreenState extends State<ConnectScreen> {
 
   Future<void> _shareAyah() async {
     final surah = surahs[_surahNumber - 1];
-    final text = '''
-    Daily Ayah
-    ${surah.nameEnglish} $_surahNumber:$_ayahNumber
-
-    $_arabicText
-
-    $_englishText
-
-    Quarn App
-    ''';
-    await Clipboard.setData(ClipboardData(text: text));
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Ayah copied. You can now share it.')),
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => Dialog(
+        backgroundColor: const Color(0xFF10251D),
+        insetPadding: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RepaintBoundary(
+                key: _shareCardKey,
+                child: _buildShareArtwork(surah),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _shareAyahImage(dialogContext),
+                  icon: const Icon(Icons.share_rounded),
+                  label: const Text('Share image'),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Close', style: TextStyle(color: Colors.white70)),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  Widget _buildShareArtwork(dynamic surah) {
+    return Container(
+      width: 340,
+      height: 600,
+      padding: const EdgeInsets.fromLTRB(25, 30, 25, 26),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF183F32), Color(0xFF102B24), Color(0xFF071812)],
+        ),
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(color: const Color(0xFFC9A45D), width: 1.4),
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            top: -42,
+            right: -35,
+            child: Icon(Icons.mosque_rounded, size: 190, color: Colors.white.withOpacity(0.045)),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Icon(Icons.auto_awesome, color: Color(0xFFE2C17A), size: 27),
+              const SizedBox(height: 8),
+              const Text(
+                'A DAILY AYAH',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xFFE8D4A6), fontSize: 13, letterSpacing: 3, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 10),
+              Container(height: 1, color: const Color(0x80D6B66F)),
+              const SizedBox(height: 18),
+              Text(
+                '${surah.nameEnglish}  •  $_surahNumber:$_ayahNumber',
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Color(0xFFF4E9D1), fontSize: 15, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 22),
+              Expanded(
+                child: Center(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 22),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF7E9),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: const Color(0xFFD9BD83), width: 1.2),
+                    ),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Text(
+                        '$_arabicText  ۝${_arabicDigits(_ayahNumber)}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Color(0xFF282016), fontSize: 27, height: 2, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                _useAllahTerminology(_englishText),
+                textAlign: TextAlign.center,
+                textDirection: AppSettings.language.value == 'ur' ? TextDirection.rtl : TextDirection.ltr,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Color(0xFFF5EEDC), fontSize: 15, height: 1.65),
+              ),
+              const Spacer(),
+              Container(height: 1, color: const Color(0x80D6B66F)),
+              const SizedBox(height: 12),
+              const Text(
+                'May this verse bring peace to your heart',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xFFE3C987), fontSize: 11, fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'QUARN APP',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white70, fontSize: 10, letterSpacing: 2.5, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _shareAyahImage(BuildContext dialogContext) async {
+    try {
+      await WidgetsBinding.instance.endOfFrame;
+      final boundary = _shareCardKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
+      if (boundary == null) return;
+      final image = await boundary.toImage(pixelRatio: 3);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
+      if (byteData == null) return;
+      final bytes = byteData.buffer.asUint8List();
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile.fromData(bytes, mimeType: 'image/png', name: 'daily_ayah.png')],
+          text: 'Daily Ayah • Quarn App',
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not share image: $error')),
+      );
+    }
   }
 
   Future<void> _openContinueReading() async {
