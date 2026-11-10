@@ -405,146 +405,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
             ],
           ),
           SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(34),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF26343A),
-                  Color(0xFF263B36),
-                  Color(0xFF07130F),
-                ],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: green.withOpacity(0.18),
-                  blurRadius: 20,
-                  offset: Offset(0, 9),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Daily Ayah',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 27,
-                              fontWeight: FontWeight.w800,
-                              fontFamily: 'serif',
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            '$_surahNumber:$_ayahNumber',
-                            style: TextStyle(
-                              color: Color(0xFFE4E4E4),
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            '${surah.nameEnglish} • ${surah.nameArabic}',
-                            style: TextStyle(
-                              color: Color(0xFFD8D8D8),
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    _circleAction(
-                      icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
-                      label: _isSaved ? 'Remove bookmark' : 'Save ayah',
-                      onTap: _toggleBookmark,
-                    ),
-                    SizedBox(width: 10),
-                    _circleAction(
-                      icon: Icons.share_outlined,
-                      label: 'Share as WhatsApp Status',
-                      onTap: _shareAyah,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 28),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 1),
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFF8F0),
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: const Color(0xFFE4D4C3)),
-                  ),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Text(
-                      '$_arabicText  ۝${_arabicDigits(_ayahNumber)}',
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Color(0xFF241D18),
-                        fontSize: 37,
-                        height: 2.0,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 28),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Text(
-                    _useAllahTerminology(_englishText),
-                    textAlign: TextAlign.left,
-                    textDirection: AppSettings.language.value == 'ur'
-                        ? TextDirection.rtl
-                        : TextDirection.ltr,
-                    style: const TextStyle(
-                      color: Color(0xFFF2EDE5),
-                      fontSize: 16,
-                      height: 1.8,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 26),
-                SizedBox(
-                  height: 58,
-                  child: ElevatedButton.icon(
-                    onPressed: _openSurah,
-                    icon: Icon(Icons.menu_book_rounded, size: 24),
-                    label: Text(
-                      'Read in Quran',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black.withOpacity(0.28),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _buildDailyAyahCard(surah),
           SizedBox(height: 18),
           Text(
             'A verse to reflect on every day',
@@ -558,6 +419,168 @@ class _ConnectScreenState extends State<ConnectScreen> {
           SizedBox(height: 20),
           _continueReadingCard(),
         ],
+      ),
+    );
+  }
+
+
+  Widget _buildDailyAyahCard(dynamic surah) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: AspectRatio(
+        aspectRatio: 0.62,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.network(
+              'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1100&q=85',
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF59636A), Color(0xFF18231F), Color(0xFF050A08)],
+                  ),
+                ),
+              ),
+            ),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xB8000000),
+                    Color(0x28000000),
+                    Color(0xD9000000),
+                  ],
+                  stops: [0, 0.42, 1],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Daily Ayah',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontFamily: 'serif',
+                                fontWeight: FontWeight.w800,
+                                shadows: [Shadow(color: Colors.black87, blurRadius: 10)],
+                              ),
+                            ),
+                            const SizedBox(height: 7),
+                            Text(
+                              '$_surahNumber:$_ayahNumber  •  ${surah.nameEnglish}',
+                              style: const TextStyle(
+                                color: Color(0xFFF0E9DD),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      _circleAction(
+                        icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        label: _isSaved ? 'Remove bookmark' : 'Save ayah',
+                        onTap: _toggleBookmark,
+                      ),
+                      const SizedBox(width: 9),
+                      _circleAction(
+                        icon: Icons.share_outlined,
+                        label: 'Share as WhatsApp Status',
+                        onTap: _shareAyah,
+                      ),
+                    ],
+                  ),
+                  const Spacer(flex: 2),
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                      '$_arabicText  ۝${_arabicDigits(_ayahNumber)}',
+                      textAlign: TextAlign.center,
+                      maxLines: 6,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        height: 1.9,
+                        fontWeight: FontWeight.w600,
+                        shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
+                      ),
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  Text(
+                    _useAllahTerminology(_englishText),
+                    textAlign: AppSettings.language.value == 'ur'
+                        ? TextAlign.right
+                        : TextAlign.left,
+                    textDirection: AppSettings.language.value == 'ur'
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
+                    maxLines: 6,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'serif',
+                      fontSize: 18,
+                      height: 1.55,
+                      fontWeight: FontWeight.w700,
+                      shadows: [Shadow(color: Colors.black, blurRadius: 12)],
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  SizedBox(
+                    height: 54,
+                    child: ElevatedButton.icon(
+                      onPressed: _openSurah,
+                      icon: const Icon(Icons.menu_book_rounded, size: 22),
+                      label: const Text(
+                        'Read in Quran',
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black.withOpacity(0.42),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(26),
+                          side: BorderSide(color: Colors.white.withOpacity(0.25)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'QUARN APP',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 10,
+                      letterSpacing: 2.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
