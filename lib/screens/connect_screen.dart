@@ -135,92 +135,165 @@ class _ConnectScreenState extends State<ConnectScreen> {
   }
 
   Widget _buildShareArtwork(dynamic surah) {
-    return Container(
-      width: 340,
-      height: 600,
-      padding: const EdgeInsets.fromLTRB(25, 30, 25, 26),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF183F32), Color(0xFF102B24), Color(0xFF071812)],
-        ),
-        borderRadius: BorderRadius.circular(26),
-        border: Border.all(color: const Color(0xFFC9A45D), width: 1.4),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -42,
-            right: -35,
-            child: Icon(Icons.mosque_rounded, size: 190, color: Colors.white.withOpacity(0.045)),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(Icons.auto_awesome, color: Color(0xFFE2C17A), size: 27),
-              const SizedBox(height: 8),
-              const Text(
-                'A DAILY AYAH',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Color(0xFFE8D4A6), fontSize: 13, letterSpacing: 3, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 10),
-              Container(height: 1, color: const Color(0x80D6B66F)),
-              const SizedBox(height: 18),
-              Text(
-                '${surah.nameEnglish}  •  $_surahNumber:$_ayahNumber',
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Color(0xFFF4E9D1), fontSize: 15, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 22),
-              Expanded(
-                child: Center(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 22),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFF7E9),
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color(0xFFD9BD83), width: 1.2),
-                    ),
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Text(
-                        '$_arabicText  ۝${_arabicDigits(_ayahNumber)}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Color(0xFF282016), fontSize: 27, height: 2, fontWeight: FontWeight.w500),
-                      ),
-                    ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        width: 340,
+        height: 600,
+        decoration: const BoxDecoration(color: Color(0xFF101820)),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.network(
+              'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1100&q=85',
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF59636A), Color(0xFF18231F), Color(0xFF050A08)],
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Text(
-                _useAllahTerminology(_englishText),
-                textAlign: TextAlign.center,
-                textDirection: AppSettings.language.value == 'ur' ? TextDirection.rtl : TextDirection.ltr,
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Color(0xFFF5EEDC), fontSize: 15, height: 1.65),
+            ),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.center,
+                  colors: [Color(0xB8000000), Color(0x16000000), Color(0x65000000)],
+                  stops: [0, 0.55, 1],
+                ),
               ),
-              const Spacer(),
-              Container(height: 1, color: const Color(0x80D6B66F)),
-              const SizedBox(height: 12),
-              const Text(
-                'May this verse bring peace to your heart',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Color(0xFFE3C987), fontSize: 11, fontStyle: FontStyle.italic),
+            ),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.center,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x00000000), Color(0xD9000000)],
+                  stops: [0.28, 1],
+                ),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'QUARN APP',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white70, fontSize: 10, letterSpacing: 2.5, fontWeight: FontWeight.w700),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 28, 25, 25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Daily Ayah',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'serif',
+                                fontSize: 26,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(height: 7),
+                            Text(
+                              '$_surahNumber:$_ayahNumber',
+                              style: const TextStyle(
+                                color: Color(0xFFE8E8E8),
+                                fontSize: 21,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${surah.nameEnglish}  •  ${surah.nameArabic}',
+                              style: const TextStyle(
+                                color: Color(0xFFE0E0E0),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.menu_book_rounded, color: Colors.white70, size: 25),
+                    ],
+                  ),
+                  const Spacer(flex: 2),
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(
+                      _arabicText,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        height: 1.9,
+                        fontWeight: FontWeight.w600,
+                        shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
+                      ),
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  Text(
+                    _useAllahTerminology(_englishText),
+                    textAlign: TextAlign.center,
+                    textDirection: AppSettings.language.value == 'ur'
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
+                    maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'serif',
+                      fontSize: 22,
+                      height: 1.45,
+                      fontWeight: FontWeight.w800,
+                      shadows: [Shadow(color: Colors.black, blurRadius: 12)],
+                    ),
+                  ),
+                  const Spacer(flex: 3),
+                  Container(
+                    height: 58,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.42),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: Colors.white.withOpacity(0.12)),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.menu_book_rounded, color: Colors.white, size: 23),
+                        SizedBox(width: 12),
+                        Text(
+                          'Commentary',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'QUARN APP',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 10,
+                      letterSpacing: 2.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
