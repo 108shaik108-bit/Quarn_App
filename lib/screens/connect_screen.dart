@@ -238,8 +238,8 @@ class _ConnectScreenState extends State<ConnectScreen> {
       final bytes = byteData.buffer.asUint8List();
       await SharePlus.instance.share(
         ShareParams(
-          files: [XFile.fromData(bytes, mimeType: 'image/png', name: 'daily_ayah.png')],
-          text: 'Daily Ayah • Quarn App',
+          files: [XFile.fromData(bytes, mimeType: 'image/png')],
+          fileNameOverrides: ['daily_ayah.png'],
         ),
       );
     } catch (error) {
