@@ -83,7 +83,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 sliver: SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 104,
+                    mainAxisExtent: 112,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -128,100 +128,109 @@ class _SurahListScreenState extends State<SurahListScreen> {
         borderRadius: BorderRadius.circular(18),
         onTap: () => _openSurah(surah),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: Color(0xFFF0D8A9)),
+            border: Border.all(color: const Color(0xFFF0D8A9)),
             boxShadow: [
               BoxShadow(
-                color: Color(0xFF8B672D).withOpacity(0.10),
+                color: const Color(0xFF8B672D).withOpacity(0.10),
                 blurRadius: 7,
-                offset: Offset(0, 3),
+                offset: const Offset(0, 3),
               ),
             ],
           ),
           child: Row(
-     
-          children: [
-            // Surah number badge
-            Container(
-              width: 43,
-              height: 43,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Color(0xFFE9EAB4),
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                '${surah.number}',
-                style: TextStyle(
-                  color: green,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+            children: [
+              // Compact Surah number badge.
+              Container(
+                width: 36,
+                height: 36,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFE9EAB4),
+                  shape: BoxShape.circle,
                 ),
-              ),
-            ),
-
-            SizedBox(width: 12),
-
-            // English and Arabic names
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    surah.nameArabic,
-                    textDirection: TextDirection.rtl,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Color(0xFF8B672D),
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                 SizedBox(height: 13),
-                  Text(
-                    surah.nameEnglish,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: green,
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            SizedBox(width: 8),
-
-            // Ayah count on the right
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${surah.ayahs}',
+                child: Text(
+                  '${surah.number}',
                   style: TextStyle(
-                    color:  Color(0xFF8B672D),
-                    fontSize: 19,
+                    color: green,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  'Ayahs',
-                  style: TextStyle(
-                    color: green,
-                    fontSize: 19,
-                  ),
+              ),
+              const SizedBox(width: 8),
+
+              // Keep both Surah names visible in the available card width.
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      surah.nameArabic,
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.start,
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: green,
+                        fontSize: 17,
+                        height: 1.35,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      surah.nameEnglish,
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: green,
+                        fontSize: 13,
+                        height: 1.2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-              
+              ),
+              const SizedBox(width: 6),
+
+              // Smaller Ayah count so it does not squeeze out the names.
+              SizedBox(
+                width: 42,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${surah.ayahs}',
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: const Color(0xFF8B672D),
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Ayahs',
+                      maxLines: 1,
+                      style: TextStyle(
+                        color: green,
+                        fontSize: 10,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -268,7 +277,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
           if (surahNumbers.isNotEmpty)
             GridView.count(
               crossAxisCount: 2,
-              mainAxisExtent: 104,
+              mainAxisExtent: 112,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               shrinkWrap: true,
