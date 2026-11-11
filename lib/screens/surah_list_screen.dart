@@ -146,21 +146,19 @@ class _SurahListScreenState extends State<SurahListScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
-                  constraints: const BoxConstraints(minWidth: 34, minHeight: 28),
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                  constraints: const BoxConstraints(minWidth: 26, minHeight: 23),
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: const Color(0xFFE9EAB4),
-                    borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: const Color(0xFFC49A45), width: 0.8),
+                    borderRadius: BorderRadius.circular(7),
                   ),
                   child: Text(
-                    surah.number.toString().padLeft(3, '0'),
+                    '${surah.number}',
                     style: TextStyle(
                       color: green,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.3,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
