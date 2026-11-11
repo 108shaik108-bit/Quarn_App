@@ -83,7 +83,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 sliver: SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 124,
+                    mainAxisExtent: 142,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -141,42 +141,31 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ],
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Top row: Surah number and Ayah count.
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFE9EAB4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '${surah.number}',
-                      style: TextStyle(
-                        color: green,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              // A small ornamental rounded-square replaces the circular number badge.
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  constraints: const BoxConstraints(minWidth: 34, minHeight: 28),
+                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE9EAB4),
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(color: const Color(0xFFC49A45), width: 0.8),
                   ),
-                  Text(
-                    '${surah.ayahs} Ayahs',
-                    maxLines: 1,
+                  child: Text(
+                    surah.number.toString().padLeft(3, '0'),
                     style: TextStyle(
-                      color: const Color(0xFF8B672D),
+                      color: green,
                       fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.3,
                     ),
                   ),
-                ],
+                ),
               ),
               const Spacer(),
-              // Full Arabic name on its own line.
               SizedBox(
                 width: double.infinity,
                 child: Text(
@@ -189,7 +178,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   style: TextStyle(
                     color: green,
                     fontSize: 19,
-                    height: 1.4,
+                    height: 1.35,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -203,12 +192,22 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: green,
-                  fontSize: 13,
+                  fontSize: 12,
                   height: 1.2,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
+              // Ayah total is deliberately placed at the bottom of each card.
+              Text(
+                '${surah.ayahs} Ayahs',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: const Color(0xFF8B672D),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ),
@@ -256,7 +255,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
           if (surahNumbers.isNotEmpty)
             GridView.count(
               crossAxisCount: 2,
-              mainAxisExtent: 124,
+              mainAxisExtent: 142,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               shrinkWrap: true,
