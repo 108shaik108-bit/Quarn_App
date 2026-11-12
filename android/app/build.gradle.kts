@@ -39,9 +39,10 @@ android {
         }
     }
 
-    dependencies {
-        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
-    }
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 kotlin {
