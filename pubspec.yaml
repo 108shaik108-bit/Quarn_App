@@ -40,6 +40,8 @@ dependencies:
   alarm: ^5.15.0
   permission_handler: ^13.0.2
   share_plus: ^13.3.1
+  flutter_local_notifications: ^19.5.0
+  timezone: ^0.10.1
 
   # Cupertino icons for the app
   cupertino_icons: ^1.0.8
