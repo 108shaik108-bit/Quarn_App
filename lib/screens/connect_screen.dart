@@ -263,30 +263,6 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
                     ),
                   ),
-                  const Spacer(flex: 1),
-                  Container(
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.42),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white.withOpacity(0.12)),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.menu_book_rounded, color: Colors.white, size: 23),
-                        SizedBox(width: 12),
-                        Text(
-                          'Commentary',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 7),
                   const Text(
                     'QUARN APP',
