@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/adhan_scheduler_service.dart';
 import '../services/app_settings.dart';
 import '../services/location_disclosure.dart';
+import '../services/notification_service.dart';
 import 'qibla_finder_screen.dart';
 
 class PrayerTabScreen extends StatefulWidget {
@@ -92,6 +93,9 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
     await prefs.setDouble('prayer_location_lat', coordinates.latitude);
     await prefs.setDouble('prayer_location_lon', coordinates.longitude);
     await prefs.setString('prayer_selected_city', selectedCity);
+    await NotificationService.refreshPrayerTimeReminders(
+      coordinates: coordinates,
+    );
     if (_ringAdhanEnabled) {
       await AdhanSchedulerService.refresh(coordinates: coordinates);
     }
