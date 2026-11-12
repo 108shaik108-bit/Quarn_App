@@ -310,7 +310,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
           if (surahNumbers.isNotEmpty)
             GridView.count(
               crossAxisCount: 2,
-              mainAxisExtent: 100,
+              mainAxisExtent: 85,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               shrinkWrap: true,
