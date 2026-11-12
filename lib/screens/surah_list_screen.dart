@@ -182,14 +182,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
               Container(
                 width: 43,
                 height: 43,
-                decoration: ShapeDecoration(
+                decoration: BoxDecoration(
                   color: goldColor.withOpacity(isDark ? 0.13 : 0.12),
-                  shape: BeveledRectangleBorder(
-                    borderRadius: BorderRadius.circular(9),
-                    side: BorderSide(
-                      color: goldColor.withOpacity(0.85),
-                      width: 1.3,
-                    ),
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
+                    color: goldColor.withOpacity(0.85),
+                    width: 1.3,
                   ),
                 ),
                 alignment: Alignment.center,
