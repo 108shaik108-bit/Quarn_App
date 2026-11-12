@@ -59,7 +59,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
       child: Column(
         children: [
           SizedBox(
-            height: 49,
+            height: 74,
             child: Row(
               children: [
                 _tab('Surahs', 0, Icons.menu_book_rounded),
@@ -73,7 +73,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           if (selectedTab != 2) ...[
             const SizedBox(height: 12),
             Container(
-              height: 58,
+              height: 37,
               decoration: BoxDecoration(
                 color: deepGreen.withOpacity(0.45),
                 borderRadius: BorderRadius.circular(32),
@@ -92,7 +92,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                       : 'Search Juz...',
                   hintStyle: TextStyle(
                     color: Colors.white.withOpacity(0.9),
-                    fontSize: 13,
+                    fontSize: 11.5,
                   ),
                   prefixIcon: Icon(
                     Icons.search_rounded,
@@ -102,7 +102,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
             ),

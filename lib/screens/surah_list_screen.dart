@@ -180,7 +180,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     color: AppSettings.isDark
                         ? const Color(0xFFE0B96B)
                         : const Color(0xFF8A6428),
-                    fontSize: 13,
+                    fontSize: 17,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.2,
                   ),
@@ -203,7 +203,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 2),
               Text(
                 surah.nameEnglish,
                 textAlign: TextAlign.center,
@@ -213,7 +213,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFFFE8B0)
                       : const Color(0xFF17271B),
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -256,7 +256,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFE0B96B)
                       : const Color(0xFF543A18),
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
                 ),
               ),
