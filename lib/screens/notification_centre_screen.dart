@@ -27,11 +27,15 @@ class _NotificationCentreScreenState extends State<NotificationCentreScreen> {
 
   bool _loading = true;
   bool _masterEnabled = false;
+  bool _prayerTimeMasterEnabled = false;
   bool _quranEnabled = false;
   bool _ayahEnabled = false;
   bool _busy = false;
   DateTime _quranTime = DateTime(2000, 1, 1, 20);
   DateTime _ayahTime = DateTime(2000, 1, 1, 9);
+  final Map<String, bool> _prayerTimeEnabled = {
+    for (final prayer in AdhanSchedulerService.prayerNames) prayer: true,
+  };
   final Map<String, bool> _prayerEnabled = {
     for (final prayer in AdhanSchedulerService.prayerNames) prayer: true,
   };
@@ -44,6 +48,12 @@ class _NotificationCentreScreenState extends State<NotificationCentreScreen> {
 
   Future<void> _loadPreferences() async {
     final master = await AdhanSchedulerService.isRingEnabled();
+    final prayerTimeMaster = await NotificationService.arePrayerTimeRemindersEnabled();
+    final prayerTimeValues = <String, bool>{};
+    for (final prayer in AdhanSchedulerService.prayerNames) {
+      prayerTimeValues[prayer] =
+          await NotificationService.isPrayerTimeReminderEnabled(prayer);
+    }
     final values = <String, bool>{};
     for (final prayer in AdhanSchedulerService.prayerNames) {
       values[prayer] = await AdhanSchedulerService.isPrayerEnabled(prayer);
@@ -55,6 +65,8 @@ class _NotificationCentreScreenState extends State<NotificationCentreScreen> {
     if (!mounted) return;
     setState(() {
       _masterEnabled = master;
+      _prayerTimeMasterEnabled = prayerTimeMaster;
+      _prayerTimeEnabled.addAll(prayerTimeValues);
       _prayerEnabled.addAll(values);
       _quranEnabled = quran;
       _ayahEnabled = ayah;
@@ -109,6 +121,53 @@ class _NotificationCentreScreenState extends State<NotificationCentreScreen> {
       );
     }
     if (mounted) setState(() => _prayerEnabled[prayer] = enabled);
+  }
+
+
+  Future<void> _togglePrayerTimeMaster(bool enabled) async {
+    if (kIsWeb) {
+      _message('Prayer time notifications are available in the Android and iOS app. Please test this on your phone.');
+      return;
+    }
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      if (enabled) {
+        await NotificationService.requestPrayerTimeReminderPermissions();
+      }
+      await NotificationService.setPrayerTimeRemindersEnabled(enabled);
+      if (mounted) {
+        setState(() => _prayerTimeMasterEnabled = enabled);
+        _message(enabled
+            ? 'Prayer time reminders scheduled for the next 7 days.'
+            : 'Prayer time reminders turned off.');
+      }
+    } catch (error) {
+      if (mounted) {
+        _message(error.toString().replaceFirst('Exception: ', ''));
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _togglePrayerTimePrayer(String prayer, bool enabled) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await NotificationService.setPrayerTimeReminderPrayerEnabled(
+          prayer, enabled);
+      if (mounted) {
+        setState(() => _prayerTimeEnabled[prayer] = enabled);
+        _message('$prayer reminder ${enabled ? 'enabled' : 'disabled'}.');
+      }
+    } catch (error) {
+      if (mounted) {
+        _message(error.toString().replaceFirst('Exception: ', ''));
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   Future<void> _toggleDailyReminder({
@@ -263,6 +322,50 @@ class _NotificationCentreScreenState extends State<NotificationCentreScreen> {
                                     color: green, fontWeight: FontWeight.w600)),
                             value: _prayerEnabled[prayer] ?? true,
                             onChanged: (value) => _togglePrayer(prayer, value),
+                          ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 18),
+                _sectionTitle('PRAYER TIME REMINDERS'),
+                _panel(
+                  child: Column(
+                    children: [
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        activeColor: green,
+                        secondary: Icon(Icons.notifications_active_outlined,
+                            color: green),
+                        title: Text('Prayer Time Reminder',
+                            style: TextStyle(
+                                color: green, fontWeight: FontWeight.bold)),
+                        subtitle: Text(
+                          _prayerTimeMasterEnabled
+                              ? 'Normal notifications at selected prayer times'
+                              : 'Get a notification when each selected prayer begins',
+                          style: TextStyle(
+                              color: green.withOpacity(0.72), fontSize: 12),
+                        ),
+                        value: _prayerTimeMasterEnabled,
+                        onChanged: _busy ? null : _togglePrayerTimeMaster,
+                      ),
+                      if (_prayerTimeMasterEnabled) ...[
+                        Divider(color: gold.withOpacity(0.35)),
+                        for (final prayer in AdhanSchedulerService.prayerNames)
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            dense: true,
+                            activeColor: green,
+                            title: Text(prayer,
+                                style: TextStyle(
+                                    color: green, fontWeight: FontWeight.w600)),
+                            subtitle: const Text('Notify exactly at prayer time'),
+                            value: _prayerTimeEnabled[prayer] ?? true,
+                            onChanged: _busy
+                                ? null
+                                : (value) =>
+                                    _togglePrayerTimePrayer(prayer, value),
                           ),
                       ],
                     ],
