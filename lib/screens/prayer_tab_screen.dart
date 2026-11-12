@@ -151,19 +151,29 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
         final locality = place.locality?.trim();
-        final subLocality = place.subLocality?.trim();
         final subAdministrativeArea = place.subAdministrativeArea?.trim();
-        final country = place.country?.trim();
-        final city = (locality != null && locality.isNotEmpty)
-            ? locality
-            : (subLocality != null && subLocality.isNotEmpty)
-                ? subLocality
-                : (subAdministrativeArea != null && subAdministrativeArea.isNotEmpty)
-                    ? subAdministrativeArea
-                    : _nearestKnownCity(latitude, longitude);
-        if (city != null) {
-          return city;
+        final subLocality = place.subLocality?.trim();
+        final administrativeArea = place.administrativeArea?.trim();
+
+        // Prefer the city/district name over a smaller neighbourhood.
+        // In places such as Ambattur, Android may return Ambattur as
+        // subLocality and Chennai as subAdministrativeArea.
+        final candidates = [
+          locality,
+          subAdministrativeArea,
+          subLocality,
+          administrativeArea,
+        ];
+        for (final candidate in candidates) {
+          if (candidate != null &&
+              candidate.isNotEmpty &&
+              candidate.toLowerCase() != 'india') {
+            return candidate;
+          }
         }
+
+        final nearbyCity = _nearestKnownCity(latitude, longitude);
+        if (nearbyCity != null) return nearbyCity;
       }
     } catch (_) {
       // Use nearby known city as a fallback if Android geocoding is unavailable.
