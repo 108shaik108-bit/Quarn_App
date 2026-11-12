@@ -55,7 +55,22 @@ class _SurahListScreenState extends State<SurahListScreen> {
       backgroundColor: cream,
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: QuranHeader()),
+          SliverToBoxAdapter(
+            child: QuranHeader(
+              onNotificationsTap: () {
+                setState(() {
+                  selectedContentTab = 2;
+                  searchQuery = '';
+                });
+              },
+              onSettingsTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                );
+              },
+            ),
+          ),
 
           SliverToBoxAdapter(
             child: Padding(
