@@ -184,7 +184,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 height: 43,
                 decoration: BoxDecoration(
                   color: goldColor.withOpacity(isDark ? 0.13 : 0.12),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: goldColor.withOpacity(0.85),
                     width: 1.3,
