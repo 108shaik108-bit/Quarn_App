@@ -134,8 +134,8 @@ class _SurahListScreenState extends State<SurahListScreen> {
   Widget _surahCard(Surah surah) {
     final isDark = AppSettings.isDark;
     final goldColor = isDark
-        ? const Color(0xFFEAD7A8)
-        : const Color(0xFFD8C08D);
+        ? const Color(0xFFE0B96B)
+        : const Color(0xFF9A702C);
     final textColor = isDark
         ? const Color(0xFFFFE8B0)
         : const Color(0xFF2B2116);
@@ -183,34 +183,20 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 width: 43,
                 height: 43,
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF26372D)
-                      : const Color(0xFFF4EBDD),
+                  color: goldColor.withOpacity(isDark ? 0.13 : 0.12),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: isDark
-                        ? const Color(0xFF8E7548)
-                        : const Color(0xFFD8C6A1),
-                    width: 0.9,
+                    color: goldColor.withOpacity(0.85),
+                    width: 1.3,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(isDark ? 0.12 : 0.035),
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  surah.number.toString().padLeft(3, '0'),
+                  surah.number.toString(),
                   style: TextStyle(
-                    color: isDark
-                        ? const Color(0xFFE6D2A4)
-                        : const Color(0xFF6B5130),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.4,
+                    color: goldColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
