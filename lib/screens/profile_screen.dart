@@ -395,9 +395,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Text(
-                  'KEEP GOING',
+                  'PERSONAL SETTINGS',
                   style: TextStyle(
                     color: mutedGreen,
                     fontSize: 12,
@@ -407,15 +407,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 SizedBox(height: 10),
                 _settingTile(
-                  icon: Icons.bookmark_outline_rounded,
-                  title: 'My saved ayahs',
-                  subtitle: 'Revisit verses you have bookmarked',
-                  onTap: _openBookmarks,
+                  icon: Icons.person_outline_rounded,
+                  title: 'Personal information',
+                  subtitle: 'Change the name shown on your profile',
+                  onTap: _editName,
+                ),
+                _settingTile(
+                  icon: Icons.location_on_outlined,
+                  title: 'Prayer settings',
+                  subtitle: 'Karachi method • Standard Asr (Ahl-e-Hadith)',
+                  onTap: () => _showInfo(
+                    'Prayer settings',
+                    'Your Prayer tab currently uses the Karachi calculation method and Standard (Shafi\'i) Asr calculation. You can select your city or use GPS from the Prayer tab.',
+                  ),
+                ),
+                _settingTile(
+                  icon: Icons.translate_rounded,
+                  title: 'Language',
+                  subtitle: '${AppSettings.language.value.value} Quran translation',
+                  onTap: _chooseLanguage,
+                ),
+                _settingTile(
+                  icon: Icons.palette_outlined,
+                  title: 'Appearance',
+                  subtitle: _themeLabel,
+                  onTap: _chooseAppearance,
+                ),
+                SizedBox(height: 22),
+                Text(
+                  'ABOUT',
+                  style: TextStyle(
+                    color: mutedGreen,
+                    fontSize: 12,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                _settingTile(
+                  icon: Icons.info_outline_rounded,
+                  title: 'About Quarn App',
+                  subtitle: 'A companion for your Quran journey',
+                  onTap: () => _showInfo(
+                    'About Quarn App',
+                    '''
+                  Quarn App is being built to make Quran reading and daily Islamic practice simple and beautiful.
+
+                  Quran text and translations are provided through the app's Quran data package.
+                  ''',
+                  ),
+                ),
+                SizedBox(height: 22),
+                Text(
+                  'PRIVACY & LEGAL',
+                  style: TextStyle(
+                    color: mutedGreen,
+                    fontSize: 12,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                _settingTile(
+                  icon: Icons.privacy_tip_outlined,
+                  title: 'Privacy Policy',
+                  subtitle: 'How the app handles your information',
+                  onTap: () => _openLegalDocument(
+                    'Privacy Policy',
+                    AppLegalContent.privacy,
+                  ),
+                ),
+                _settingTile(
+                  icon: Icons.description_outlined,
+                  title: 'Terms of Use',
+                  subtitle: 'Rules and important app information',
+                  onTap: () => _openLegalDocument(
+                    'Terms of Use',
+                    AppLegalContent.terms,
+                  ),
+                ),
+                _settingTile(
+                  icon: Icons.delete_outline_rounded,
+                  title: 'Clear My Local Data',
+                  subtitle: 'Erase saved profile, bookmarks and progress',
+                  onTap: _clearLocalData,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 18),
                   child: Text(
-                    'Your Quran journey, one ayah at a time.',
+                    'Version 1.0.0  •  $totalAyahs Quran ayahs',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: mutedGreen, fontSize: 12),
                   ),
