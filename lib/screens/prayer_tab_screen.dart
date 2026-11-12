@@ -162,7 +162,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
                     ? subAdministrativeArea
                     : _nearestKnownCity(latitude, longitude);
         if (city != null) {
-          return country == null || country.isEmpty ? city : '$city, $country';
+          return city;
         }
       }
     } catch (_) {
