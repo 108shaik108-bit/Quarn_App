@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:adhan/adhan.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:quran_flutter/quran_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
@@ -17,6 +19,15 @@ class NotificationService {
 
   static const int quranReminderId = 4101;
   static const int ayahReminderId = 4102;
+  static const int prayerTimeReminderBaseId = 4300;
+  static const String _prayerTimeMasterKey = 'prayer_time_reminders_enabled';
+  static const Map<String, String> _prayerTimeKeys = {
+    'Fajr': 'prayer_time_fajr_enabled',
+    'Dhuhr': 'prayer_time_dhuhr_enabled',
+    'Asr': 'prayer_time_asr_enabled',
+    'Maghrib': 'prayer_time_maghrib_enabled',
+    'Isha': 'prayer_time_isha_enabled',
+  };
   static const String _historyKey = 'notification_open_history';
   static const String _quranEnabledKey = 'daily_quran_enabled';
   static const String _ayahEnabledKey = 'daily_ayah_enabled';
@@ -210,6 +221,132 @@ class NotificationService {
     return (arabic: verse.text, surahName: 'Al-Fatihah', ayahNumber: 1);
   }
 
+
+  static Future<bool> arePrayerTimeRemindersEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_prayerTimeMasterKey) ?? false;
+  }
+
+  static Future<bool> isPrayerTimeReminderEnabled(String prayer) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _prayerTimeKeys[prayer];
+    if (key == null) return false;
+    return prefs.getBool(key) ?? true;
+  }
+
+  static Future<bool> requestPrayerTimeReminderPermissions() async {
+    if (kIsWeb) return false;
+    final notificationsAllowed = await requestPermission();
+    if (!notificationsAllowed) {
+      throw Exception('Please allow notifications in your device settings.');
+    }
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final exactAlarm = await Permission.scheduleExactAlarm.request();
+      if (!exactAlarm.isGranted) {
+        throw Exception('Please allow exact alarms so prayer reminders can arrive at prayer time.');
+      }
+    }
+    return true;
+  }
+
+  static Future<void> setPrayerTimeRemindersEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prayerTimeMasterKey, enabled);
+    await refreshPrayerTimeReminders();
+  }
+
+  static Future<void> setPrayerTimeReminderPrayerEnabled(
+      String prayer, bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    final key = _prayerTimeKeys[prayer];
+    if (key == null) return;
+    await prefs.setBool(key, enabled);
+    await refreshPrayerTimeReminders();
+  }
+
+  /// Schedules exact, sound-independent prayer notifications for the next 7 days.
+  /// The rolling window is refreshed whenever the app opens or the location changes.
+  static Future<void> refreshPrayerTimeReminders({
+    Coordinates? coordinates,
+  }) async {
+    if (kIsWeb) return;
+    await initialize();
+
+    final prefs = await SharedPreferences.getInstance();
+    for (var day = 0; day < 7; day++) {
+      for (var prayerIndex = 0; prayerIndex < _prayerTimeKeys.length; prayerIndex++) {
+        await _plugin.cancel(prayerTimeReminderBaseId + day * 5 + prayerIndex);
+      }
+    }
+    if (!(prefs.getBool(_prayerTimeMasterKey) ?? false)) return;
+
+    final savedLat = prefs.getDouble('prayer_location_lat');
+    final savedLon = prefs.getDouble('prayer_location_lon');
+    final location = coordinates ??
+        (savedLat != null && savedLon != null
+            ? Coordinates(savedLat, savedLon)
+            : Coordinates(13.1143, 80.1548));
+
+    final parameters = CalculationMethod.karachi.getParameters()
+      ..madhab = Madhab.shafi;
+    final now = tz.TZDateTime.now(tz.local);
+    const prayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'prayer_time_reminders',
+        'Prayer time reminders',
+        channelDescription: 'Normal notifications at each selected prayer time',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
+    );
+
+    for (var dayOffset = 0; dayOffset < 7; dayOffset++) {
+      final date = DateTime(now.year, now.month, now.day + dayOffset);
+      final times = PrayerTimes(
+        location,
+        DateComponents.from(date),
+        parameters,
+      );
+      final timesByPrayer = <String, DateTime>{
+        'Fajr': times.fajr,
+        'Dhuhr': times.dhuhr,
+        'Asr': times.asr,
+        'Maghrib': times.maghrib,
+        'Isha': times.isha,
+      };
+
+      for (var prayerIndex = 0; prayerIndex < prayers.length; prayerIndex++) {
+        final prayer = prayers[prayerIndex];
+        if (!(prefs.getBool(_prayerTimeKeys[prayer]!) ?? true)) continue;
+        final prayerTime = timesByPrayer[prayer]!;
+        final scheduled = tz.TZDateTime(
+          tz.local,
+          prayerTime.year,
+          prayerTime.month,
+          prayerTime.day,
+          prayerTime.hour,
+          prayerTime.minute,
+          prayerTime.second,
+        );
+        if (!scheduled.isAfter(now)) continue;
+
+        final id = prayerTimeReminderBaseId + dayOffset * 5 + prayerIndex;
+        final body = 'It is time for $prayer prayer.';
+        await _plugin.zonedSchedule(
+          id,
+          '$prayer prayer time',
+          body,
+          scheduled,
+          details,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          payload: '$prayer prayer time|$body',
+        );
+      }
+    }
+  }
+
   static Future<void> refreshEnabledReminders() async {
     if (kIsWeb) return;
     await initialize();
@@ -218,6 +355,11 @@ class NotificationService {
     }
     if (await isAyahEnabled()) {
       await setAyahReminder(true, await getAyahTime());
+    }
+    try {
+      await refreshPrayerTimeReminders();
+    } catch (_) {
+      // A revoked exact-alarm permission must not prevent the app from opening.
     }
   }
 
