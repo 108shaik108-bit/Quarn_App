@@ -184,21 +184,33 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 height: 43,
                 decoration: BoxDecoration(
                   color: isDark
-                      ? const Color(0xFF354238)
-                      : const Color(0xFFFFF3D9),
+                      ? const Color(0xFF26372D)
+                      : const Color(0xFFF4EBDD),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: goldColor.withOpacity(0.55),
-                    width: 1.0,
+                    color: isDark
+                        ? const Color(0xFF8E7548)
+                        : const Color(0xFFD8C6A1),
+                    width: 0.9,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(isDark ? 0.12 : 0.035),
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  surah.number.toString(),
+                  surah.number.toString().padLeft(3, '0'),
                   style: TextStyle(
-                    color: goldColor.withOpacity(isDark ? 0.82 : 0.72),
-                    fontSize: 15,
+                    color: isDark
+                        ? const Color(0xFFE6D2A4)
+                        : const Color(0xFF6B5130),
+                    fontSize: 13,
                     fontWeight: FontWeight.w700,
+                    letterSpacing: 0.4,
                   ),
                 ),
               ),
