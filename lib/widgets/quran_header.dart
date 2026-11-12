@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import '../services/app_settings.dart';
 
 class QuranHeader extends StatelessWidget {
-  const QuranHeader({super.key});
+  const QuranHeader({super.key, this.onNotificationsTap, this.onSettingsTap});
+
+  final VoidCallback? onNotificationsTap;
+  final VoidCallback? onSettingsTap;
 
   static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
   static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
@@ -44,9 +47,9 @@ class QuranHeader extends StatelessWidget {
             right: 20,
             child: Row(
               children: [
-                _headerButton(Icons.notifications_none),
+                _headerButton(Icons.notifications_none, 'Prayer notifications', onNotificationsTap),
                 SizedBox(width: 12),
-                _headerButton(Icons.settings_outlined),
+                _headerButton(Icons.settings_outlined, 'App settings', onSettingsTap),
               ],
             ),
           ),
@@ -109,7 +112,11 @@ class QuranHeader extends StatelessWidget {
     );
   }
 
-  static Widget _headerButton(IconData icon) {
+  static Widget _headerButton(
+    IconData icon,
+    String tooltip,
+    VoidCallback? onPressed,
+  ) {
     return Container(
       width: 48,
       height: 48,
@@ -124,10 +131,10 @@ class QuranHeader extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(
-        icon,
-        color: green,
-        size: 27,
+      child: IconButton(
+        tooltip: tooltip,
+        onPressed: onPressed,
+        icon: Icon(icon, color: green, size: 27),
       ),
     );
   }
