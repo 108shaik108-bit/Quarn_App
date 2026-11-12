@@ -183,20 +183,20 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 width: 43,
                 height: 43,
                 decoration: BoxDecoration(
-                  color: goldColor.withOpacity(isDark ? 0.13 : 0.12),
+                  color: goldColor.withOpacity(isDark ? 0.07 : 0.045),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: goldColor.withOpacity(0.85),
-                    width: 1.3,
+                    color: goldColor.withOpacity(isDark ? 0.38 : 0.32),
+                    width: 1.0,
                   ),
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   surah.number.toString(),
                   style: TextStyle(
-                    color: goldColor,
+                    color: goldColor.withOpacity(isDark ? 0.82 : 0.72),
                     fontSize: 15,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
