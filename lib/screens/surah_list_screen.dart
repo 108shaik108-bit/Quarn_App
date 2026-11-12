@@ -94,7 +94,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 sliver: SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 160,
+                    mainAxisExtent: 150,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -140,7 +140,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
         onTap: () => _openSurah(surah),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(13, 12, 13, 12),
+          padding: const EdgeInsets.fromLTRB(11, 8, 11, 8),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -170,6 +170,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ],
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Surah number is part of the card layout, not a separate badge.
               Align(
@@ -180,30 +181,29 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     color: AppSettings.isDark
                         ? const Color(0xFFE0B96B)
                         : const Color(0xFF8A6428),
-                    fontSize: 17,
+                    fontSize: 15,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 1.2,
                   ),
                 ),
               ),
-              const Spacer(),
               Text(
                 surah.nameArabic,
                 textDirection: TextDirection.rtl,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 softWrap: false,
-                overflow: TextOverflow.visible,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: AppSettings.isDark
                       ? const Color(0xFFFFE8B0)
                       : const Color(0xFF17271B),
-                  fontSize: 25,
-                  height: 1.35,
+                  fontSize: 21,
+                  height: 1.12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 1),
               Text(
                 surah.nameEnglish,
                 textAlign: TextAlign.center,
@@ -213,11 +213,10 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFFFE8B0)
                       : const Color(0xFF17271B),
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -248,7 +247,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 7),
+              const SizedBox(height: 3),
               Text(
                 '${surah.ayahs} Ayahs',
                 textAlign: TextAlign.center,
@@ -256,7 +255,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFE0B96B)
                       : const Color(0xFF543A18),
-                  fontSize: 12,
+                  fontSize: 10,
                   fontWeight: FontWeight.w700,
                 ),
               ),
