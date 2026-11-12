@@ -134,8 +134,8 @@ class _SurahListScreenState extends State<SurahListScreen> {
   Widget _surahCard(Surah surah) {
     final isDark = AppSettings.isDark;
     final goldColor = isDark
-        ? const Color(0xFFE0B96B)
-        : const Color(0xFF9A702C);
+        ? const Color(0xFFEAD7A8)
+        : const Color(0xFFD8C08D);
     final textColor = isDark
         ? const Color(0xFFFFE8B0)
         : const Color(0xFF2B2116);
@@ -183,10 +183,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 width: 43,
                 height: 43,
                 decoration: BoxDecoration(
-                  color: goldColor.withOpacity(isDark ? 0.07 : 0.045),
+                  color: isDark
+                      ? const Color(0xFF354238)
+                      : const Color(0xFFFFF3D9),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: goldColor.withOpacity(isDark ? 0.38 : 0.32),
+                    color: goldColor.withOpacity(0.55),
                     width: 1.0,
                   ),
                 ),
