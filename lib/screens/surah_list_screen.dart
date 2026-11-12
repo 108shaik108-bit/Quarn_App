@@ -58,12 +58,14 @@ class _SurahListScreenState extends State<SurahListScreen> {
           SliverToBoxAdapter(
             child: QuranHeader(
               onNotificationsTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const PrayerTabScreen(),
-                  ),
-                );
+                // Open the Prayer section inside the existing Home screen.
+                // This keeps it under the app's Scaffold/Material and lets
+                // the main CustomScrollView handle the long prayer content.
+                setState(() {
+                  selectedContentTab = 2;
+                  selectedNavIndex = 0;
+                  searchQuery = '';
+                });
               },
             ),
           ),
