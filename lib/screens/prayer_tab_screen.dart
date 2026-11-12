@@ -1,5 +1,7 @@
 
 
+import 'dart:math' as math;
+
 import 'package:adhan/adhan.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -149,22 +151,49 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
       if (placemarks.isNotEmpty) {
         final place = placemarks.first;
         final locality = place.locality?.trim();
-        final subLocality = place.subAdministrativeArea?.trim();
-        final administrativeArea = place.administrativeArea?.trim();
+        final subLocality = place.subLocality?.trim();
+        final subAdministrativeArea = place.subAdministrativeArea?.trim();
         final country = place.country?.trim();
         final city = (locality != null && locality.isNotEmpty)
             ? locality
             : (subLocality != null && subLocality.isNotEmpty)
                 ? subLocality
-                : (administrativeArea != null && administrativeArea.isNotEmpty)
-                    ? administrativeArea
-                    : 'Current GPS location';
-        return country == null || country.isEmpty ? city : '$city, $country';
+                : (subAdministrativeArea != null && subAdministrativeArea.isNotEmpty)
+                    ? subAdministrativeArea
+                    : _nearestKnownCity(latitude, longitude);
+        if (city != null) {
+          return country == null || country.isEmpty ? city : '$city, $country';
+        }
       }
     } catch (_) {
-      // Coordinates still work for prayer calculations if reverse geocoding fails.
+      // Use nearby known city as a fallback if Android geocoding is unavailable.
     }
-    return 'Current GPS location';
+    return _nearestKnownCity(latitude, longitude) ?? 'Current GPS location';
+  }
+
+  String? _nearestKnownCity(double latitude, double longitude) {
+    String? nearestCity;
+    double nearestDistance = double.infinity;
+
+    for (final entry in cities.entries) {
+      final cityLatitude = entry.value.latitude;
+      final cityLongitude = entry.value.longitude;
+      final latitudeDifference = (latitude - cityLatitude) * math.pi / 180;
+      final longitudeDifference = (longitude - cityLongitude) * math.pi / 180;
+      final a = math.pow(math.sin(latitudeDifference / 2), 2) +
+          math.cos(latitude * math.pi / 180) *
+              math.cos(cityLatitude * math.pi / 180) *
+              math.pow(math.sin(longitudeDifference / 2), 2);
+      final distanceKm = 6371 * 2 * math.asin(math.sqrt(a));
+
+      if (distanceKm < nearestDistance) {
+        nearestDistance = distanceKm;
+        nearestCity = entry.key;
+      }
+    }
+
+    // Do not label a distant, unknown location as one of our preset cities.
+    return nearestDistance <= 40 ? nearestCity : null;
   }
 
   Future<void> _saveLocationAndRefresh() async {
