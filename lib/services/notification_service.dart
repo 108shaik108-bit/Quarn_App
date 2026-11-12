@@ -45,6 +45,14 @@ class NotificationService {
       onDidReceiveNotificationResponse: _recordOpenedNotification,
     );
     _initialized = true;
+
+    final launchDetails = await _plugin.getNotificationAppLaunchDetails();
+    if (launchDetails?.didNotificationLaunchApp ?? false) {
+      final response = launchDetails?.notificationResponse;
+      if (response != null) {
+        await _recordOpenedNotification(response);
+      }
+    }
   }
 
   static Future<bool> requestPermission() async {
