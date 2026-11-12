@@ -18,100 +18,97 @@ class GlowingDoorCard extends StatefulWidget {
 class _GlowingDoorCardState extends State<GlowingDoorCard> {
   int selectedTab = 0;
 
+  static bool get isDark => AppSettings.isDark;
+  static Color get green =>
+      isDark ? const Color(0xFF10291D) : const Color(0xFF07502D);
+  static Color get deepGreen =>
+      isDark ? const Color(0xFF0A1D14) : const Color(0xFF064426);
   static Color get gold =>
-      AppSettings.isDark ? const Color(0xFFE0B96B) : const Color(0xFFFFD875);
-  static Color get darkGreen =>
-      AppSettings.isDark ? const Color(0xFF0B2117) : const Color(0xFF032F19);
+      isDark ? const Color(0xFFE0B96B) : const Color(0xFFD9B65D);
   static Color get cream =>
-      AppSettings.isDark ? const Color(0xFF263B2D) : const Color(0xFFFFE3A0);
-  static Color get selectedText =>
-      AppSettings.isDark ? const Color(0xFF102219) : const Color(0xFF172719);
+      isDark ? const Color(0xFFFFE9B0) : const Color(0xFFFFF7E5);
+  static Color get ink =>
+      isDark ? const Color(0xFF17271B) : const Color(0xFF123522);
 
   @override
   Widget build(BuildContext context) {
     Theme.of(context);
-    return Column(
-      children: [
-        Container(
-          height: 76,
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [darkGreen, const Color(0xFF062B18), darkGreen],
-            ),
-            borderRadius: BorderRadius.circular(42),
-            border: Border.all(color: gold, width: 1.6),
-            boxShadow: [
-              BoxShadow(
-                color: gold.withOpacity(0.16),
-                blurRadius: 12,
-                spreadRadius: 1,
-              ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.18),
-                blurRadius: 7,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              _tab('Surahs', 0, Icons.menu_book_rounded),
-              _tab('Juz', 1, Icons.auto_stories_rounded),
-              _tab('Prayer', 2, Icons.account_balance_rounded),
-            ],
-          ),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(11, 10, 11, 11),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [green, deepGreen, green],
         ),
-        if (selectedTab != 2) ...[
-          const SizedBox(height: 13),
-          Container(
-            height: 61,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [darkGreen, const Color(0xFF062B18), darkGreen],
-              ),
-              borderRadius: BorderRadius.circular(34),
-              border: Border.all(color: gold, width: 1.6),
-              boxShadow: [
-                BoxShadow(
-                  color: gold.withOpacity(0.13),
-                  blurRadius: 9,
-                  spreadRadius: 1,
-                ),
-              ],
-            ),
-            child: TextField(
-              onChanged: widget.onSearch,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                hintText: selectedTab == 0
-                    ? 'Search surah by name or number...'
-                    : 'Search Juz...',
-                hintStyle: TextStyle(
-                  color: Colors.white.withOpacity(0.88),
-                  fontSize: 13,
-                ),
-                prefixIcon: Icon(Icons.search_rounded, color: gold, size: 27),
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(vertical: 17),
-              ),
-            ),
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: gold, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: gold.withOpacity(0.14),
+            blurRadius: 10,
+            spreadRadius: 1,
           ),
-          const SizedBox(height: 5),
-          Container(
-            width: 9,
-            height: 9,
-            transform: Matrix4.rotationZ(0.785398),
-            decoration: BoxDecoration(
-              color: darkGreen,
-              border: Border.all(color: gold, width: 1.2),
-            ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
           ),
         ],
-      ],
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 49,
+            child: Row(
+              children: [
+                _tab('Surahs', 0, Icons.menu_book_rounded),
+                const SizedBox(width: 7),
+                _tab('Juz', 1, Icons.auto_stories_rounded),
+                const SizedBox(width: 7),
+                _tab('Prayer', 2, Icons.account_balance_rounded),
+              ],
+            ),
+          ),
+          if (selectedTab != 2) ...[
+            const SizedBox(height: 12),
+            Container(
+              height: 58,
+              decoration: BoxDecoration(
+                color: deepGreen.withOpacity(0.45),
+                borderRadius: BorderRadius.circular(32),
+                border: Border.all(
+                  color: cream.withOpacity(0.9),
+                  width: 1.35,
+                ),
+              ),
+              child: TextField(
+                onChanged: widget.onSearch,
+                style: const TextStyle(color: Colors.white, fontSize: 15),
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  hintText: selectedTab == 0
+                      ? 'Search surah by name or number...'
+                      : 'Search Juz...',
+                  hintStyle: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 13,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search_rounded,
+                    color: cream,
+                    size: 29,
+                  ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 
@@ -126,50 +123,36 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           widget.onTabChanged?.call(index);
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.symmetric(horizontal: 2),
-          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
+          duration: const Duration(milliseconds: 180),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: 5),
           decoration: BoxDecoration(
-            gradient: selected
-                ? const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFFFFE9AE), Color(0xFFEFC45F)],
-                  )
-                : null,
-            borderRadius: BorderRadius.circular(36),
-            boxShadow: selected
-                ? [
-                    BoxShadow(
-                      color: gold.withOpacity(0.24),
-                      blurRadius: 7,
-                    ),
-                  ]
-                : null,
+            color: selected ? cream : Colors.transparent,
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: selected ? cream : cream.withOpacity(0.35),
+              width: 1.1,
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 23,
-                color: selected ? selectedText : gold,
-              ),
-              const SizedBox(width: 5),
-              Flexible(
-                child: Text(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 21, color: selected ? ink : cream),
+                const SizedBox(width: 5),
+                Text(
                   label,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: selected ? selectedText : const Color(0xFFFFE5A0),
+                    color: selected ? ink : cream,
                     fontFamily: 'serif',
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
