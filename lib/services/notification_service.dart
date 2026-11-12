@@ -252,7 +252,15 @@ class NotificationService {
   static Future<void> setPrayerTimeRemindersEnabled(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_prayerTimeMasterKey, enabled);
-    await refreshPrayerTimeReminders();
+    try {
+      await refreshPrayerTimeReminders();
+    } catch (_) {
+      if (enabled) {
+        await prefs.setBool(_prayerTimeMasterKey, false);
+        await refreshPrayerTimeReminders();
+      }
+      rethrow;
+    }
   }
 
   static Future<void> setPrayerTimeReminderPrayerEnabled(
