@@ -168,17 +168,25 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
           if (candidate != null &&
               candidate.isNotEmpty &&
               candidate.toLowerCase() != 'india') {
-            return candidate;
+            return _normalizeCityName(candidate);
           }
         }
 
         final nearbyCity = _nearestKnownCity(latitude, longitude);
-        if (nearbyCity != null) return nearbyCity;
+        if (nearbyCity != null) return _normalizeCityName(nearbyCity);
       }
     } catch (_) {
       // Use nearby known city as a fallback if Android geocoding is unavailable.
     }
     return _nearestKnownCity(latitude, longitude) ?? 'Current GPS location';
+  }
+
+  String _normalizeCityName(String name) {
+    final normalized = name.trim().toLowerCase();
+    // Ambattur is part of the Chennai metropolitan area.
+    if (normalized == 'ambattur') return 'Chennai';
+    if (normalized == 'bangalore') return 'Bengaluru';
+    return name.trim();
   }
 
   String? _nearestKnownCity(double latitude, double longitude) {
