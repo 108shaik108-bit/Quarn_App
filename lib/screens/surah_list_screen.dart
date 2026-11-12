@@ -309,7 +309,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
           const SizedBox(height: 8),
           if (surahNumbers.isNotEmpty)
             GridView.count(
-              crossAxisCount: 2,
+              crossAxisCount: 1,
               mainAxisExtent: 85,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
