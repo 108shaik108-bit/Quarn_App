@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import '../services/app_settings.dart';
 
 class QuranHeader extends StatelessWidget {
-  const QuranHeader({super.key, this.onNotificationsTap, this.onSettingsTap});
+  const QuranHeader({super.key, this.onNotificationsTap});
 
   final VoidCallback? onNotificationsTap;
-  final VoidCallback? onSettingsTap;
 
   static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
   static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
@@ -41,16 +40,14 @@ class QuranHeader extends StatelessWidget {
             ),
           ),
 
-          // Notification and settings
+          // Prayer notification shortcut
           Positioned(
             top: 18,
             right: 20,
-            child: Row(
-              children: [
-                _headerButton(Icons.notifications_none, 'Prayer notifications', onNotificationsTap),
-                SizedBox(width: 12),
-                _headerButton(Icons.settings_outlined, 'App settings', onSettingsTap),
-              ],
+            child: _headerButton(
+              Icons.notifications_none,
+              'Prayer notifications',
+              onNotificationsTap,
             ),
           ),
 
