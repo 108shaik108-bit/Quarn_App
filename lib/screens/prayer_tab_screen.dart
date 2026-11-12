@@ -148,33 +148,31 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
   Future<String> _cityNameFromCoordinates(double latitude, double longitude) async {
     try {
       final placemarks = await placemarkFromCoordinates(latitude, longitude);
-      if (placemarks.isNotEmpty) {
-        final place = placemarks.first;
+      // Android can return several placemarks for one coordinate.
+      // The first may contain only a street or neighbourhood, so inspect
+      // every result and prefer the city-level fields across all results.
+      for (final place in placemarks) {
         final locality = place.locality?.trim();
         final subAdministrativeArea = place.subAdministrativeArea?.trim();
         final subLocality = place.subLocality?.trim();
         final administrativeArea = place.administrativeArea?.trim();
 
-        // Prefer the city/district name over a smaller neighbourhood.
-        // In places such as Ambattur, Android may return Ambattur as
-        // subLocality and Chennai as subAdministrativeArea.
-        final candidates = [
+        for (final candidate in [
           locality,
           subAdministrativeArea,
           subLocality,
           administrativeArea,
-        ];
-        for (final candidate in candidates) {
+        ]) {
           if (candidate != null &&
               candidate.isNotEmpty &&
               candidate.toLowerCase() != 'india') {
             return _normalizeCityName(candidate);
           }
         }
-
-        final nearbyCity = _nearestKnownCity(latitude, longitude);
-        if (nearbyCity != null) return _normalizeCityName(nearbyCity);
       }
+
+      final nearbyCity = _nearestKnownCity(latitude, longitude);
+      if (nearbyCity != null) return _normalizeCityName(nearbyCity);
     } catch (_) {
       // Use nearby known city as a fallback if Android geocoding is unavailable.
     }
