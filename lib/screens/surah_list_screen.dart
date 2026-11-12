@@ -63,12 +63,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   searchQuery = '';
                 });
               },
-              onSettingsTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                );
-              },
             ),
           ),
 
