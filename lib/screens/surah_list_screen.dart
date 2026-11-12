@@ -11,6 +11,7 @@ import 'prayer_tab_screen.dart';
 import 'bookmarks_screen.dart';
 import 'connect_screen.dart';
 import 'profile_screen.dart';
+import 'notification_centre_screen.dart';
 class SurahListScreen extends StatefulWidget {
   const SurahListScreen({super.key});
 
@@ -58,14 +59,11 @@ class _SurahListScreenState extends State<SurahListScreen> {
           SliverToBoxAdapter(
             child: QuranHeader(
               onNotificationsTap: () {
-                // Open the Prayer section inside the existing Home screen.
-                // This keeps it under the app's Scaffold/Material and lets
-                // the main CustomScrollView handle the long prayer content.
-                setState(() {
-                  selectedContentTab = 2;
-                  selectedNavIndex = 0;
-                  searchQuery = '';
-                });
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const NotificationCentreScreen(),
+                  ),
+                );
               },
             ),
           ),
