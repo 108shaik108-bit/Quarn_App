@@ -216,7 +216,33 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           await Geolocator.isLocationServiceEnabled();
 
       if (!serviceEnabled) {
-        throw Exception('Please turn on your device location.');
+        if (!mounted) return;
+        setState(() => isLoading = false);
+        final openSettings = await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Turn on device location'),
+            content: const Text(
+              'Your phone location is turned off. Please enable Location '
+              'in your phone settings to use your current GPS location '
+              'and calculate accurate prayer times.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                child: const Text('Open Location Settings'),
+              ),
+            ],
+          ),
+        );
+        if (openSettings == true) {
+          await Geolocator.openLocationSettings();
+        }
+        return;
       }
 
       LocationPermission permission =
