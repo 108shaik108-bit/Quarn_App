@@ -76,13 +76,19 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
     if (!mounted) return;
     setState(() {
       _manualLocationSelected = manualLocationSelected;
-      if (savedCity != null && cities.containsKey(savedCity)) {
-        selectedCity = savedCity;
-      }
       if (latitude != null && longitude != null) {
         currentCoordinates = Coordinates(latitude, longitude);
+        if (savedCity != null && savedCity.isNotEmpty) {
+          selectedCity = savedCity;
+          cities[savedCity] = currentCoordinates!;
+          locationLabel = savedCity;
+        } else {
+          locationLabel = 'Saved location';
+        }
         isGpsLocation = true;
-        locationLabel = 'Saved location';
+      } else if (savedCity != null && cities.containsKey(savedCity)) {
+        selectedCity = savedCity;
+        locationLabel = '$savedCity, India';
       }
       _ringAdhanEnabled = enabled;
     });
