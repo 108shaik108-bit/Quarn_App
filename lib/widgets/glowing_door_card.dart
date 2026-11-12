@@ -20,15 +20,15 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
 
   static bool get isDark => AppSettings.isDark;
   static Color get green =>
-      isDark ? const Color(0xFF101D35) : const Color(0xFF142B50);
+      isDark ? const Color(0xFF241D1A) : const Color(0xFF493326);
   static Color get deepGreen =>
-      isDark ? const Color(0xFF091326) : const Color(0xFF0D1D38);
+      isDark ? const Color(0xFF17120F) : const Color(0xFF35251D);
   static Color get gold =>
       isDark ? const Color(0xFFE0B96B) : const Color(0xFFD9B65D);
   static Color get cream =>
       isDark ? const Color(0xFFFFE9B0) : const Color(0xFFFFF7E5);
   static Color get ink =>
-      isDark ? const Color(0xFF17243A) : const Color(0xFF142B50);
+      isDark ? const Color(0xFF241D1A) : const Color(0xFF493326);
 
   @override
   Widget build(BuildContext context) {
