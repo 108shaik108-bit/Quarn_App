@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -17,15 +18,17 @@ class ConnectScreen extends StatefulWidget {
   State<ConnectScreen> createState() => _ConnectScreenState();
 }
 
-class _ConnectScreenState extends State<ConnectScreen> {
+class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserver {
   static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
   static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
   static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
 
-  late final int _surahNumber;
-  late final int _ayahNumber;
-  late final String _arabicText;
-  late final String _englishText;
+  late int _surahNumber;
+  late int _ayahNumber;
+  late String _arabicText;
+  late String _englishText;
+  late DateTime _loadedDailyDate;
+  Timer? _dailyRefreshTimer;
   bool _isSaved = false;
   final GlobalKey _shareCardKey = GlobalKey();
   late Future<({int surah, int ayah})?> _continueReadingFuture;
@@ -33,8 +36,51 @@ class _ConnectScreenState extends State<ConnectScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _continueReadingFuture = QuranProgressService.getLastReadLocation();
     _loadDailyAyah();
+    _scheduleDailyRefresh();
+  }
+
+  @override
+  void dispose() {
+    _dailyRefreshTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshDailyAyahIfNeeded();
+    }
+  }
+
+  void _scheduleDailyRefresh() {
+    _dailyRefreshTimer?.cancel();
+    final now = DateTime.now();
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+    _dailyRefreshTimer = Timer(
+      nextMidnight.difference(now) + const Duration(seconds: 1),
+      _refreshDailyAyahIfNeeded,
+    );
+  }
+
+  void _refreshDailyAyahIfNeeded() {
+    if (!mounted) return;
+
+    final now = DateTime.now();
+    final loadedDate = DateTime(
+      _loadedDailyDate.year,
+      _loadedDailyDate.month,
+      _loadedDailyDate.day,
+    );
+    final currentDate = DateTime(now.year, now.month, now.day);
+
+    if (currentDate != loadedDate) {
+      setState(_loadDailyAyah);
+    }
+    _scheduleDailyRefresh();
   }
 
   void _loadDailyAyah() {
@@ -48,9 +94,9 @@ class _ConnectScreenState extends State<ConnectScreen> {
     }
 
     final today = DateTime.now();
-    final dayNumber = DateTime(today.year, today.month, today.day)
-        .difference(DateTime(2024, 1, 1))
-        .inDays;
+    _loadedDailyDate = DateTime(today.year, today.month, today.day);
+    _isSaved = false;
+    final dayNumber = _loadedDailyDate.difference(DateTime(2024, 1, 1)).inDays;
     final selected = allVerses[dayNumber % allVerses.length];
 
     _surahNumber = selected.surah;
