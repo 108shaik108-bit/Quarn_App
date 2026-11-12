@@ -197,19 +197,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1100&q=85',
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF59636A), Color(0xFF18231F), Color(0xFF050A08)],
-                  ),
-                ),
-              ),
-            ),
+            _buildDailyBackground(),
             const DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -455,6 +443,22 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 
 
+  int get _dailyBackgroundIndex {
+    final dayNumber = DateTime(
+      _loadedDailyDate.year,
+      _loadedDailyDate.month,
+      _loadedDailyDate.day,
+    ).difference(DateTime(2024, 1, 1)).inDays;
+    return dayNumber % 30;
+  }
+
+  Widget _buildDailyBackground() {
+    return CustomPaint(
+      painter: _IslamicDailyBackgroundPainter(_dailyBackgroundIndex),
+      child: const SizedBox.expand(),
+    );
+  }
+
   Widget _buildDailyAyahCard(dynamic surah) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
@@ -463,19 +467,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1100&q=85',
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF59636A), Color(0xFF18231F), Color(0xFF050A08)],
-                  ),
-                ),
-              ),
-            ),
+            _buildDailyBackground(),
             const DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -734,4 +726,111 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       ),
     );
   }
+}
+
+
+/// A lightweight, locally-rendered collection of 30 premium Islamic-inspired
+/// backgrounds. The same date always selects the same design on every device.
+class _IslamicDailyBackgroundPainter extends CustomPainter {
+  _IslamicDailyBackgroundPainter(this.index);
+
+  final int index;
+
+  static const List<List<Color>> _palettes = [
+    [Color(0xFF142D2A), Color(0xFF071714), Color(0xFF020908)],
+    [Color(0xFF49301F), Color(0xFF21150F), Color(0xFF090604)],
+    [Color(0xFF263B58), Color(0xFF111D32), Color(0xFF050A13)],
+    [Color(0xFF5A3B2B), Color(0xFF2A1C18), Color(0xFF0C0807)],
+    [Color(0xFF344B3A), Color(0xFF17251D), Color(0xFF070D0A)],
+    [Color(0xFF3E315B), Color(0xFF1D1730), Color(0xFF080610)],
+    [Color(0xFF5A4526), Color(0xFF2B2113), Color(0xFF0D0905)],
+    [Color(0xFF1D4650), Color(0xFF0D252B), Color(0xFF030B0D)],
+    [Color(0xFF593A42), Color(0xFF281A22), Color(0xFF0B070A)],
+    [Color(0xFF405044), Color(0xFF1D281F), Color(0xFF080C09)],
+    [Color(0xFF55412F), Color(0xFF292016), Color(0xFF0A0805)],
+    [Color(0xFF263C4A), Color(0xFF101F2A), Color(0xFF04080D)],
+    [Color(0xFF51402B), Color(0xFF261E15), Color(0xFF0B0805)],
+    [Color(0xFF24413C), Color(0xFF10231F), Color(0xFF040B09)],
+    [Color(0xFF49354D), Color(0xFF211728), Color(0xFF09060C)],
+    [Color(0xFF4C3A2A), Color(0xFF241B14), Color(0xFF090705)],
+    [Color(0xFF30475A), Color(0xFF152432), Color(0xFF050A10)],
+    [Color(0xFF4C4930), Color(0xFF242316), Color(0xFF090A06)],
+    [Color(0xFF3C4B45), Color(0xFF1B2521), Color(0xFF070B09)],
+    [Color(0xFF5A3B25), Color(0xFF2A1B11), Color(0xFF0B0704)],
+    [Color(0xFF293B5A), Color(0xFF121D32), Color(0xFF050811)],
+    [Color(0xFF4D3440), Color(0xFF241821), Color(0xFF09060A)],
+    [Color(0xFF385044), Color(0xFF192820), Color(0xFF070C09)],
+    [Color(0xFF594A35), Color(0xFF2A2419), Color(0xFF0B0906)],
+    [Color(0xFF24434B), Color(0xFF102329), Color(0xFF040A0C)],
+    [Color(0xFF51402F), Color(0xFF261E17), Color(0xFF0A0806)],
+    [Color(0xFF3E3A5A), Color(0xFF1D1A32), Color(0xFF080710)],
+    [Color(0xFF405044), Color(0xFF1C281F), Color(0xFF070C09)],
+    [Color(0xFF58402D), Color(0xFF291E15), Color(0xFF0A0705)],
+    [Color(0xFF29464A), Color(0xFF122529), Color(0xFF050A0B)],
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final palette = _palettes[index % _palettes.length];
+    final rect = Offset.zero & size;
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: palette,
+          stops: const [0, 0.55, 1],
+        ).createShader(rect),
+    );
+
+    final goldPaint = Paint()
+      ..color = const Color(0xFFD6B36A).withOpacity(0.20)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.1;
+    final softPaint = Paint()
+      ..color = const Color(0xFFF4E4C1).withOpacity(0.08)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.8;
+
+    // Large ornamental arches and rings create a quiet mosque-inspired depth.
+    final center = Offset(size.width * (0.18 + (index % 5) * 0.16), size.height * 0.32);
+    for (var ring = 0; ring < 7; ring++) {
+      final radius = size.width * (0.13 + ring * 0.075);
+      canvas.drawCircle(center, radius, ring.isEven ? goldPaint : softPaint);
+    }
+
+    // Repeating diamond geometry, offset per day for 30 distinct compositions.
+    final spacing = size.width / 5.2;
+    final offset = (index % 4) * spacing / 4;
+    for (double y = -spacing; y < size.height + spacing; y += spacing) {
+      for (double x = -spacing; x < size.width + spacing; x += spacing) {
+        final c = Offset(x + offset, y + offset);
+        final path = Path()
+          ..moveTo(c.dx, c.dy - spacing * 0.42)
+          ..lineTo(c.dx + spacing * 0.42, c.dy)
+          ..lineTo(c.dx, c.dy + spacing * 0.42)
+          ..lineTo(c.dx - spacing * 0.42, c.dy)
+          ..close();
+        canvas.drawPath(path, softPaint);
+        canvas.drawCircle(c, spacing * 0.12, goldPaint);
+      }
+    }
+
+    // A subtle dark veil keeps Quran text legible over every composition.
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0x52000000), Color(0x18000000), Color(0xD9000000)],
+          stops: [0, 0.42, 1],
+        ).createShader(rect),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _IslamicDailyBackgroundPainter oldDelegate) =>
+      oldDelegate.index != index;
 }
