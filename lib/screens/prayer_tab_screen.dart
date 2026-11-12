@@ -4,6 +4,7 @@ import 'package:adhan/adhan.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/adhan_scheduler_service.dart';
@@ -102,7 +103,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
   /// Refresh GPS automatically when permission has already been granted.
   /// A manually selected city remains selected until the user chooses GPS.
   Future<void> _refreshGpsLocationIfAllowed() async {
-    if (_manualLocationSelected || isLoading) return;
+    if (isLoading) return;
     try {
       if (!await Geolocator.isLocationServiceEnabled()) return;
       final permission = await Geolocator.checkPermission();
@@ -116,20 +117,48 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
       );
       if (!mounted) return;
       final nextCoordinates = Coordinates(position.latitude, position.longitude);
+      final cityName = await _cityNameFromCoordinates(position.latitude, position.longitude);
       final previous = currentCoordinates;
       final changed = previous == null ||
           (previous.latitude - position.latitude).abs() > 0.001 ||
           (previous.longitude - position.longitude).abs() > 0.001;
       setState(() {
         currentCoordinates = nextCoordinates;
+        selectedCity = cityName;
+        cities[cityName] = nextCoordinates;
         isGpsLocation = true;
-        locationLabel = 'Current GPS location';
+        _manualLocationSelected = false;
+        locationLabel = cityName;
         errorMessage = null;
       });
       if (changed) await _saveLocationAndRefresh();
     } catch (_) {
       // Keep the last saved location if GPS is temporarily unavailable.
     }
+  }
+
+  Future<String> _cityNameFromCoordinates(double latitude, double longitude) async {
+    try {
+      final placemarks = await placemarkFromCoordinates(latitude, longitude);
+      if (placemarks.isNotEmpty) {
+        final place = placemarks.first;
+        final locality = place.locality?.trim();
+        final subLocality = place.subAdministrativeArea?.trim();
+        final administrativeArea = place.administrativeArea?.trim();
+        final country = place.country?.trim();
+        final city = (locality != null && locality.isNotEmpty)
+            ? locality
+            : (subLocality != null && subLocality.isNotEmpty)
+                ? subLocality
+                : (administrativeArea != null && administrativeArea.isNotEmpty)
+                    ? administrativeArea
+                    : 'Current GPS location';
+        return country == null || country.isEmpty ? city : '$city, $country';
+      }
+    } catch (_) {
+      // Coordinates still work for prayer calculations if reverse geocoding fails.
+    }
+    return 'Current GPS location';
   }
 
   Future<void> _saveLocationAndRefresh() async {
@@ -322,14 +351,16 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
 
       if (!mounted) return;
 
+      final gpsCity = await _cityNameFromCoordinates(position.latitude, position.longitude);
+      if (!mounted) return;
+      final gpsCoordinates = Coordinates(position.latitude, position.longitude);
       setState(() {
-        currentCoordinates = Coordinates(
-          position.latitude,
-          position.longitude,
-        );
+        currentCoordinates = gpsCoordinates;
+        selectedCity = gpsCity;
+        cities[gpsCity] = gpsCoordinates;
         isGpsLocation = true;
         _manualLocationSelected = false;
-        locationLabel = 'Current GPS location';
+        locationLabel = gpsCity;
         isLoading = false;
       });
       await _saveLocationAndRefresh();
@@ -354,7 +385,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
       locationLabel = '$city, India';
       errorMessage = null;
     });
-    _saveLocationAndRefresh();
+    _saveLocationAndRefresh().then((_) => _refreshGpsLocationIfAllowed());
   }
 
   String formatTime(DateTime time) {
