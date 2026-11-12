@@ -395,7 +395,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 24),
                 const SizedBox(height: 24),
                 Text(
                   'KEEP GOING',
@@ -420,7 +419,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(color: mutedGreen, fontSize: 12),
                   ),
-                ),
                 ),
               ],
             ),
