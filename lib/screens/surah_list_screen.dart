@@ -94,7 +94,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 sliver: SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,
-                    mainAxisExtent: 96,
+                    mainAxisExtent: 102,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -306,7 +306,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
           if (surahNumbers.isNotEmpty)
             GridView.count(
               crossAxisCount: 1,
-              mainAxisExtent: 96,
+              mainAxisExtent: 102,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               shrinkWrap: true,
