@@ -134,23 +134,54 @@ class NotificationService {
     await prefs.setBool(_ayahEnabledKey, enabled);
     await prefs.setInt(_ayahHourKey, time.hour);
     await prefs.setInt(_ayahMinuteKey, time.minute);
-    if (!enabled) {
-      if (!kIsWeb) await _plugin.cancel(ayahReminderId);
-      return;
+
+    if (kIsWeb) return;
+    for (var offset = 0; offset < 7; offset++) {
+      await _plugin.cancel(ayahReminderId + offset);
+    }
+    if (!enabled) return;
+
+    final now = tz.TZDateTime.now(tz.local);
+    var firstDate = tz.TZDateTime(tz.local, now.year, now.month, now.day);
+    var firstTime = tz.TZDateTime(
+        tz.local, now.year, now.month, now.day, time.hour, time.minute);
+    if (!firstTime.isAfter(now)) {
+      firstDate = firstDate.add(const Duration(days: 1));
+      firstTime = firstTime.add(const Duration(days: 1));
     }
 
-    final ayah = _todaysAyah();
-    await _scheduleDaily(
-      id: ayahReminderId,
-      title: 'Your Daily Ayah',
-      body: '${ayah.arabic}  (${ayah.surahName} ${ayah.ayahNumber})',
-      time: time,
-      payloadTitle: 'Your Daily Ayah',
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'daily_ayah',
+        'Daily Ayah',
+        channelDescription: 'A different Quran verse reminder each day',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
     );
+
+    for (var offset = 0; offset < 7; offset++) {
+      final date = firstDate.add(Duration(days: offset));
+      final scheduled = firstTime.add(Duration(days: offset));
+      final ayah = _ayahForDate(DateTime(date.year, date.month, date.day));
+      final body =
+          '${ayah.arabic}  (${ayah.surahName} ${ayah.ayahNumber})';
+      await _plugin.zonedSchedule(
+        ayahReminderId + offset,
+        'Your Daily Ayah',
+        body,
+        scheduled,
+        details,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        payload: 'Your Daily Ayah|$body',
+      );
+    }
   }
 
-  static ({String arabic, String surahName, int ayahNumber}) _todaysAyah() {
-    final day = DateTime.now().difference(DateTime(2020, 1, 1)).inDays;
+  static ({String arabic, String surahName, int ayahNumber}) _ayahForDate(
+      DateTime date) {
+    final day = date.difference(DateTime(2020, 1, 1)).inDays;
     var index = day % 6236;
     for (final surah in app_data.surahs) {
       if (index < surah.ayahs) {
