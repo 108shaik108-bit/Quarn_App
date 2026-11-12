@@ -107,27 +107,34 @@ class _ConnectScreenState extends State<ConnectScreen> {
         insetPadding: const EdgeInsets.all(16),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RepaintBoundary(
-                key: _shareCardKey,
-                child: _buildShareArtwork(surah),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(dialogContext).size.height * 0.82,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RepaintBoundary(
+                    key: _shareCardKey,
+                    child: _buildShareArtwork(surah),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _shareAyahImage(dialogContext),
+                      icon: const Icon(Icons.share_rounded),
+                      label: const Text('Share image'),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: const Text('Close', style: TextStyle(color: Colors.white70)),
+                  ),
+                ],
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => _shareAyahImage(dialogContext),
-                  icon: const Icon(Icons.share_rounded),
-                  label: const Text('Share image'),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text('Close', style: TextStyle(color: Colors.white70)),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -139,7 +146,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
       borderRadius: BorderRadius.circular(30),
       child: Container(
         width: 340,
-        height: 600,
+        height: 560,
         decoration: const BoxDecoration(color: Color(0xFF101820)),
         child: Stack(
           fit: StackFit.expand,
@@ -221,22 +228,24 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       const Icon(Icons.menu_book_rounded, color: Colors.white70, size: 25),
                     ],
                   ),
-                  const Spacer(flex: 2),
+                  const Spacer(flex: 1),
                   Directionality(
                     textDirection: TextDirection.rtl,
                     child: Text(
                       _arabicText,
                       textAlign: TextAlign.center,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
-                        height: 1.9,
+                        fontSize: 26,
+                        height: 1.55,
                         fontWeight: FontWeight.w600,
                         shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
                       ),
                     ),
                   ),
-                  const Spacer(flex: 2),
+                  const Spacer(flex: 1),
                   Text(
                     _useAllahTerminology(_englishText),
                     textAlign: TextAlign.center,
@@ -248,15 +257,15 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'serif',
-                      fontSize: 22,
-                      height: 1.45,
+                      fontSize: 18,
+                      height: 1.3,
                       fontWeight: FontWeight.w800,
                       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
                     ),
                   ),
-                  const Spacer(flex: 3),
+                  const Spacer(flex: 1),
                   Container(
-                    height: 58,
+                    height: 48,
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.42),
                       borderRadius: BorderRadius.circular(30),
@@ -278,7 +287,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 7),
                   const Text(
                     'QUARN APP',
                     textAlign: TextAlign.center,
@@ -428,7 +437,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: AspectRatio(
-        aspectRatio: 0.62,
+        aspectRatio: 0.56,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -507,24 +516,24 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       ),
                     ],
                   ),
-                  const Spacer(flex: 2),
+                  const Spacer(flex: 1),
                   Directionality(
                     textDirection: TextDirection.rtl,
                     child: Text(
                       '$_arabicText  ۝${_arabicDigits(_ayahNumber)}',
                       textAlign: TextAlign.center,
-                      maxLines: 6,
+                      maxLines: 5,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
-                        height: 1.9,
+                        fontSize: 26,
+                        height: 1.55,
                         fontWeight: FontWeight.w600,
                         shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
                       ),
                     ),
                   ),
-                  const Spacer(flex: 2),
+                  const Spacer(flex: 1),
                   Text(
                     _useAllahTerminology(_englishText),
                     textAlign: AppSettings.language.value == 'ur'
@@ -533,26 +542,26 @@ class _ConnectScreenState extends State<ConnectScreen> {
                     textDirection: AppSettings.language.value == 'ur'
                         ? TextDirection.rtl
                         : TextDirection.ltr,
-                    maxLines: 6,
+                    maxLines: 5,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'serif',
-                      fontSize: 18,
-                      height: 1.55,
+                      fontSize: 16,
+                      height: 1.35,
                       fontWeight: FontWeight.w700,
                       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
                     ),
                   ),
-                  const Spacer(flex: 2),
+                  const Spacer(flex: 1),
                   SizedBox(
-                    height: 54,
+                    height: 48,
                     child: ElevatedButton.icon(
                       onPressed: _openSurah,
                       icon: const Icon(Icons.menu_book_rounded, size: 22),
                       label: const Text(
                         'Read in Quran',
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black.withOpacity(0.42),
@@ -565,7 +574,7 @@ class _ConnectScreenState extends State<ConnectScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 6),
                   const Text(
                     'QUARN APP',
                     textAlign: TextAlign.center,
