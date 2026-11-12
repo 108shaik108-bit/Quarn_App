@@ -430,7 +430,7 @@ Widget _bottomNavigationBar() {
                             color: selected
                                 ? Color(0xFF07502D)
                                 : Colors.black87,
-                            size: 29,
+                            size: 26,
                           ),
                           SizedBox(height: 4),
                           Text(
@@ -440,7 +440,7 @@ Widget _bottomNavigationBar() {
                               color: selected
                                   ? Color(0xFF07502D)
                                   : Colors.black87,
-                              fontSize: 12,
+                              fontSize: 10.5,
                               fontWeight: selected
                                   ? FontWeight.bold
                                   : FontWeight.normal,
