@@ -90,9 +90,9 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                     : 'Search Juz...',
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.88),
-                  fontSize: 14,
+                  fontSize: 12.5,
                 ),
-                prefixIcon: Icon(Icons.search_rounded, color: gold, size: 31),
+                prefixIcon: Icon(Icons.search_rounded, color: gold, size: 27),
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -151,10 +151,10 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
             children: [
               Icon(
                 icon,
-                size: 27,
+                size: 22,
                 color: selected ? selectedText : gold,
               ),
-              const SizedBox(width: 7),
+              const SizedBox(width: 4),
               Flexible(
                 child: Text(
                   label,
@@ -163,7 +163,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                   style: TextStyle(
                     color: selected ? selectedText : const Color(0xFFFFE5A0),
                     fontFamily: 'serif',
-                    fontSize: 16,
+                    fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
