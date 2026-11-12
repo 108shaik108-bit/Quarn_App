@@ -11,7 +11,6 @@ import 'prayer_tab_screen.dart';
 import 'bookmarks_screen.dart';
 import 'connect_screen.dart';
 import 'profile_screen.dart';
-import 'settings_screen.dart';
 class SurahListScreen extends StatefulWidget {
   const SurahListScreen({super.key});
 
@@ -67,7 +66,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               onSettingsTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
                 );
               },
             ),
