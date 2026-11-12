@@ -174,62 +174,110 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           SliverToBoxAdapter(
             child: Container(
               margin: const EdgeInsets.fromLTRB(16, 20, 16, 12),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 12),
               decoration: BoxDecoration(
                 color: const Color(0xFF111A16),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: const Color(0xFF22332B)),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
-                    onTap: currentPage > 0
-                        ? () => _changePage(currentPage - 1)
-                        : null,
-                    child: Row(
-                      children: [
-                        Icon(Icons.chevron_left,
-                            size: 20,
-                            color: currentPage > 0
-                                ? const Color(0xFF22C55E)
-                                : Colors.grey.shade700),
-                        Text(" Previous",
-                            style: TextStyle(
+                  Expanded(
+                    flex: 3,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: currentPage > 0
+                          ? () => _changePage(currentPage - 1)
+                          : null,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.chevron_left,
+                              size: 18,
+                              color: currentPage > 0
+                                  ? const Color(0xFF22C55E)
+                                  : Colors.grey.shade700),
+                          Flexible(
+                            child: Text(
+                              "Previous",
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
                                 color: currentPage > 0
                                     ? const Color(0xFF22C55E)
-                                    : Colors.grey.shade700)),
+                                    : Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            "Page ${currentPage + 1} of $totalPages",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: mushafMode ? mushafInk : Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            "Ayahs ${startAyah + 1} - $endAyah",
+                            style: TextStyle(
+                              color: mushafMode ? const Color(0xFF8B7969) : Colors.grey,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Column(
-                    children: [
-                      Text("Page ${currentPage + 1} of $totalPages",
-                          style: TextStyle(
-                              color: mushafMode ? mushafInk : Colors.white, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 2),
-                      Text("Ayahs ${startAyah + 1} - $endAyah",
-                          style:
-                              TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 12)),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: currentPage < totalPages - 1
-                        ? () => _changePage(currentPage + 1)
-                        : null,
-                    child: Row(
-                      children: [
-                        Text("Next ",
-                            style: TextStyle(
+                  Expanded(
+                    flex: 3,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: currentPage < totalPages - 1
+                          ? () => _changePage(currentPage + 1)
+                          : null,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "Next",
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
                                 color: currentPage < totalPages - 1
                                     ? const Color(0xFF22C55E)
-                                    : Colors.grey.shade700)),
-                        Icon(Icons.chevron_right,
-                            size: 20,
-                            color: currentPage < totalPages - 1
-                                ? const Color(0xFF22C55E)
-                                : Colors.grey.shade700),
-                      ],
+                                    : Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                          Icon(Icons.chevron_right,
+                              size: 18,
+                              color: currentPage < totalPages - 1
+                                  ? const Color(0xFF22C55E)
+                                  : Colors.grey.shade700),
+                        ],
+                      ),
                     ),
                   ),
                 ],
