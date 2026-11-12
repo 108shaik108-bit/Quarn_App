@@ -63,9 +63,9 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
             child: Row(
               children: [
                 _tab('Surahs', 0, Icons.menu_book_rounded),
-                const SizedBox(width: 7),
+                _tabDivider(),
                 _tab('Juz', 1, Icons.auto_stories_rounded),
-                const SizedBox(width: 7),
+                _tabDivider(),
                 _tab('Prayer', 2, Icons.account_balance_rounded),
               ],
             ),
@@ -112,6 +112,12 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
     );
   }
 
+  Widget _tabDivider() => Container(
+        width: 1,
+        height: 28,
+        color: cream.withOpacity(0.48),
+      );
+
   Widget _tab(String label, int index, IconData icon) {
     final selected = selectedTab == index;
     return Expanded(
@@ -122,36 +128,34 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           widget.onSearch?.call('');
           widget.onTabChanged?.call(index);
         },
-        child: AnimatedContainer(
+        child: AnimatedOpacity(
           duration: const Duration(milliseconds: 180),
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(horizontal: 5),
-          decoration: BoxDecoration(
-            color: selected ? cream : Colors.transparent,
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: selected ? cream : cream.withOpacity(0.35),
-              width: 1.1,
-            ),
-          ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(icon, size: 21, color: selected ? ink : cream),
-                const SizedBox(width: 5),
-                Text(
-                  label,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: selected ? ink : cream,
-                    fontFamily: 'serif',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
+          opacity: selected ? 1 : 0.78,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    size: 22,
+                    color: selected ? cream : cream.withOpacity(0.88),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 5),
+                  Text(
+                    label,
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: selected ? cream : cream.withOpacity(0.88),
+                      fontFamily: 'serif',
+                      fontSize: 15,
+                      fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
