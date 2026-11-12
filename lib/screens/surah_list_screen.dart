@@ -140,7 +140,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
         onTap: () => _openSurah(surah),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(11, 8, 11, 8),
+          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -187,7 +187,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 1),
               Text(
                 surah.nameArabic,
                 textDirection: TextDirection.rtl,
@@ -199,12 +199,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFFFE8B0)
                       : const Color(0xFF17271B),
-                  fontSize: 19,
-                  height: 1.15,
+                  fontSize: 17,
+                  height: 1.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 1),
               Text(
                 surah.nameEnglish,
                 textAlign: TextAlign.center,
@@ -214,17 +214,17 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFFFE8B0)
                       : const Color(0xFF17271B),
-                  fontSize: 11,
-                  height: 1.15,
+                  fontSize: 10,
+                  height: 1.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 25,
+                    width: 20,
                     height: 1,
                     color: const Color(0xFFB88732).withOpacity(0.75),
                   ),
@@ -232,8 +232,8 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   Transform.rotate(
                     angle: 0.785398,
                     child: Container(
-                      width: 6,
-                      height: 6,
+                      width: 5,
+                      height: 5,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: const Color(0xFFB88732),
@@ -244,13 +244,13 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   ),
                   const SizedBox(width: 6),
                   Container(
-                    width: 25,
+                    width: 20,
                     height: 1,
                     color: const Color(0xFFB88732).withOpacity(0.75),
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 1),
               Text(
                 '${surah.ayahs} Ayahs',
                 textAlign: TextAlign.center,
@@ -258,8 +258,8 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFE0B96B)
                       : const Color(0xFF543A18),
-                  fontSize: 9,
-                  height: 1.1,
+                  fontSize: 8,
+                  height: 1.0,
                   fontWeight: FontWeight.w700,
                 ),
               ),
