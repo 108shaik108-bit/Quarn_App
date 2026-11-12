@@ -5,6 +5,7 @@ import 'package:quran_flutter/quran_flutter.dart';
 
 import 'screens/surah_list_screen.dart';
 import 'services/app_settings.dart';
+import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,8 @@ Future<void> main() async {
   }
   await Quran.initialize();
   await AppSettings.load();
+  await NotificationService.initialize();
+  await NotificationService.refreshEnabledReminders();
   runApp(const QuranApp());
 }
 
