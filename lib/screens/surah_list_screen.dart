@@ -170,9 +170,9 @@ class _SurahListScreenState extends State<SurahListScreen> {
             ],
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Surah number is part of the card layout, not a separate badge.
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -181,12 +181,13 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     color: AppSettings.isDark
                         ? const Color(0xFFE0B96B)
                         : const Color(0xFF8A6428),
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
+                    letterSpacing: 1.0,
                   ),
                 ),
               ),
+              const SizedBox(height: 5),
               Text(
                 surah.nameArabic,
                 textDirection: TextDirection.rtl,
@@ -198,12 +199,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFFFE8B0)
                       : const Color(0xFF17271B),
-                  fontSize: 21,
-                  height: 1.12,
+                  fontSize: 19,
+                  height: 1.15,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 1),
+              const SizedBox(height: 3),
               Text(
                 surah.nameEnglish,
                 textAlign: TextAlign.center,
@@ -213,41 +214,43 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFFFE8B0)
                       : const Color(0xFF17271B),
-                  fontSize: 12,
+                  fontSize: 11,
+                  height: 1.15,
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    width: 31,
+                    width: 25,
                     height: 1,
                     color: const Color(0xFFB88732).withOpacity(0.75),
                   ),
-                  const SizedBox(width: 7),
+                  const SizedBox(width: 6),
                   Transform.rotate(
                     angle: 0.785398,
                     child: Container(
-                      width: 7,
-                      height: 7,
+                      width: 6,
+                      height: 6,
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: const Color(0xFFB88732),
-                          width: 1.3,
+                          width: 1.2,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 7),
+                  const SizedBox(width: 6),
                   Container(
-                    width: 31,
+                    width: 25,
                     height: 1,
                     color: const Color(0xFFB88732).withOpacity(0.75),
                   ),
                 ],
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 4),
               Text(
                 '${surah.ayahs} Ayahs',
                 textAlign: TextAlign.center,
@@ -255,12 +258,13 @@ class _SurahListScreenState extends State<SurahListScreen> {
                   color: AppSettings.isDark
                       ? const Color(0xFFE0B96B)
                       : const Color(0xFF543A18),
-                  fontSize: 10,
+                  fontSize: 9,
+                  height: 1.1,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ],
-          ),
+          )
         ),
       ),
     );
