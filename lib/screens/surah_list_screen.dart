@@ -175,7 +175,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  surah.number.toString().padLeft(3, '0'),
+                  surah.number.toString(),
                   style: TextStyle(
                     color: AppSettings.isDark
                         ? const Color(0xFFE0B96B)
