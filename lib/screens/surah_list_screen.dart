@@ -94,7 +94,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                 sliver: SliverGrid(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 150,
+                    mainAxisExtent: 100,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
