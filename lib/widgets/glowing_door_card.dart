@@ -33,7 +33,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
     return Column(
       children: [
         Container(
-          height: 82,
+          height: 76,
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -90,7 +90,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                     : 'Search Juz...',
                 hintStyle: TextStyle(
                   color: Colors.white.withOpacity(0.88),
-                  fontSize: 12.5,
+                  fontSize: 13,
                 ),
                 prefixIcon: Icon(Icons.search_rounded, color: gold, size: 27),
                 border: InputBorder.none,
@@ -128,6 +128,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           margin: const EdgeInsets.symmetric(horizontal: 2),
+          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 5),
           decoration: BoxDecoration(
             gradient: selected
                 ? const LinearGradient(
@@ -151,10 +152,10 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
             children: [
               Icon(
                 icon,
-                size: 22,
+                size: 23,
                 color: selected ? selectedText : gold,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 5),
               Flexible(
                 child: Text(
                   label,
@@ -163,7 +164,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                   style: TextStyle(
                     color: selected ? selectedText : const Color(0xFFFFE5A0),
                     fontFamily: 'serif',
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
