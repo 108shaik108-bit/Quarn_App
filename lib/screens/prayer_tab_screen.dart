@@ -19,7 +19,7 @@ class PrayerTabScreen extends StatefulWidget {
   State<PrayerTabScreen> createState() => _PrayerTabScreenState();
 }
 
-class _PrayerTabScreenState extends State<PrayerTabScreen> {
+class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingObserver {
   static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
   static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
   static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
@@ -39,6 +39,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
   Coordinates? currentCoordinates;
   String locationLabel = 'Ambattur, India';
   bool isGpsLocation = false;
+  bool _manualLocationSelected = false;
   bool isLoading = false;
   String? errorMessage;
 
@@ -52,18 +53,28 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadAdhanPreferences();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshGpsLocationIfAllowed();
+    }
   }
 
   Future<void> _loadAdhanPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     final savedCity = prefs.getString('prayer_selected_city');
+    final manualLocationSelected = prefs.getBool('prayer_manual_location_selected') ?? false;
     final latitude = prefs.getDouble('prayer_location_lat');
     final longitude = prefs.getDouble('prayer_location_lon');
     final enabled = await AdhanSchedulerService.isRingEnabled();
 
     if (!mounted) return;
     setState(() {
+      _manualLocationSelected = manualLocationSelected;
       if (savedCity != null && cities.containsKey(savedCity)) {
         selectedCity = savedCity;
       }
@@ -85,6 +96,40 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
         coordinates: currentCoordinates ?? cities[selectedCity]!,
       );
     }
+    await _refreshGpsLocationIfAllowed();
+  }
+
+  /// Refresh GPS automatically when permission has already been granted.
+  /// A manually selected city remains selected until the user chooses GPS.
+  Future<void> _refreshGpsLocationIfAllowed() async {
+    if (_manualLocationSelected || isLoading) return;
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) return;
+      final permission = await Geolocator.checkPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) return;
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: const Duration(seconds: 12),
+        ),
+      );
+      if (!mounted) return;
+      final nextCoordinates = Coordinates(position.latitude, position.longitude);
+      final previous = currentCoordinates;
+      final changed = previous == null ||
+          (previous.latitude - position.latitude).abs() > 0.001 ||
+          (previous.longitude - position.longitude).abs() > 0.001;
+      setState(() {
+        currentCoordinates = nextCoordinates;
+        isGpsLocation = true;
+        locationLabel = 'Current GPS location';
+        errorMessage = null;
+      });
+      if (changed) await _saveLocationAndRefresh();
+    } catch (_) {
+      // Keep the last saved location if GPS is temporarily unavailable.
+    }
   }
 
   Future<void> _saveLocationAndRefresh() async {
@@ -93,6 +138,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
     await prefs.setDouble('prayer_location_lat', coordinates.latitude);
     await prefs.setDouble('prayer_location_lon', coordinates.longitude);
     await prefs.setString('prayer_selected_city', selectedCity);
+    await prefs.setBool('prayer_manual_location_selected', _manualLocationSelected);
     await NotificationService.refreshPrayerTimeReminders(
       coordinates: coordinates,
     );
@@ -154,6 +200,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _adhanPlayer.dispose();
     super.dispose();
   }
@@ -281,6 +328,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
           position.longitude,
         );
         isGpsLocation = true;
+        _manualLocationSelected = false;
         locationLabel = 'Current GPS location';
         isLoading = false;
       });
@@ -300,6 +348,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> {
 
     setState(() {
       selectedCity = city;
+      _manualLocationSelected = true;
       currentCoordinates = null;
       isGpsLocation = false;
       locationLabel = '$city, India';
