@@ -58,10 +58,12 @@ class _SurahListScreenState extends State<SurahListScreen> {
           SliverToBoxAdapter(
             child: QuranHeader(
               onNotificationsTap: () {
-                setState(() {
-                  selectedContentTab = 2;
-                  searchQuery = '';
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PrayerTabScreen(),
+                  ),
+                );
               },
             ),
           ),
