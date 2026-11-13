@@ -153,10 +153,10 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 const SizedBox(height: 5),
                 Text(
                   surah.nameEnglish,
-                  style: TextStyle(
-                    color: const Color(0xFFD8B77A),
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
+                  style: const TextStyle(
+                    color: Color(0xFFD8B77A),
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 2),
