@@ -101,34 +101,26 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: mushafMode ? mushafInk : Colors.white),
-        title: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-          decoration: BoxDecoration(
-            color: const Color(0xEE111A16),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0x66D8B77A)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Page ${currentPage + 1} of $totalPages",
-                style: const TextStyle(
-                  color: Color(0xFFD8B77A),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
+        title: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Page ${currentPage + 1} of $totalPages",
+              style: const TextStyle(
+                color: Color(0xFFD8B77A),
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
               ),
-              const SizedBox(height: 2),
-              Text(
-                "Ayahs ${startAyah + 1} - $endAyah",
-                style: const TextStyle(
-                  color: Color(0xFFE8DCCB),
-                  fontSize: 10,
-                ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              "Ayahs ${startAyah + 1} - $endAyah",
+              style: const TextStyle(
+                color: Color(0xFFE8DCCB),
+                fontSize: 10,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       body: GestureDetector(
