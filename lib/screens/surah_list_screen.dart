@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../services/app_settings.dart';
-import '../services/quran_progress_service.dart';
 import '../data/surah_data.dart';
 import '../data/surah_meanings.dart';
 import '../data/juz_data.dart';
@@ -24,146 +23,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
   String searchQuery = '';
  int selectedContentTab = 0;
   int selectedNavIndex = 0;
-  late Future<({int surah, int ayah})?> _lastReadFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _lastReadFuture = QuranProgressService.getLastReadLocation();
-  }
-
-  Future<void> _continueReading() async {
-    final location = await _lastReadFuture;
-    if (!mounted) return;
-    final surahNumber = location?.surah ?? 1;
-    final ayahNumber = location?.ayah ?? 1;
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => SurahReaderScreen(
-          surah: surahs[surahNumber - 1],
-          initialAyah: ayahNumber,
-        ),
-      ),
-    );
-    if (!mounted) return;
-    setState(() {
-      _lastReadFuture = QuranProgressService.getLastReadLocation();
-    });
-  }
-
-  Widget _continueReadingCard() {
-    return FutureBuilder<({int surah, int ayah})?>(
-      future: _lastReadFuture,
-      builder: (context, snapshot) {
-        final location = snapshot.data;
-        final hasProgress = location != null;
-        final surah = location == null ? surahs.first : surahs[location.surah - 1];
-        final ayah = location?.ayah ?? 1;
-        final totalPages = (surah.ayahs / 10).ceil();
-        final currentPage = ((ayah - 1) ~/ 10) + 1;
-        final progress = ayah / surah.ayahs;
-        final isLoading = snapshot.connectionState == ConnectionState.waiting;
-
-        return Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
-          child: InkWell(
-            onTap: isLoading ? null : _continueReading,
-            borderRadius: BorderRadius.circular(20),
-            child: Ink(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: cardCream,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppSettings.isDark
-                      ? const Color(0xFF405448)
-                      : const Color(0xFFE5D2AE),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(AppSettings.isDark ? 0.10 : 0.045),
-                    blurRadius: 10,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: AppSettings.isDark
-                              ? const Color(0xFF304638)
-                              : const Color(0xFFE9EAB4),
-                          borderRadius: BorderRadius.circular(13),
-                        ),
-                        child: Icon(Icons.menu_book_rounded, color: green, size: 25),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Continue Reading',
-                              style: TextStyle(
-                                color: green,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              isLoading
-                                  ? 'Loading your reading progress...'
-                                  : hasProgress
-                                      ? '${surah.nameEnglish} • Ayah $ayah'
-                                      : 'Begin with Al-Fatihah',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: mutedGreen, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Icon(Icons.arrow_forward_rounded, color: gold, size: 22),
-                    ],
-                  ),
-                  if (hasProgress && !isLoading) ...[
-                    const SizedBox(height: 13),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: LinearProgressIndicator(
-                        value: progress.clamp(0.0, 1.0).toDouble(),
-                        minHeight: 5,
-                        backgroundColor: AppSettings.isDark
-                            ? const Color(0xFF304638)
-                            : const Color(0xFFECE2D0),
-                        valueColor: AlwaysStoppedAnimation<Color>(gold),
-                      ),
-                    ),
-                    const SizedBox(height: 7),
-                    Text(
-                      'Page $currentPage of $totalPages',
-                      style: TextStyle(color: mutedGreen, fontSize: 11),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   static Color get cream => AppSettings.isDark ? Color(0xFF101814) : Color(0xFFFFF5E2);
   static Color get cardCream => AppSettings.isDark ? Color(0xFF1B2922) : Color(0xFFFFFAEF);
   static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
@@ -207,14 +66,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
               },
             ),
           ),
-
-          if (selectedContentTab == 0)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
-                child: _continueReadingCard(),
-              ),
-            ),
 
           SliverToBoxAdapter(
             child: Padding(
@@ -622,12 +473,7 @@ Widget _bottomNavigationBar() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SurahReaderScreen(surah: surah)),
-    ).then((_) {
-      if (!mounted) return;
-      setState(() {
-        _lastReadFuture = QuranProgressService.getLastReadLocation();
-      });
-    });
+    );
   }
 }
 
