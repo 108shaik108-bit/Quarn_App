@@ -127,9 +127,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         behavior: HitTestBehavior.opaque,
         onHorizontalDragEnd: (details) {
           final velocity = details.primaryVelocity ?? 0;
-          if (velocity < -200 && currentPage < totalPages - 1) {
+          if (velocity > 200 && currentPage < totalPages - 1) {
             _changePage(currentPage + 1);
-          } else if (velocity > 200 && currentPage > 0) {
+          } else if (velocity < -200 && currentPage > 0) {
             _changePage(currentPage - 1);
           }
         },
