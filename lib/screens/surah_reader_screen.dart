@@ -146,7 +146,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   surah.nameArabic,
                   style: const TextStyle(
                     color: Color(0xFFD8B77A),
-                    fontSize: 35,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
