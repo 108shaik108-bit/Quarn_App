@@ -266,7 +266,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             Text(
                               _useAllahTerminology(englishVerses[ayahIndex].text),
                               style: const TextStyle(
-                                  color: Color(0xFF655548),
+                                  color: Color(0xFF000000),
                                   fontSize: 16,
                                   height: 1.8),
                             ),
@@ -291,7 +291,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         textDirection: TextDirection.rtl,
                         text: TextSpan(
                           style: const TextStyle(
-                            color: mushafInk,
+                            color: Color(0xFF000000),
                             fontSize: 27,
                             height: 2.15,
                             fontWeight: FontWeight.w500,
