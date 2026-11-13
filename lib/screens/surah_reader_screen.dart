@@ -107,9 +107,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             Text(
               "Page ${currentPage + 1} of $totalPages",
               style: const TextStyle(
-                color: Color(0xFFD8B77A),
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
+                color: Color(0xFF8A857D),
+                fontSize: 10,
+                fontWeight: FontWeight.normal,
               ),
             ),
             const SizedBox(width: 12),
