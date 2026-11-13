@@ -63,7 +63,9 @@ class QuranHeader extends StatelessWidget {
                   textDirection: TextDirection.rtl,
                   style: TextStyle(
                     fontSize: 42,
-                    color: green,
+                    color: AppSettings.isDark
+                        ? const Color(0xFFD6B36F)
+                        : const Color(0xFFA47C43),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
