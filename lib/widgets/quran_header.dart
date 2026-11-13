@@ -75,7 +75,7 @@ class QuranHeader extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 34,
-                    color: const Color(0xFF8B7969),
+                    color: green,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
