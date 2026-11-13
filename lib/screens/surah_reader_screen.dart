@@ -197,7 +197,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                     "Page ${currentPage + 1} of $totalPages",
                     style: const TextStyle(
                       fontSize: 13,
-                      color: Colors.white,
+                      color: Color(0xFFD8B77A),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -205,7 +205,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   Text(
                     "Ayahs ${startAyah + 1} - $endAyah",
                     style: const TextStyle(
-                      color: Color(0xFFD6C7B5),
+                      color: Color(0xFFE8DCCB),
                       fontSize: 11,
                     ),
                   ),
