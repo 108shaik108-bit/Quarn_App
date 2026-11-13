@@ -145,7 +145,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 Text(
                   surah.nameEnglish,
                   style: TextStyle(
-                    color: mushafMode ? mushafInk : Colors.white,
+                    color: const Color(0xFFD8B77A),
                     fontSize: 26,
                     fontWeight: FontWeight.w800,
                   ),
@@ -159,7 +159,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 Text(
                   surah.nameArabic,
                   style: const TextStyle(
-                    color: Color(0xFF22C55E),
+                    color: Color(0xFFD8B77A),
                     fontSize: 29,
                     fontWeight: FontWeight.bold,
                   ),
