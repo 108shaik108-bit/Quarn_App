@@ -148,7 +148,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
                     label,
                     maxLines: 1,
                     style: TextStyle(
-                      color: selected ? cream : cream.withOpacity(0.88),
+                      color: Colors.black,
                       fontFamily: 'serif',
                       fontSize: 15,
                       fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
