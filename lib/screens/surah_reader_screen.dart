@@ -326,6 +326,32 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             ),
           ),
 
+          // Previous/Next page controls — available on every page
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _surahNavButton(
+                      "‹ Previous",
+                      currentPage > 0,
+                      () => _changePage(currentPage - 1),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _surahNavButton(
+                      "Next ›",
+                      currentPage < totalPages - 1,
+                      () => _changePage(currentPage + 1),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           // ═══ 6. Previous/Next Surah — only after the final page ═══
           if (currentPage == totalPages - 1)
             SliverToBoxAdapter(
