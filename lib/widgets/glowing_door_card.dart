@@ -81,7 +81,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
             Container(
               height: 37,
               decoration: BoxDecoration(
-                color: deepGreen.withOpacity(0.45),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(32),
                 border: Border.all(
                   color: cream.withOpacity(0.9),
@@ -90,19 +90,19 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
               ),
               child: TextField(
                 onChanged: widget.onSearch,
-                style: const TextStyle(color: Colors.white, fontSize: 15),
+                style: const TextStyle(color: Colors.black, fontSize: 15),
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   hintText: selectedTab == 0
                       ? 'Search surah by name or number...'
                       : 'Search Juz...',
                   hintStyle: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.black.withOpacity(0.55),
                     fontSize: 11.5,
                   ),
                   prefixIcon: Icon(
                     Icons.search_rounded,
-                    color: cream,
+                    color: const Color(0xFF35251D),
                     size: 29,
                   ),
                   border: InputBorder.none,
