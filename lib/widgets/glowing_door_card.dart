@@ -36,7 +36,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
     return Container(
       padding: const EdgeInsets.fromLTRB(11, 10, 11, 11),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8E2D5),
+        color: const Color(0xFF9E9A91),
         borderRadius: BorderRadius.circular(32),
         border: Border.all(color: gold, width: 1.5),
         boxShadow: [
@@ -57,7 +57,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           Container(
             height: 74,
             decoration: BoxDecoration(
-              color: const Color(0xFFE8E2D5),
+              color: const Color(0xFF9E9A91),
               borderRadius: BorderRadius.circular(22),
             ),
             child: Row(
