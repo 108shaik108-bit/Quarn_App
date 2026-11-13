@@ -143,6 +143,15 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             child: Column(
               children: [
                 Text(
+                  surah.nameArabic,
+                  style: const TextStyle(
+                    color: Color(0xFFD8B77A),
+                    fontSize: 29,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
                   surah.nameEnglish,
                   style: TextStyle(
                     color: const Color(0xFFD8B77A),
@@ -154,15 +163,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 Text(
                   "Surah ${surah.number}",
                   style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 13),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  surah.nameArabic,
-                  style: const TextStyle(
-                    color: Color(0xFFD8B77A),
-                    fontSize: 29,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
