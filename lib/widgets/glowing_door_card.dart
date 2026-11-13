@@ -128,34 +128,43 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           widget.onSearch?.call('');
           widget.onTabChanged?.call(index);
         },
-        child: AnimatedOpacity(
+        child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          opacity: selected ? 1 : 0.78,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    icon,
-                    size: 22,
-                    color: selected ? cream : cream.withOpacity(0.88),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    label,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'serif',
-                      fontSize: 15,
-                      fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
-                    ),
-                  ),
-                ],
+          margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 9),
+          decoration: BoxDecoration(
+            color: cream,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: selected ? gold : cream.withOpacity(0.75),
+              width: selected ? 1.6 : 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.12),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
               ),
+            ],
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 22, color: const Color(0xFF35251D)),
+                const SizedBox(width: 5),
+                Text(
+                  label,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'serif',
+                    fontSize: 15,
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
