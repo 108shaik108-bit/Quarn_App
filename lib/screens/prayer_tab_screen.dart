@@ -757,10 +757,14 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
       child: Row(
         children: [
           Icon(icon, color: gold, size: 24),
-          SizedBox(width: 13),
+          SizedBox(width: 8),
           Expanded(
+            flex: 3,
             child: Text(
               name,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.visible,
               style: TextStyle(
                 color: green,
                 fontSize: 16,
@@ -768,17 +772,28 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
               ),
             ),
           ),
-          Text(
-            arabic,
-            textDirection: TextDirection.rtl,
-            style: TextStyle(
-              color: gold,
-              fontSize: 20,
+          SizedBox(width: 6),
+          Expanded(
+            flex: 3,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.center,
+              child: Text(
+                arabic,
+                textDirection: TextDirection.rtl,
+                maxLines: 1,
+                style: TextStyle(
+                  color: gold,
+                  fontSize: 18,
+                ),
+              ),
             ),
           ),
-          SizedBox(width: 15),
+          SizedBox(width: 6),
           Text(
             formatTime(time),
+            maxLines: 1,
+            softWrap: false,
             style: TextStyle(
               color: green,
               fontSize: 16,
@@ -786,13 +801,17 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
             ),
           ),
           if (enableAdhan) ...[
-            SizedBox(width: 8),
+            SizedBox(width: 4),
             IconButton(
+              visualDensity: VisualDensity.compact,
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints.tightFor(width: 32, height: 40),
               tooltip: _playingPrayer == name ? 'Stop Adhan preview' : 'Play Adhan preview',
               onPressed: () => _toggleAdhan(name),
               icon: Icon(
                 _playingPrayer == name ? Icons.stop_circle : Icons.volume_up_rounded,
                 color: gold,
+                size: 22,
               ),
             ),
           ],
