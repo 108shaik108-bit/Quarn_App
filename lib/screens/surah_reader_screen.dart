@@ -137,7 +137,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           children: [
             CustomScrollView(
               slivers: [
-                const SliverToBoxAdapter(child: SizedBox(height: 52)),
+                const SliverToBoxAdapter(child: SizedBox(height: 16)),
           // ═══ 1. Header: name, number, Arabic, ayah count ═══
           SliverToBoxAdapter(
             child: Column(
@@ -146,30 +146,30 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   surah.nameEnglish,
                   style: TextStyle(
                     color: mushafMode ? mushafInk : Colors.white,
-                    fontSize: 30,
+                    fontSize: 26,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   "Surah ${surah.number}",
-                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 15),
+                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 13),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 5),
                 Text(
                   surah.nameArabic,
                   style: const TextStyle(
                     color: Color(0xFF22C55E),
-                    fontSize: 34,
+                    fontSize: 29,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "${surah.ayahs} Ayahs • ${surah.isMakki ? 'makki' : 'madinah'}",
-                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 14),
+                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 12),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   height: 1,
