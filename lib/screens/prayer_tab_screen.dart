@@ -493,7 +493,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
                   locationLabel,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 17,
+                    fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
