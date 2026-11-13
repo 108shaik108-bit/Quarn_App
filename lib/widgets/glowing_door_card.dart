@@ -64,12 +64,8 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
       ),
       child: Column(
         children: [
-          Container(
+          SizedBox(
             height: 74,
-            decoration: BoxDecoration(
-              color: const Color(0xFF9E9A91),
-              borderRadius: BorderRadius.circular(22),
-            ),
             child: Row(
               children: [
                 _tab('Surahs', 0, Icons.menu_book_rounded),
