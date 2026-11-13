@@ -21,6 +21,7 @@ class SurahReaderScreen extends StatefulWidget {
 class _SurahReaderScreenState extends State<SurahReaderScreen> {
   int currentPage = 0;
   bool showTranslation = false; // Arabic Only = false
+  final ScrollController _scrollController = ScrollController();
   static const int ayahsPerPage = 10;
 
   @override
@@ -34,7 +35,18 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
   void _changePage(int page) {
     setState(() => currentPage = page);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
+    });
     _recordCurrentPage();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _recordCurrentPage() async {
@@ -136,6 +148,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         child: Stack(
           children: [
             CustomScrollView(
+              controller: _scrollController,
               slivers: [
                 const SliverToBoxAdapter(child: SizedBox(height: 16)),
           // ═══ 1. Header: name, number, Arabic, ayah count ═══
