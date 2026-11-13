@@ -760,15 +760,18 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
           SizedBox(width: 8),
           Expanded(
             flex: 3,
-            child: Text(
-              name,
-              maxLines: 1,
-              softWrap: false,
-              overflow: TextOverflow.visible,
-              style: TextStyle(
-                color: green,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                name,
+                maxLines: 1,
+                softWrap: false,
+                style: TextStyle(
+                  color: green,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
