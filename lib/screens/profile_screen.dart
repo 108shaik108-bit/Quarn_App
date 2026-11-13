@@ -53,44 +53,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _editName() async {
-    final controller = TextEditingController(text: _displayName);
     final name = await showDialog<String>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: card,
-        title: Text('Your name', style: TextStyle(color: green)),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          maxLength: 35,
-          decoration: InputDecoration(
-            hintText: 'Enter your name',
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: gold),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              FocusScope.of(dialogContext).unfocus();
-              Navigator.of(dialogContext).pop<String>(null);
-            },
-            child: Text('Cancel', style: TextStyle(color: mutedGreen)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: green,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () =>
-                Navigator.pop(dialogContext, controller.text.trim()),
-            child: Text('Save'),
-          ),
-        ],
+      builder: (_) => _EditNameDialog(
+        initialName: _displayName,
+        dialogColor: card,
+        titleColor: green,
+        mutedColor: mutedGreen,
+        actionColor: green,
+        underlineColor: gold,
       ),
     );
-    controller.dispose();
 
     if (name == null || name.isEmpty) return;
     final prefs = await SharedPreferences.getInstance();
@@ -583,6 +556,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         trailing: Icon(Icons.chevron_right, color: gold),
       ),
+    );
+  }
+}
+
+ 
+class _EditNameDialog extends StatefulWidget {
+  const _EditNameDialog({
+    required this.initialName,
+    required this.dialogColor,
+    required this.titleColor,
+    required this.mutedColor,
+    required this.actionColor,
+    required this.underlineColor,
+  });
+
+  final String initialName;
+  final Color dialogColor;
+  final Color titleColor;
+  final Color mutedColor;
+  final Color actionColor;
+  final Color underlineColor;
+
+  @override
+  State<_EditNameDialog> createState() => _EditNameDialogState();
+}
+
+class _EditNameDialogState extends State<_EditNameDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialName);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: widget.dialogColor,
+      title: Text('Your name', style: TextStyle(color: widget.titleColor)),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        maxLength: 35,
+        decoration: InputDecoration(
+          hintText: 'Enter your name',
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: widget.underlineColor),
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop<String>(null),
+          child: Text('Cancel', style: TextStyle(color: widget.mutedColor)),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: widget.actionColor,
+            foregroundColor: Colors.white,
+          ),
+          onPressed: () =>
+              Navigator.of(context).pop<String>(_controller.text.trim()),
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }
