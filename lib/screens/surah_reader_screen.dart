@@ -101,7 +101,17 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         elevation: 0,
         iconTheme: IconThemeData(color: mushafMode ? mushafInk : Colors.white),
       ),
-      body: CustomScrollView(
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onHorizontalDragEnd: (details) {
+          final velocity = details.primaryVelocity ?? 0;
+          if (velocity < -200 && currentPage < totalPages - 1) {
+            _changePage(currentPage + 1);
+          } else if (velocity > 200 && currentPage > 0) {
+            _changePage(currentPage - 1);
+          }
+        },
+        child: CustomScrollView(
         slivers: [
           // ═══ 1. Header: name, number, Arabic, ayah count ═══
           SliverToBoxAdapter(
@@ -455,8 +465,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                               children: List.generate(totalPages, (i) {
                                 final active = i == currentPage;
                                 return GestureDetector(
-                                  onTap: () =>
-                                      setState(() => currentPage = i),
+                                  onTap: () => _changePage(i),
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(
                                         horizontal: 3),
@@ -545,6 +554,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
           const SliverToBoxAdapter(child: SizedBox(height: 30)),
         ],
+        ),
       ),
     );
   }
