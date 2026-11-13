@@ -434,19 +434,25 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 9),
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: const Color(0xFFE8E2D5),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: const Color(0xFFE8E2D5)),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: const Color(0xFF000000),
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            maxLines: 1,
+            softWrap: false,
+            style: const TextStyle(
+              color: Color(0xFF000000),
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
           ),
         ),
       ),
