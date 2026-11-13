@@ -334,7 +334,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 children: [
                   Expanded(
                     child: _surahNavButton(
-                      "Next ›",
+                      "‹ Next",
                       currentPage < totalPages - 1,
                       () => _changePage(currentPage + 1),
                     ),
@@ -342,7 +342,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _surahNavButton(
-                      "‹ Previous",
+                      "Previous ›",
                       currentPage > 0,
                       () => _changePage(currentPage - 1),
                     ),
