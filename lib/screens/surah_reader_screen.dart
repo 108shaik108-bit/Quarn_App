@@ -22,6 +22,8 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
   int currentPage = 0;
   bool showTranslation = false; // Arabic Only = false
   static const int ayahsPerPage = 10;
+  double _indicatorTop = 8;
+  double _indicatorRight = 14;
 
   @override
   void initState() {
@@ -444,9 +446,19 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               ],
             ),
             Positioned(
-              top: 8,
-              right: 14,
-              child: IgnorePointer(
+              top: _indicatorTop,
+              right: _indicatorRight,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onPanUpdate: (details) {
+                  final screen = MediaQuery.of(context).size;
+                  setState(() {
+                    _indicatorTop = (_indicatorTop + details.delta.dy)
+                        .clamp(8.0, screen.height - 110.0);
+                    _indicatorRight = (_indicatorRight - details.delta.dx)
+                        .clamp(8.0, screen.width - 132.0);
+                  });
+                },
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
