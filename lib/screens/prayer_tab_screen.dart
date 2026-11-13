@@ -503,7 +503,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
                       .formatMediumDate(DateTime.now()),
                   style: TextStyle(
                     color: Color(0xFFE9D19A),
-                    fontSize: 13,
+                    fontSize: 14,
                   ),
                 ),
               ],
@@ -591,12 +591,12 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
                 children: [
                   Text(
                     'Qibla Finder',
-                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 3),
                   Text(
                     'Find the direction of the Kaaba',
-                    style: TextStyle(color: Color(0xFFE9D19A), fontSize: 12),
+                    style: TextStyle(color: Color(0xFFE9D19A), fontSize: 14),
                   ),
                 ],
               ),
@@ -628,7 +628,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
                   'Ring Adhan',
                   style: TextStyle(
                     color: green,
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -644,7 +644,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
             _ringAdhanEnabled
                 ? 'Adhan is enabled. Choose which prayers should ring. Alarm audio may still sound in phone silent mode.'
                 : 'Muted by default. Turn on Ring Adhan when you want it.',
-            style: TextStyle(color: Color(0xFF52735F), fontSize: 12),
+            style: TextStyle(color: Color(0xFF52735F), fontSize: 14),
           ),
           if (_ringAdhanEnabled) ...[
             SizedBox(height: 8),
@@ -686,7 +686,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
             style: TextStyle(
               color: green,
               fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontSize: 18,
             ),
           ),
           SizedBox(height: 10),
@@ -773,7 +773,7 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
             textDirection: TextDirection.rtl,
             style: TextStyle(
               color: gold,
-              fontSize: 18,
+              fontSize: 20,
             ),
           ),
           SizedBox(width: 15),
