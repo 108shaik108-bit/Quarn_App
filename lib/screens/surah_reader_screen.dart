@@ -111,8 +111,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             _changePage(currentPage - 1);
           }
         },
-        child: CustomScrollView(
-        slivers: [
+        child: Stack(
+          children: [
+            CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(child: SizedBox(height: 52)),
           // ═══ 1. Header: name, number, Arabic, ayah count ═══
           SliverToBoxAdapter(
             child: Column(
@@ -176,40 +179,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                     }),
                   ],
                 ),
-              ),
-            ),
-          ),
-
-          // ═══ 3. Top pagination bar ═══
-          SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 20, 16, 12),
-              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF111A16),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF22332B)),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Page ${currentPage + 1} of $totalPages",
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFFD8B77A),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    "Ayahs ${startAyah + 1} - $endAyah",
-                    style: const TextStyle(
-                      color: Color(0xFFE8DCCB),
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
@@ -472,7 +441,52 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 30)),
-        ],
+              ],
+            ),
+            Positioned(
+              top: 8,
+              right: 14,
+              child: IgnorePointer(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xEE111A16),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0x66D8B77A)),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x22000000),
+                        blurRadius: 10,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Page ${currentPage + 1} of $totalPages",
+                        style: const TextStyle(
+                          color: Color(0xFFD8B77A),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        "Ayahs ${startAyah + 1} - $endAyah",
+                        style: const TextStyle(
+                          color: Color(0xFFE8DCCB),
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
