@@ -101,7 +101,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: mushafMode ? mushafInk : Colors.white),
-        title: Column(
+        title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
@@ -112,11 +112,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(width: 12),
             Text(
               "Ayahs ${startAyah + 1} - $endAyah",
               style: const TextStyle(
-                color: Color(0xFFE8DCCB),
+                color: Color(0xFF8A857D),
                 fontSize: 10,
               ),
             ),
