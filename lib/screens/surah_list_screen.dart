@@ -58,7 +58,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
       builder: (context, snapshot) {
         final location = snapshot.data;
         final hasProgress = location != null;
-        final surah = hasProgress ? surahs[location.surah - 1] : surahs.first;
+        final surah = location == null ? surahs.first : surahs[location.surah - 1];
         final ayah = location?.ayah ?? 1;
         final totalPages = (surah.ayahs / 10).ceil();
         final currentPage = ((ayah - 1) ~/ 10) + 1;
@@ -141,7 +141,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: LinearProgressIndicator(
-                        value: progress.clamp(0.0, 1.0),
+                        value: progress.clamp(0.0, 1.0).toDouble(),
                         minHeight: 5,
                         backgroundColor: AppSettings.isDark
                             ? const Color(0xFF304638)
@@ -622,7 +622,12 @@ Widget _bottomNavigationBar() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SurahReaderScreen(surah: surah)),
-    );
+    ).then((_) {
+      if (!mounted) return;
+      setState(() {
+        _lastReadFuture = QuranProgressService.getLastReadLocation();
+      });
+    });
   }
 }
 
