@@ -7,6 +7,7 @@ import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
+import '../services/quran_progress_service.dart';
 import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
@@ -30,11 +31,13 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   Timer? _dailyRefreshTimer;
   bool _isSaved = false;
   final GlobalKey _shareCardKey = GlobalKey();
+  late Future<({int surah, int ayah})?> _continueReadingFuture;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _continueReadingFuture = QuranProgressService.getLastReadLocation();
     _loadDailyAyah();
     _scheduleDailyRefresh();
   }
@@ -340,6 +343,29 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 
 
+  Future<void> _openContinueReading() async {
+    final location = await _continueReadingFuture;
+    if (!mounted) return;
+
+    final surahNumber = location?.surah ?? 1;
+    final ayahNumber = location?.ayah ?? 1;
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SurahReaderScreen(
+          surah: surahs[surahNumber - 1],
+          initialAyah: ayahNumber,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _continueReadingFuture = QuranProgressService.getLastReadLocation();
+    });
+  }
+
   void _openSurah() {
     Navigator.push(
       context,
@@ -410,6 +436,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
               fontStyle: FontStyle.italic,
             ),
           ),
+          SizedBox(height: 20),
+          _continueReadingCard(),
         ],
       ),
     );
@@ -581,6 +609,102 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     );
   }
 
+
+  Widget _continueReadingCard() {
+    return FutureBuilder<({int surah, int ayah})?>(
+      future: _continueReadingFuture,
+      builder: (context, snapshot) {
+        final location = snapshot.data;
+        final surah = location == null ? surahs.first : surahs[location.surah - 1];
+        final ayah = location?.ayah ?? 1;
+        final hasProgress = location != null;
+
+        return Container(
+          padding: const EdgeInsets.all(13),
+          decoration: BoxDecoration(
+            color: AppSettings.isDark ? Color(0xFF1B2922) : Color(0xFFFFFAEF),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: AppSettings.isDark ? Color(0xFF405448) : Color(0xFFF0D8A9),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: green.withOpacity(0.10),
+                blurRadius: 9,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 58,
+                height: 58,
+                decoration: BoxDecoration(
+                  color: AppSettings.isDark ? Color(0xFF304638) : Color(0xFFE9EAB4),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.menu_book_rounded, color: green, size: 33),
+              ),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Continue Reading',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: green,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      snapshot.connectionState == ConnectionState.waiting
+                          ? 'Loading your progress...'
+                          : '${surah.nameEnglish} • Ayah $ayah',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppSettings.isDark ? Color(0xFFB4C7BA) : Color(0xFF52735F),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: snapshot.connectionState == ConnectionState.waiting
+                    ? null
+                    : _openContinueReading,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: green,
+                  foregroundColor: AppSettings.isDark ? Color(0xFF101814) : Colors.white,
+                  elevation: 2,
+                  padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(hasProgress ? 'Resume' : 'Start'),
+                    SizedBox(width: 3),
+                    Icon(Icons.chevron_right, size: 19),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Widget _circleAction({
     required IconData icon,
