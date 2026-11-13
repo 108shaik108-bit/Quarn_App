@@ -503,11 +503,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: active
-                ? Colors.white
-                : (mushafMode
-                    ? const Color(0xFF3D3028)
-                    : const Color(0xFFB8C0BA)),
+            color: active ? Colors.white : const Color(0xFF3D3028),
             fontWeight: FontWeight.w600,
             fontSize: 13,
           ),
