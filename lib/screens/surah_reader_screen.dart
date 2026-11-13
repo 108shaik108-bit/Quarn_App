@@ -22,8 +22,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
   int currentPage = 0;
   bool showTranslation = false; // Arabic Only = false
   static const int ayahsPerPage = 10;
-  double _indicatorTop = 8;
-  double _indicatorRight = 14;
 
   @override
   void initState() {
@@ -101,7 +99,37 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
       appBar: AppBar(
         backgroundColor: mushafMode ? mushafPaper : const Color(0xFF0A0F0D),
         elevation: 0,
+        centerTitle: true,
         iconTheme: IconThemeData(color: mushafMode ? mushafInk : Colors.white),
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          decoration: BoxDecoration(
+            color: const Color(0xEE111A16),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0x66D8B77A)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Page ${currentPage + 1} of $totalPages",
+                style: const TextStyle(
+                  color: Color(0xFFD8B77A),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                "Ayahs ${startAyah + 1} - $endAyah",
+                style: const TextStyle(
+                  color: Color(0xFFE8DCCB),
+                  fontSize: 10,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -444,59 +472,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
           const SliverToBoxAdapter(child: SizedBox(height: 30)),
               ],
-            ),
-            Positioned(
-              top: _indicatorTop,
-              right: _indicatorRight,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onPanUpdate: (details) {
-                  final screen = MediaQuery.of(context).size;
-                  setState(() {
-                    _indicatorTop = (_indicatorTop + details.delta.dy)
-                        .clamp(8.0, screen.height - 110.0);
-                    _indicatorRight = (_indicatorRight - details.delta.dx)
-                        .clamp(8.0, screen.width - 132.0);
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xEE111A16),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0x66D8B77A)),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x22000000),
-                        blurRadius: 10,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Page ${currentPage + 1} of $totalPages",
-                        style: const TextStyle(
-                          color: Color(0xFFD8B77A),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        "Ayahs ${startAyah + 1} - $endAyah",
-                        style: const TextStyle(
-                          color: Color(0xFFE8DCCB),
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ),
           ],
         ),
