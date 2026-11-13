@@ -58,8 +58,12 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
       ),
       child: Column(
         children: [
-          SizedBox(
+          Container(
             height: 74,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8E2D5),
+              borderRadius: BorderRadius.circular(22),
+            ),
             child: Row(
               children: [
                 _tab('Surahs', 0, Icons.menu_book_rounded),
@@ -115,7 +119,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
   Widget _tabDivider() => Container(
         width: 1,
         height: 28,
-        color: cream.withOpacity(0.48),
+        color: const Color(0xFF493326).withOpacity(0.35),
       );
 
   Widget _tab(String label, int index, IconData icon) {
