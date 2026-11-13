@@ -326,141 +326,32 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             ),
           ),
 
-          // ═══ 6. NEW! Page pills + Previous/Next Surah ═══
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-              child: Column(
-                children: [
-                  // Numbered pills row
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF111A16),
-                      borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(color: const Color(0xFF22332B)),
-                    ),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: currentPage > 0
-                              ? () => _changePage(currentPage - 1)
-                              : null,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 6),
-                            child: Row(
-                              children: [
-                                Icon(Icons.chevron_left,
-                                    size: 18,
-                                    color: currentPage > 0
-                                        ? const Color(0xFF22C55E)
-                                        : Colors.grey.shade700),
-                                Text(" Previous",
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: currentPage > 0
-                                            ? const Color(0xFF22C55E)
-                                            : Colors.grey.shade700)),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: List.generate(totalPages, (i) {
-                                final active = i == currentPage;
-                                return GestureDetector(
-                                  onTap: () => _changePage(i),
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 3),
-                                    width: 32,
-                                    height: 32,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: active
-                                          ? const Color(0xFF16A34A)
-                                          : const Color(0xFF1A2620),
-                                      borderRadius:
-                                          BorderRadius.circular(7),
-                                      border: Border.all(
-                                          color: const Color(0xFF22332B)),
-                                    ),
-                                    child: Text(
-                                      "${i + 1}",
-                                      style: TextStyle(
-                                        color: active
-                                            ? Colors.white
-                                            : Colors.grey,
-                                        fontSize: 13,
-                                        fontWeight: active
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: currentPage < totalPages - 1
-                              ? () => _changePage(currentPage + 1)
-                              : null,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 6),
-                            child: Row(
-                              children: [
-                                Text("Next ",
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: currentPage < totalPages - 1
-                                            ? const Color(0xFF22C55E)
-                                            : Colors.grey.shade700)),
-                                Icon(Icons.chevron_right,
-                                    size: 18,
-                                    color: currentPage < totalPages - 1
-                                        ? const Color(0xFF22C55E)
-                                        : Colors.grey.shade700),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  // Previous Surah / Next Surah buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _surahNavButton(
-                          "← Previous Surah",
-                          surah.number > 1,
-                          () => _goToSurah(surah.number - 1),
-                        ),
+          // ═══ 6. Previous/Next Surah — only after the final page ═══
+          if (currentPage == totalPages - 1)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _surahNavButton(
+                        "← Previous Surah",
+                        surah.number > 1,
+                        () => _goToSurah(surah.number - 1),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _surahNavButton(
-                          "Next Surah →",
-                          surah.number < 114,
-                          () => _goToSurah(surah.number + 1),
-                        ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _surahNavButton(
+                        "Next Surah →",
+                        surah.number < 114,
+                        () => _goToSurah(surah.number + 1),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
           const SliverToBoxAdapter(child: SizedBox(height: 30)),
               ],
@@ -520,16 +411,14 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         padding: const EdgeInsets.symmetric(vertical: 14),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: const Color(0xFF111A16),
+          color: const Color(0xFF8A857D),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: enabled ? const Color(0xFF22C55E) : const Color(0xFF22332B),
-          ),
+          border: Border.all(color: const Color(0xFF8A857D)),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: enabled ? const Color(0xFF22C55E) : Colors.grey.shade700,
+            color: enabled ? Colors.white : const Color(0xFFE4E1DC),
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
