@@ -444,6 +444,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
   // ═══ NEW! Helper: Previous/Next Surah button ═══
   Widget _surahNavButton(String label, bool enabled, VoidCallback onTap) {
+    const enabledBackground = Color(0xFFE8E2D5);
+    const disabledBackground = Color(0xFFF1EDE5);
+    const enabledText = Color(0xFF000000);
+    const disabledText = Color(0xFFAAA39A);
+
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: Container(
@@ -451,9 +456,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 6),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: const Color(0xFFE8E2D5),
+          color: enabled ? enabledBackground : disabledBackground,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFE8E2D5)),
+          border: Border.all(
+            color: enabled ? enabledBackground : disabledBackground,
+          ),
         ),
         child: FittedBox(
           fit: BoxFit.scaleDown,
@@ -461,8 +468,8 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             label,
             maxLines: 1,
             softWrap: false,
-            style: const TextStyle(
-              color: Color(0xFF000000),
+            style: TextStyle(
+              color: enabled ? enabledText : disabledText,
               fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
