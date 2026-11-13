@@ -72,7 +72,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
+            onPressed: () {
+              FocusScope.of(dialogContext).unfocus();
+              Navigator.of(dialogContext).pop<String>(null);
+            },
             child: Text('Cancel', style: TextStyle(color: mutedGreen)),
           ),
           ElevatedButton(
