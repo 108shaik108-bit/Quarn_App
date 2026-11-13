@@ -444,7 +444,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: enabled ? Colors.white : const Color(0xFFE4E1DC),
+            color: const Color(0xFF000000),
             fontWeight: FontWeight.w600,
             fontSize: 14,
           ),
