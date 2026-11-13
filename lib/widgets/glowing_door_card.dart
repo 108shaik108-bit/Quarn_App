@@ -139,7 +139,7 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 9),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: deepGreen.withOpacity(0.45),
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
               color: selected ? gold : cream.withOpacity(0.75),
@@ -158,13 +158,13 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, size: 22, color: const Color(0xFF35251D)),
+                Icon(icon, size: 22, color: cream),
                 const SizedBox(width: 5),
                 Text(
                   label,
                   maxLines: 1,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontFamily: 'serif',
                     fontSize: 15,
                     fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
