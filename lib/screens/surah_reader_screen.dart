@@ -190,104 +190,23 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: const Color(0xFF22332B)),
               ),
-              child: Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    flex: 3,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: currentPage > 0
-                          ? () => _changePage(currentPage - 1)
-                          : null,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.chevron_left,
-                              size: 18,
-                              color: currentPage > 0
-                                  ? const Color(0xFF22C55E)
-                                  : Colors.grey.shade700),
-                          Flexible(
-                            child: Text(
-                              "Previous",
-                              maxLines: 1,
-                              overflow: TextOverflow.clip,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: currentPage > 0
-                                    ? const Color(0xFF22C55E)
-                                    : Colors.grey.shade700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                  Text(
+                    "Page ${currentPage + 1} of $totalPages",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Expanded(
-                    flex: 4,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            "Page ${currentPage + 1} of $totalPages",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: mushafMode ? mushafInk : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            "Ayahs ${startAyah + 1} - $endAyah",
-                            style: TextStyle(
-                              color: mushafMode ? const Color(0xFF8B7969) : Colors.grey,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: currentPage < totalPages - 1
-                          ? () => _changePage(currentPage + 1)
-                          : null,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              "Next",
-                              maxLines: 1,
-                              overflow: TextOverflow.clip,
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: currentPage < totalPages - 1
-                                    ? const Color(0xFF22C55E)
-                                    : Colors.grey.shade700,
-                              ),
-                            ),
-                          ),
-                          Icon(Icons.chevron_right,
-                              size: 18,
-                              color: currentPage < totalPages - 1
-                                  ? const Color(0xFF22C55E)
-                                  : Colors.grey.shade700),
-                        ],
-                      ),
+                  const SizedBox(height: 3),
+                  Text(
+                    "Ayahs ${startAyah + 1} - $endAyah",
+                    style: const TextStyle(
+                      color: Color(0xFFD6C7B5),
+                      fontSize: 11,
                     ),
                   ),
                 ],
