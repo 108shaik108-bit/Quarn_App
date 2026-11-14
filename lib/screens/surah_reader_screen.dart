@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:quran_flutter/quran_flutter.dart' hide Surah;
 import '../data/surah_data.dart';
 import '../services/bookmark_service.dart';
@@ -64,6 +68,170 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
   Future<void> _toggleAyahBookmark(int ayahNumber) async {
     await BookmarkService.toggle(widget.surah.number, ayahNumber);
     if (mounted) setState(() {});
+  }
+
+
+  void _copyAyahText(String text, String label) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$label copied')),
+    );
+  }
+
+  Widget _ayahActionsMenu({
+    required int ayahNumber,
+    required String arabic,
+    required String translation,
+  }) {
+    return PopupMenuButton<String>(
+      tooltip: 'Ayah options',
+      icon: const Icon(Icons.more_horiz, color: Color(0xFF8B7969)),
+      onSelected: (value) {
+        if (value == 'arabic') {
+          _copyAyahText(arabic, 'Arabic Ayah');
+        } else if (value == 'translation') {
+          _copyAyahText(translation, 'Translation');
+        } else if (value == 'share') {
+          _showShareAyahCard(
+            ayahNumber: ayahNumber,
+            arabic: arabic,
+            translation: translation,
+          );
+        }
+      },
+      itemBuilder: (context) => const [
+        PopupMenuItem(value: 'arabic', child: Text('Copy Arabic')),
+        PopupMenuItem(value: 'translation', child: Text('Copy Translation')),
+        PopupMenuDivider(),
+        PopupMenuItem(
+          value: 'share',
+          child: Row(
+            children: [
+              Icon(Icons.share_outlined, size: 18),
+              SizedBox(width: 10),
+              Text('Share Ayah Card'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showShareAyahCard({
+    required int ayahNumber,
+    required String arabic,
+    required String translation,
+  }) async {
+    final cardKey = GlobalKey();
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: const Color(0xFFFFF8F0),
+        contentPadding: const EdgeInsets.all(16),
+        content: RepaintBoundary(
+          key: cardKey,
+          child: Container(
+            width: 320,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF8F0),
+              border: Border.all(color: const Color(0xFFD8B77A), width: 1.4),
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'THE HOLY QURAN',
+                  style: TextStyle(
+                    color: Color(0xFF806443),
+                    fontSize: 11,
+                    letterSpacing: 2,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 22),
+                Text(
+                  arabic,
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.rtl,
+                  style: const TextStyle(
+                    color: Color(0xFF241D18),
+                    fontSize: 28,
+                    height: 1.9,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Container(height: 1, color: const Color(0xFFE4D4C3)),
+                const SizedBox(height: 18),
+                Text(
+                  translation,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFF655548),
+                    fontSize: 15,
+                    height: 1.7,
+                  ),
+                ),
+                const SizedBox(height: 22),
+                Text(
+                  '${widget.surah.nameEnglish} • Ayah $ayahNumber',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color(0xFF9A784D),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          FilledButton.icon(
+            onPressed: () async {
+              try {
+                final boundary = cardKey.currentContext?.findRenderObject()
+                    as RenderRepaintBoundary?;
+                if (boundary == null) return;
+                final image = await boundary.toImage(pixelRatio: 3);
+                final data = await image.toByteData(
+                  format: ui.ImageByteFormat.png,
+                );
+                image.dispose();
+                if (data == null) return;
+                final bytes = data.buffer.asUint8List();
+                await SharePlus.instance.share(
+                  ShareParams(
+                    files: [
+                      XFile.fromData(
+                        bytes,
+                        mimeType: 'image/png',
+                        name: 'quran-ayah.png',
+                      ),
+                    ],
+                    text: '${widget.surah.nameEnglish} • Ayah $ayahNumber',
+                  ),
+                );
+                if (dialogContext.mounted) Navigator.pop(dialogContext);
+              } catch (error) {
+                if (dialogContext.mounted) {
+                  ScaffoldMessenger.of(dialogContext).showSnackBar(
+                    const SnackBar(content: Text('Could not create share card.')),
+                  );
+                }
+              }
+            },
+            icon: const Icon(Icons.share_outlined),
+            label: const Text('Share'),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _pageBookmarkButton(int firstAyahNumber) {
@@ -309,9 +477,16 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                   fontSize: 16,
                                   height: 1.8),
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: _bookmarkButton(ayahIndex + 1),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                _bookmarkButton(ayahIndex + 1),
+                                _ayahActionsMenu(
+                                  ayahNumber: ayahIndex + 1,
+                                  arabic: arabicVerses[ayahIndex].text,
+                                  translation: _useAllahTerminology(englishVerses[ayahIndex].text),
+                                ),
+                              ],
                             ),
                             if (i < endAyah - startAyah - 1) ...[
                               const SizedBox(height: 16),
@@ -341,19 +516,29 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                               TextSpan(text: '${arabicVerses[i].text} '),
                               WidgetSpan(
                                 alignment: PlaceholderAlignment.middle,
-                                child: GestureDetector(
-                                  onTap: () => _toggleAyahBookmark(i + 1),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                                    child: Text(
-                                      '۝${_arabicDigits(i + 1)}',
-                                      style: const TextStyle(
-                                        color: Color(0xFFB18A68),
-                                        fontSize: 19,
-                                        height: 1,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => _toggleAyahBookmark(i + 1),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                                        child: Text(
+                                          '۝${_arabicDigits(i + 1)}',
+                                          style: const TextStyle(
+                                            color: Color(0xFFB18A68),
+                                            fontSize: 19,
+                                            height: 1,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                    _ayahActionsMenu(
+                                      ayahNumber: i + 1,
+                                      arabic: arabicVerses[i].text,
+                                      translation: _useAllahTerminology(englishVerses[i].text),
+                                    ),
+                                  ],
                                 ),
                               ),
                               const TextSpan(text: ' '),
