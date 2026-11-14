@@ -517,29 +517,19 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                               TextSpan(text: '${arabicVerses[i].text} '),
                               WidgetSpan(
                                 alignment: PlaceholderAlignment.middle,
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () => _toggleAyahBookmark(i + 1),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                                        child: Text(
-                                          '۝${_arabicDigits(i + 1)}',
-                                          style: const TextStyle(
-                                            color: Color(0xFFB18A68),
-                                            fontSize: 19,
-                                            height: 1,
-                                          ),
-                                        ),
+                                child: GestureDetector(
+                                  onTap: () => _toggleAyahBookmark(i + 1),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                                    child: Text(
+                                      '۝${_arabicDigits(i + 1)}',
+                                      style: const TextStyle(
+                                        color: Color(0xFFB18A68),
+                                        fontSize: 19,
+                                        height: 1,
                                       ),
                                     ),
-                                    _ayahActionsMenu(
-                                      ayahNumber: i + 1,
-                                      arabic: arabicVerses[i].text,
-                                      translation: _useAllahTerminology(englishVerses[i].text),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
                               const TextSpan(text: ' '),
