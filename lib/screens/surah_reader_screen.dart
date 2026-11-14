@@ -222,7 +222,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           if (surah.number != 1 && surah.number != 9)
             const SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Text(
                   "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
                   textAlign: TextAlign.center,
@@ -235,8 +235,13 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           // ═══ 5. The Quran page card ═══
           SliverToBoxAdapter(
             child: Container(
-              margin: EdgeInsets.fromLTRB(mushafMode ? 10 : 16, 8, mushafMode ? 10 : 16, 20),
-              padding: EdgeInsets.symmetric(horizontal: mushafMode ? 18 : 20, vertical: mushafMode ? 28 : 20),
+              margin: EdgeInsets.fromLTRB(mushafMode ? 10 : 16, 0, mushafMode ? 10 : 16, 20),
+              padding: EdgeInsets.fromLTRB(
+                mushafMode ? 18 : 20,
+                mushafMode ? 12 : 20,
+                mushafMode ? 18 : 20,
+                mushafMode ? 28 : 20,
+              ),
               decoration: BoxDecoration(
                 color: mushafMode ? mushafPaper : const Color(0xFF111A16),
                 borderRadius: BorderRadius.circular(mushafMode ? 2 : 12),
