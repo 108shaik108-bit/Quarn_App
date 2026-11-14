@@ -219,7 +219,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           ),
 
           // ═══ 4. Bismillah ═══
-          if (surah.number != 1 && surah.number != 9)
+          if (currentPage == 0 && surah.number != 1 && surah.number != 9)
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
