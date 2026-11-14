@@ -171,7 +171,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             CustomScrollView(
               controller: _scrollController,
               slivers: [
-                const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                const SliverToBoxAdapter(child: SizedBox(height: 0)),
           // ═══ 1. Header: name, number, Arabic, ayah count ═══
           SliverToBoxAdapter(
             child: Column(
