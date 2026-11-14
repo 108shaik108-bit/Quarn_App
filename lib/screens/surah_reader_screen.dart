@@ -66,6 +66,26 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     if (mounted) setState(() {});
   }
 
+  Widget _pageBookmarkButton(int firstAyahNumber) {
+    return FutureBuilder<bool>(
+      future: BookmarkService.isBookmarked(
+        widget.surah.number,
+        firstAyahNumber,
+      ),
+      builder: (context, snapshot) {
+        final saved = snapshot.data ?? false;
+        return IconButton(
+          tooltip: saved ? 'Remove page bookmark' : 'Save this page',
+          onPressed: () => _toggleAyahBookmark(firstAyahNumber),
+          icon: Icon(
+            saved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+            color: const Color(0xFFC49A45),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _bookmarkButton(int ayahNumber) {
     return FutureBuilder<bool>(
       future: BookmarkService.isBookmarked(widget.surah.number, ayahNumber),
@@ -113,6 +133,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: mushafMode ? mushafInk : Colors.white),
+        actions: [_pageBookmarkButton(startAyah + 1)],
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
