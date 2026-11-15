@@ -42,7 +42,7 @@ class QuranHeader extends StatelessWidget {
 
           // Prayer notification shortcut
           Positioned(
-            top: 18,
+            top: 34,
             right: 20,
             child: _headerButton(
               Icons.notifications_none,
