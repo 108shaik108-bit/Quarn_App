@@ -225,7 +225,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          '${widget.surah.nameEnglish} • Ayah $ayahNumber',
+                          '${widget.surah.nameEnglish} ${widget.surah.number}:$ayahNumber',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: Color(0xFF9A784D),
