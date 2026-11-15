@@ -83,9 +83,57 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     _scheduleDailyRefresh();
   }
 
+  bool _fitsDailyAyahShareCard(String arabic, String translation) {
+    final arabicFontSize = arabic.length > 220
+        ? 18.0
+        : arabic.length > 150
+            ? 20.0
+            : arabic.length > 90
+                ? 23.0
+                : 26.0;
+    final translationFontSize = translation.length > 280
+        ? 13.0
+        : translation.length > 210
+            ? 14.0
+            : translation.length > 140
+                ? 16.0
+                : 18.0;
+
+    final arabicPainter = TextPainter(
+      text: TextSpan(
+        text: arabic,
+        style: TextStyle(fontSize: arabicFontSize, height: 1.55, fontWeight: FontWeight.w600),
+      ),
+      textDirection: TextDirection.rtl,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: 290);
+
+    final translatedText = _useAllahTerminology(translation);
+    final translationPainter = TextPainter(
+      text: TextSpan(
+        text: translatedText,
+        style: TextStyle(
+          fontFamily: 'serif',
+          fontSize: translationFontSize,
+          height: 1.3,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      textDirection: AppSettings.language.value == 'ur'
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: 290);
+
+    // The share artwork is kept at 340 x 560 logical pixels. This budget
+    // reserves space for the heading, verse reference, padding and brand.
+    return arabicPainter.height + translationPainter.height <= 195;
+  }
+
   void _loadDailyAyah() {
-    // One stable verse per calendar day. The verse changes automatically
-    // when the device's local date changes.
+    // Choose a deterministic daily verse that fits the complete share card.
+    // Search forward from today's position so no Arabic or translation text
+    // ever needs to be shortened or clipped in the shared image.
     final allVerses = <({int surah, int ayah})>[];
     for (final surah in surahs) {
       for (var ayah = 1; ayah <= surah.ayahs; ayah++) {
@@ -97,7 +145,21 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     _loadedDailyDate = DateTime(today.year, today.month, today.day);
     _isSaved = false;
     final dayNumber = _loadedDailyDate.difference(DateTime(2024, 1, 1)).inDays;
-    final selected = allVerses[dayNumber % allVerses.length];
+    final startIndex = dayNumber % allVerses.length;
+    var selected = allVerses[startIndex];
+
+    for (var offset = 0; offset < allVerses.length; offset++) {
+      final candidate = allVerses[(startIndex + offset) % allVerses.length];
+      final arabic = Quran.getSurahVersesAsList(candidate.surah)[candidate.ayah - 1].text;
+      final translation = Quran.getSurahVersesAsList(
+        candidate.surah,
+        language: AppSettings.language.value,
+      )[candidate.ayah - 1].text;
+      if (_fitsDailyAyahShareCard(arabic, translation)) {
+        selected = candidate;
+        break;
+      }
+    }
 
     _surahNumber = selected.surah;
     _ayahNumber = selected.ayah;
@@ -228,22 +290,9 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       shadows: const [Shadow(color: Colors.black, blurRadius: 12)],
     );
 
-    final arabicPainter = TextPainter(
-      text: TextSpan(text: _arabicText, style: arabicStyle),
-      textDirection: TextDirection.rtl,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: 290);
-    final translationPainter = TextPainter(
-      text: TextSpan(text: translation, style: translationStyle),
-      textDirection: translationDirection,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: 290);
-
-    // Keep generous room for Flutter's actual font metrics, line-height
-    // rounding and the header/footer. The dialog scrolls when the card is tall.
-    final cardHeight = (365 + arabicPainter.height + translationPainter.height)
-        .clamp(560.0, double.infinity)
-        .toDouble();
+    // Daily Ayah selection guarantees the complete text fits this fixed
+    // share-card size, preserving a consistent WhatsApp image layout.
+    const cardHeight = 560.0;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
