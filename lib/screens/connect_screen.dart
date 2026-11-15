@@ -249,7 +249,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const contentWidth = cardWidth - horizontalPadding * 2;
     const arabicStyle = TextStyle(
       color: Colors.white,
-      fontSize: 29,
+      fontSize: 24,
       height: 1.5,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
@@ -257,7 +257,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const translationStyle = TextStyle(
       color: Colors.white,
       fontFamily: 'serif',
-      fontSize: 20,
+      fontSize: 17,
       height: 1.35,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
