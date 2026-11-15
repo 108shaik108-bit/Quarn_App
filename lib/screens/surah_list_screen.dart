@@ -452,13 +452,6 @@ Widget _bottomNavigationBar() {
                     ),
                   ),
                 ),
-                if (index != 3)
-                  Container(
-                    width: 1,
-                    height: 44,
-                    color: Color(0xFFC49A45),
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                  ),
               ],
             ),
           );
