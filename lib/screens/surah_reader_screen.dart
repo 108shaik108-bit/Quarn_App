@@ -29,6 +29,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
   int currentPage = 0;
   bool showTranslation = false; // Arabic Only = false
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey _initialAyahKey = GlobalKey();
   static const int ayahsPerPage = 10;
 
   @override
@@ -39,6 +40,20 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         .toInt();
     showTranslation = widget.openWithTranslation;
     _recordCurrentPage();
+
+    if (widget.openWithTranslation && widget.initialAyah > 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final ayahContext = _initialAyahKey.currentContext;
+        if (mounted && ayahContext != null) {
+          Scrollable.ensureVisible(
+            ayahContext,
+            alignment: 0.12,
+            duration: const Duration(milliseconds: 450),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    }
   }
 
   void _changePage(int page) {
@@ -446,6 +461,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                           List.generate(endAyah - startAyah, (i) {
                         final ayahIndex = startAyah + i;
                         return Column(
+                          key: ayahIndex + 1 == widget.initialAyah
+                              ? _initialAyahKey
+                              : null,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Directionality(
