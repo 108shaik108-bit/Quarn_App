@@ -29,7 +29,7 @@ class QuranApp extends StatelessWidget {
       builder: (context, themeMode, _) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Quarn App',
+          title: 'Amal Billah',
           themeMode: themeMode,
           theme: ThemeData(
             brightness: Brightness.light,
