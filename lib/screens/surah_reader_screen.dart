@@ -10,6 +10,40 @@ import '../services/bookmark_service.dart';
 import '../services/app_settings.dart';
 import '../services/quran_progress_service.dart';
 
+
+Widget _buildReaderShareText({
+  required String text,
+  required TextStyle style,
+  required TextAlign textAlign,
+  required TextDirection textDirection,
+}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      var fontSize = style.fontSize ?? 14;
+      final minFontSize = fontSize > 12 ? 12.0 : 8.0;
+      while (fontSize > minFontSize) {
+        final painter = TextPainter(
+          text: TextSpan(text: text, style: style.copyWith(fontSize: fontSize)),
+          textAlign: textAlign,
+          textDirection: textDirection,
+        )..layout(maxWidth: constraints.maxWidth);
+        if (painter.height <= constraints.maxHeight) break;
+        fontSize = (fontSize - 0.5).clamp(minFontSize, fontSize);
+      }
+      return SizedBox(
+        width: constraints.maxWidth,
+        child: Text(
+          text,
+          textAlign: textAlign,
+          textDirection: textDirection,
+          softWrap: true,
+          style: style.copyWith(fontSize: fontSize),
+        ),
+      );
+    },
+  );
+}
+
 class SurahReaderScreen extends StatefulWidget {
   final Surah surah;
   final int initialAyah;
@@ -181,22 +215,14 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         const SizedBox(height: 7),
                         Expanded(
                           flex: 5,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: SizedBox(
-                              width: 276,
-                              child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: Text(
-                                  arabic,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: Color(0xFF241D18),
-                                    fontSize: 29,
-                                    height: 1.55,
-                                  ),
-                                ),
-                              ),
+                          child: _buildReaderShareText(
+                            text: arabic,
+                            textAlign: TextAlign.center,
+                            textDirection: TextDirection.rtl,
+                            style: const TextStyle(
+                              color: Color(0xFF241D18),
+                              fontSize: 29,
+                              height: 1.55,
                             ),
                           ),
                         ),
@@ -204,22 +230,16 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         const SizedBox(height: 5),
                         Expanded(
                           flex: 4,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: SizedBox(
-                              width: 276,
-                              child: Text(
-                                translation,
-                                textAlign: TextAlign.center,
-                                textDirection: AppSettings.language.value == 'ur'
-                                    ? TextDirection.rtl
-                                    : TextDirection.ltr,
-                                style: const TextStyle(
-                                  color: Color(0xFF655548),
-                                  fontSize: 19,
-                                  height: 1.4,
-                                ),
-                              ),
+                          child: _buildReaderShareText(
+                            text: translation,
+                            textAlign: TextAlign.center,
+                            textDirection: AppSettings.language.value == 'ur'
+                                ? TextDirection.rtl
+                                : TextDirection.ltr,
+                            style: const TextStyle(
+                              color: Color(0xFF655548),
+                              fontSize: 19,
+                              height: 1.4,
                             ),
                           ),
                         ),
