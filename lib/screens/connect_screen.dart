@@ -277,7 +277,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                   const SizedBox(height: 5),
                   const Text(
                     'AMAL BILLAH',
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.right,
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 9,
