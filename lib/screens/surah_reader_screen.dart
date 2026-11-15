@@ -331,8 +331,8 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
           children: [
             Text(
               "Page ${currentPage + 1} of $totalPages",
-              style: const TextStyle(
-                color: Color(0xFF8A857D),
+              style: TextStyle(
+                color: isDark ? const Color(0xFFB8AA98) : const Color(0xFF8A857D),
                 fontSize: 10,
                 fontWeight: FontWeight.normal,
               ),
@@ -340,8 +340,8 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
             const SizedBox(width: 12),
             Text(
               "Ayahs ${startAyah + 1} - $endAyah",
-              style: const TextStyle(
-                color: Color(0xFF8A857D),
+              style: TextStyle(
+                color: isDark ? const Color(0xFFB8AA98) : const Color(0xFF8A857D),
                 fontSize: 10,
               ),
             ),
@@ -476,7 +476,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                               child: RichText(
                                 textAlign: TextAlign.right,
                                 text: TextSpan(
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 27,
                                       height: 2.15,
                                       color: primaryText,
@@ -499,7 +499,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             const SizedBox(height: 10),
                             Text(
                               _useAllahTerminology(englishVerses[ayahIndex].text),
-                              style: const TextStyle(
+                              style: TextStyle(
                                   color: secondaryText,
                                   fontSize: 16,
                                   height: 1.8),
@@ -518,7 +518,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             if (i < endAyah - startAyah - 1) ...[
                               const SizedBox(height: 16),
                               Container(
-                                  height: 1, color: const Color(0xFFE4D4C3)),
+                                  height: 1, color: dividerColor),
                               const SizedBox(height: 16),
                             ],
                           ],
@@ -531,7 +531,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         textAlign: TextAlign.justify,
                         textDirection: TextDirection.rtl,
                         text: TextSpan(
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: primaryText,
                             fontSize: 27,
                             height: 2.15,
