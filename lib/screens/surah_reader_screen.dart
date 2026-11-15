@@ -236,7 +236,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         const SizedBox(height: 3),
                         const Text(
                           'AMAL BILLAH',
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.right,
                           style: TextStyle(
                             color: Color(0xFF806443),
                             fontSize: 8,
