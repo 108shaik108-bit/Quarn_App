@@ -201,12 +201,12 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     const contentWidth = cardWidth - 44;
     const arabicStyle = TextStyle(
       color: Color(0xFF241D18),
-      fontSize: 29,
+      fontSize: 24,
       height: 1.55,
     );
     const translationStyle = TextStyle(
       color: Color(0xFF655548),
-      fontSize: 19,
+      fontSize: 16,
       height: 1.4,
     );
     const referenceStyle = TextStyle(
