@@ -181,7 +181,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   ),
                 ),
                 const SizedBox(height: 18),
-                Container(height: 1, color: dividerColor),
+                Container(height: 1, color: const Color(0xFFE4D4C3)),
                 const SizedBox(height: 18),
                 Text(
                   translation,
