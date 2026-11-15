@@ -20,18 +20,33 @@ Widget _buildConnectShareText({
 }) {
   return LayoutBuilder(
     builder: (context, constraints) {
-      return FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: Alignment.center,
-        child: SizedBox(
-          width: constraints.maxWidth,
-          child: Text(
-            text,
-            textAlign: textAlign,
-            textDirection: textDirection,
-            softWrap: true,
-            style: style,
-          ),
+      var fontSize = style.fontSize ?? 14.0;
+      const minFontSize = 8.0;
+      final availableWidth = constraints.maxWidth;
+      final availableHeight = constraints.maxHeight;
+
+      TextPainter measure(double size) {
+        return TextPainter(
+          text: TextSpan(text: text, style: style.copyWith(fontSize: size)),
+          textAlign: textAlign,
+          textDirection: textDirection,
+        )..layout(maxWidth: availableWidth);
+      }
+
+      var painter = measure(fontSize);
+      while (painter.height > availableHeight && fontSize > minFontSize) {
+        fontSize = (fontSize - 0.5).clamp(minFontSize, fontSize).toDouble();
+        painter = measure(fontSize);
+      }
+
+      return SizedBox(
+        width: availableWidth,
+        child: Text(
+          text,
+          textAlign: textAlign,
+          textDirection: textDirection,
+          softWrap: true,
+          style: style.copyWith(fontSize: fontSize),
         ),
       );
     },
