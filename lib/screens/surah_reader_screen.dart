@@ -144,111 +144,163 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     final cardKey = GlobalKey();
     await showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
+      builder: (dialogContext) => Dialog(
         backgroundColor: const Color(0xFFFFF8F0),
-        contentPadding: const EdgeInsets.all(16),
-        content: RepaintBoundary(
-          key: cardKey,
-          child: Container(
-            width: 320,
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFF8F0),
-              border: Border.all(color: const Color(0xFFD8B77A), width: 1.4),
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'THE HOLY QURAN',
-                  style: TextStyle(
-                    color: Color(0xFF806443),
-                    fontSize: 11,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w600,
+        insetPadding: const EdgeInsets.all(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RepaintBoundary(
+                key: cardKey,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: 320,
+                    height: 320,
+                    padding: const EdgeInsets.fromLTRB(22, 18, 22, 14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF8F0),
+                      border: Border.all(color: const Color(0xFFD8B77A), width: 1.4),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'THE HOLY QURAN',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFF806443),
+                            fontSize: 10,
+                            letterSpacing: 2,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 7),
+                        Expanded(
+                          flex: 5,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: SizedBox(
+                              width: 276,
+                              child: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Text(
+                                  arabic,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Color(0xFF241D18),
+                                    fontSize: 29,
+                                    height: 1.55,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(height: 1, color: const Color(0xFFE4D4C3)),
+                        const SizedBox(height: 5),
+                        Expanded(
+                          flex: 4,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: SizedBox(
+                              width: 276,
+                              child: Text(
+                                translation,
+                                textAlign: TextAlign.center,
+                                textDirection: AppSettings.language.value == 'ur'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
+                                style: const TextStyle(
+                                  color: Color(0xFF655548),
+                                  fontSize: 19,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          '${widget.surah.nameEnglish} • Ayah $ayahNumber',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Color(0xFF9A784D),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        const Text(
+                          'AMAL BILLAH',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFF806443),
+                            fontSize: 8,
+                            letterSpacing: 2,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 22),
-                Text(
-                  arabic,
-                  textAlign: TextAlign.center,
-                  textDirection: TextDirection.rtl,
-                  style: const TextStyle(
-                    color: Color(0xFF241D18),
-                    fontSize: 28,
-                    height: 1.9,
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: const Text('Cancel'),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 18),
-                Container(height: 1, color: const Color(0xFFE4D4C3)),
-                const SizedBox(height: 18),
-                Text(
-                  translation,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF655548),
-                    fontSize: 15,
-                    height: 1.7,
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () async {
+                        try {
+                          await WidgetsBinding.instance.endOfFrame;
+                          final boundary = cardKey.currentContext?.findRenderObject()
+                              as RenderRepaintBoundary?;
+                          if (boundary == null) return;
+                          final image = await boundary.toImage(pixelRatio: 3);
+                          final data = await image.toByteData(format: ui.ImageByteFormat.png);
+                          image.dispose();
+                          if (data == null) return;
+                          final bytes = data.buffer.asUint8List();
+                          await SharePlus.instance.share(
+                            ShareParams(
+                              files: [
+                                XFile.fromData(
+                                  bytes,
+                                  mimeType: 'image/png',
+                                  name: 'quran-ayah.png',
+                                ),
+                              ],
+                              text: '${widget.surah.nameEnglish} • Ayah $ayahNumber',
+                            ),
+                          );
+                          if (dialogContext.mounted) Navigator.pop(dialogContext);
+                        } catch (error) {
+                          if (dialogContext.mounted) {
+                            ScaffoldMessenger.of(dialogContext).showSnackBar(
+                              const SnackBar(content: Text('Could not create share card.')),
+                            );
+                          }
+                        }
+                      },
+                      icon: const Icon(Icons.share_outlined),
+                      label: const Text('Share'),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 22),
-                Text(
-                  '${widget.surah.nameEnglish} • Ayah $ayahNumber',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF9A784D),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          FilledButton.icon(
-            onPressed: () async {
-              try {
-                final boundary = cardKey.currentContext?.findRenderObject()
-                    as RenderRepaintBoundary?;
-                if (boundary == null) return;
-                final image = await boundary.toImage(pixelRatio: 3);
-                final data = await image.toByteData(
-                  format: ui.ImageByteFormat.png,
-                );
-                image.dispose();
-                if (data == null) return;
-                final bytes = data.buffer.asUint8List();
-                await SharePlus.instance.share(
-                  ShareParams(
-                    files: [
-                      XFile.fromData(
-                        bytes,
-                        mimeType: 'image/png',
-                        name: 'quran-ayah.png',
-                      ),
-                    ],
-                    text: '${widget.surah.nameEnglish} • Ayah $ayahNumber',
-                  ),
-                );
-                if (dialogContext.mounted) Navigator.pop(dialogContext);
-              } catch (error) {
-                if (dialogContext.mounted) {
-                  ScaffoldMessenger.of(dialogContext).showSnackBar(
-                    const SnackBar(content: Text('Could not create share card.')),
-                  );
-                }
-              }
-            },
-            icon: const Icon(Icons.share_outlined),
-            label: const Text('Share'),
-          ),
-        ],
       ),
     );
   }
