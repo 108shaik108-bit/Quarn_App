@@ -258,9 +258,10 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         insetPadding: const EdgeInsets.all(12),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
               RepaintBoundary(
                 key: cardKey,
                 child: ClipRRect(
@@ -369,7 +370,8 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   ),
                 ],
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
