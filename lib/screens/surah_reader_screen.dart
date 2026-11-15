@@ -13,10 +13,12 @@ import '../services/quran_progress_service.dart';
 class SurahReaderScreen extends StatefulWidget {
   final Surah surah;
   final int initialAyah;
+  final bool openWithTranslation;
   const SurahReaderScreen({
     super.key,
     required this.surah,
     this.initialAyah = 1,
+    this.openWithTranslation = false,
   });
 
   @override
@@ -35,6 +37,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     currentPage = ((widget.initialAyah - 1) ~/ ayahsPerPage)
         .clamp(0, (widget.surah.ayahs - 1) ~/ ayahsPerPage)
         .toInt();
+    showTranslation = widget.openWithTranslation;
     _recordCurrentPage();
   }
 
