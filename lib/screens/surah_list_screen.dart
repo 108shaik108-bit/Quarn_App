@@ -335,7 +335,7 @@ Widget _bottomNavigationBar() {
   return SafeArea(
     top: false,
     child: Container(
-      padding: const EdgeInsets.fromLTRB(8, 9, 8, 8),
+      padding: const EdgeInsets.fromLTRB(8, 5, 8, 4),
       decoration: BoxDecoration(
         color: Color(0xFFFFFAEF),
         border: Border(
@@ -414,7 +414,7 @@ Widget _bottomNavigationBar() {
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 180),
                       padding: const EdgeInsets.symmetric(
-                        vertical: 9,
+                        vertical: 6,
                         horizontal: 3,
                       ),
                       decoration: BoxDecoration(
@@ -455,7 +455,7 @@ Widget _bottomNavigationBar() {
                 if (index != 3)
                   Container(
                     width: 1,
-                    height: 52,
+                    height: 44,
                     color: Color(0xFFC49A45),
                     margin: const EdgeInsets.symmetric(horizontal: 3),
                   ),
