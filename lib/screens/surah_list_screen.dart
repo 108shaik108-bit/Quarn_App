@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/app_settings.dart';
+import '../services/notification_service.dart';
 import '../data/surah_data.dart';
 import '../data/surah_meanings.dart';
 import '../data/juz_data.dart';
@@ -28,6 +29,42 @@ class _SurahListScreenState extends State<SurahListScreen> {
   static Color get green => AppSettings.isDark ? Color(0xFF9BD0AF) : Color(0xFF07502D);
   static Color get mutedGreen => AppSettings.isDark ? Color(0xFFB4C7BA) : Color(0xFF52735F);
   static Color get gold => AppSettings.isDark ? Color(0xFFE0B96B) : Color(0xFFC49A45);
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.openConnectRequested.addListener(
+      _handleNotificationNavigation,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleNotificationNavigation();
+    });
+  }
+
+  @override
+  void dispose() {
+    NotificationService.openConnectRequested.removeListener(
+      _handleNotificationNavigation,
+    );
+    super.dispose();
+  }
+
+  void _handleNotificationNavigation() {
+    if (!mounted || !NotificationService.openConnectRequested.value) return;
+    NotificationService.openConnectRequested.value = false;
+    if (selectedNavIndex == 1) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() => selectedNavIndex = 1);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ConnectScreen()),
+      ).then((_) {
+        if (mounted) setState(() => selectedNavIndex = 0);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
