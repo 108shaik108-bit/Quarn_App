@@ -11,6 +11,40 @@ import '../services/quran_progress_service.dart';
 import '../services/app_settings.dart';
 import 'surah_reader_screen.dart';
 
+
+Widget _buildConnectShareText({
+  required String text,
+  required TextStyle style,
+  required TextAlign textAlign,
+  required TextDirection textDirection,
+}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      var fontSize = style.fontSize ?? 14;
+      final minFontSize = fontSize > 12 ? 12.0 : 8.0;
+      while (fontSize > minFontSize) {
+        final painter = TextPainter(
+          text: TextSpan(text: text, style: style.copyWith(fontSize: fontSize)),
+          textAlign: textAlign,
+          textDirection: textDirection,
+        )..layout(maxWidth: constraints.maxWidth);
+        if (painter.height <= constraints.maxHeight) break;
+        fontSize = (fontSize - 0.5).clamp(minFontSize, fontSize);
+      }
+      return SizedBox(
+        width: constraints.maxWidth,
+        child: Text(
+          text,
+          textAlign: textAlign,
+          textDirection: textDirection,
+          softWrap: true,
+          style: style.copyWith(fontSize: fontSize),
+        ),
+      );
+    },
+  );
+}
+
 class ConnectScreen extends StatefulWidget {
   const ConnectScreen({super.key});
 
@@ -189,7 +223,6 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
 
   Widget _buildShareArtwork(dynamic surah) {
     const cardWidth = 320.0;
-    const innerWidth = 276.0;
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
       child: SizedBox(
@@ -216,24 +249,16 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                 children: [
                   Expanded(
                     flex: 5,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: SizedBox(
-                        width: innerWidth,
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Text(
-                            _arabicText,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 29,
-                              height: 1.5,
-                              fontWeight: FontWeight.w600,
-                              shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
-                            ),
-                          ),
-                        ),
+                    child: _buildConnectShareText(
+                      text: _arabicText,
+                      textAlign: TextAlign.center,
+                      textDirection: TextDirection.rtl,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 29,
+                        height: 1.5,
+                        fontWeight: FontWeight.w600,
+                        shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
                       ),
                     ),
                   ),
@@ -242,25 +267,19 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                   const SizedBox(height: 5),
                   Expanded(
                     flex: 4,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: SizedBox(
-                        width: innerWidth,
-                        child: Text(
-                          _useAllahTerminology(_englishText),
-                          textAlign: TextAlign.center,
-                          textDirection: AppSettings.language.value == 'ur'
-                              ? TextDirection.rtl
-                              : TextDirection.ltr,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'serif',
-                            fontSize: 20,
-                            height: 1.35,
-                            fontWeight: FontWeight.w700,
-                            shadows: [Shadow(color: Colors.black, blurRadius: 12)],
-                          ),
-                        ),
+                    child: _buildConnectShareText(
+                      text: _useAllahTerminology(_englishText),
+                      textAlign: TextAlign.center,
+                      textDirection: AppSettings.language.value == 'ur'
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'serif',
+                        fontSize: 20,
+                        height: 1.35,
+                        fontWeight: FontWeight.w700,
+                        shadows: [Shadow(color: Colors.black, blurRadius: 12)],
                       ),
                     ),
                   ),
