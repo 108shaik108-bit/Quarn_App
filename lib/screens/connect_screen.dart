@@ -210,41 +210,10 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(22, 18, 22, 14),
+              padding: const EdgeInsets.fromLTRB(22, 16, 22, 13),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Daily Ayah',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'serif',
-                                fontSize: 22,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              '${surah.nameEnglish}  •  $_surahNumber:$_ayahNumber',
-                              style: const TextStyle(
-                                color: Color(0xFFE8E8E8),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.menu_book_rounded, color: Colors.white70, size: 23),
-                    ],
-                  ),
-                  const SizedBox(height: 7),
                   Expanded(
                     flex: 5,
                     child: FittedBox(
@@ -297,9 +266,19 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    'AMAL BILLAH',
+                    '${surah.nameEnglish} $_surahNumber:$_ayahNumber',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const Text(
+                    'AMAL BILLAH',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                       color: Colors.white70,
                       fontSize: 9,
                       letterSpacing: 2.2,
