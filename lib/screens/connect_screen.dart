@@ -373,6 +373,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
         builder: (_) => SurahReaderScreen(
           surah: surahs[_surahNumber - 1],
           initialAyah: _ayahNumber,
+          openWithTranslation: true,
         ),
       ),
     );
