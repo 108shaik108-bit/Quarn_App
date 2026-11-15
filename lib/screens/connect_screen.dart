@@ -299,7 +299,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                   ),
                   const SizedBox(height: 7),
                   const Text(
-                    'QUARN APP',
+                    'AMAL BILLAH',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
@@ -592,7 +592,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'QUARN APP',
+                    'AMAL BILLAH',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
