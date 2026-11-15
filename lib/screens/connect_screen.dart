@@ -188,12 +188,13 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 
   Widget _buildShareArtwork(dynamic surah) {
+    const cardWidth = 320.0;
+    const innerWidth = 276.0;
     return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        width: 340,
-        height: 560,
-        decoration: const BoxDecoration(color: Color(0xFF101820)),
+      borderRadius: BorderRadius.circular(22),
+      child: SizedBox(
+        width: cardWidth,
+        height: cardWidth,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -202,29 +203,18 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
-                  end: Alignment.center,
-                  colors: [Color(0xB8000000), Color(0x16000000), Color(0x65000000)],
-                  stops: [0, 0.55, 1],
-                ),
-              ),
-            ),
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.center,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0x00000000), Color(0xD9000000)],
-                  stops: [0.28, 1],
+                  colors: [Color(0xB8000000), Color(0x30000000), Color(0xE6000000)],
+                  stops: [0, 0.48, 1],
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(25, 28, 25, 25),
+              padding: const EdgeInsets.fromLTRB(22, 18, 22, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Column(
@@ -235,76 +225,84 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                               style: TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'serif',
-                                fontSize: 26,
+                                fontSize: 22,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
-                            const SizedBox(height: 7),
+                            const SizedBox(height: 3),
                             Text(
-                              '$_surahNumber:$_ayahNumber',
+                              '${surah.nameEnglish}  •  $_surahNumber:$_ayahNumber',
                               style: const TextStyle(
                                 color: Color(0xFFE8E8E8),
-                                fontSize: 21,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '${surah.nameEnglish}  •  ${surah.nameArabic}',
-                              style: const TextStyle(
-                                color: Color(0xFFE0E0E0),
                                 fontSize: 12,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(Icons.menu_book_rounded, color: Colors.white70, size: 25),
+                      const Icon(Icons.menu_book_rounded, color: Colors.white70, size: 23),
                     ],
                   ),
-                  const Spacer(flex: 1),
-                  Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Text(
-                      _arabicText,
-                      textAlign: TextAlign.center,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        height: 1.55,
-                        fontWeight: FontWeight.w600,
-                        shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
+                  const SizedBox(height: 7),
+                  Expanded(
+                    flex: 5,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SizedBox(
+                        width: innerWidth,
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Text(
+                            _arabicText,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 29,
+                              height: 1.5,
+                              fontWeight: FontWeight.w600,
+                              shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  const Spacer(flex: 1),
-                  Text(
-                    _useAllahTerminology(_englishText),
-                    textAlign: TextAlign.center,
-                    textDirection: AppSettings.language.value == 'ur'
-                        ? TextDirection.rtl
-                        : TextDirection.ltr,
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'serif',
-                      fontSize: 18,
-                      height: 1.3,
-                      fontWeight: FontWeight.w800,
-                      shadows: [Shadow(color: Colors.black, blurRadius: 12)],
+                  const SizedBox(height: 5),
+                  Container(height: 1, color: Colors.white38),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    flex: 4,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SizedBox(
+                        width: innerWidth,
+                        child: Text(
+                          _useAllahTerminology(_englishText),
+                          textAlign: TextAlign.center,
+                          textDirection: AppSettings.language.value == 'ur'
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'serif',
+                            fontSize: 20,
+                            height: 1.35,
+                            fontWeight: FontWeight.w700,
+                            shadows: [Shadow(color: Colors.black, blurRadius: 12)],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 7),
-                  const Text(
-                    'QUARN APP',
+                  const SizedBox(height: 5),
+                  Text(
+                    'AMAL BILLAH',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white70,
-                      fontSize: 10,
-                      letterSpacing: 2.5,
+                      fontSize: 9,
+                      letterSpacing: 2.2,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
