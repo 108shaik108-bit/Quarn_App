@@ -239,8 +239,10 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       textAlign: TextAlign.center,
     )..layout(maxWidth: 290);
 
-    final cardHeight = (205 + arabicPainter.height + translationPainter.height)
-        .clamp(560.0, 1600.0)
+    // Keep generous room for Flutter's actual font metrics, line-height
+    // rounding and the header/footer. The dialog scrolls when the card is tall.
+    final cardHeight = (365 + arabicPainter.height + translationPainter.height)
+        .clamp(560.0, double.infinity)
         .toDouble();
 
     return ClipRRect(
