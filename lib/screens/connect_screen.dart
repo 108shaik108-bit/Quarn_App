@@ -29,7 +29,7 @@ Widget _buildConnectShareText({
           textDirection: textDirection,
         )..layout(maxWidth: constraints.maxWidth);
         if (painter.height <= constraints.maxHeight) break;
-        fontSize = (fontSize - 0.5).clamp(minFontSize, fontSize);
+        fontSize = (fontSize - 0.5).clamp(minFontSize, fontSize).toDouble();
       }
       return SizedBox(
         width: constraints.maxWidth,
