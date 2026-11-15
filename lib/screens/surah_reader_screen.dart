@@ -181,7 +181,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   ),
                 ),
                 const SizedBox(height: 18),
-                Container(height: 1, color: const Color(0xFFE4D4C3)),
+                Container(height: 1, color: dividerColor),
                 const SizedBox(height: 18),
                 Text(
                   translation,
@@ -309,17 +309,22 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         ? surah.ayahs
         : startAyah + ayahsPerPage;
 
-    const mushafMode = true;
+    final isDark = AppSettings.isDark;
+    final mushafMode = !isDark;
     const mushafPaper = Color(0xFFFFF8F0);
     const mushafInk = Color(0xFF241D18);
+    final pageBackground = isDark ? const Color(0xFF101814) : mushafPaper;
+    final primaryText = isDark ? const Color(0xFFF1E9DC) : mushafInk;
+    final secondaryText = isDark ? const Color(0xFFB8AA98) : const Color(0xFF655548);
+    final dividerColor = isDark ? const Color(0xFF2B3A32) : const Color(0xFFE4D4C3);
 
     return Scaffold(
-      backgroundColor: mushafMode ? mushafPaper : const Color(0xFF0A0F0D),
+      backgroundColor: pageBackground,
       appBar: AppBar(
-        backgroundColor: mushafMode ? mushafPaper : const Color(0xFF0A0F0D),
+        backgroundColor: pageBackground,
         elevation: 0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: mushafMode ? mushafInk : Colors.white),
+        iconTheme: IconThemeData(color: primaryText),
         actions: [_pageBookmarkButton(startAyah + 1)],
         title: Row(
           mainAxisSize: MainAxisSize.min,
@@ -383,18 +388,18 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 const SizedBox(height: 2),
                 Text(
                   "Surah ${surah.number}",
-                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 13),
+                  style: TextStyle(color: isDark ? const Color(0xFFB8AA98) : const Color(0xFF8B7969), fontSize: 13),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   "${surah.ayahs} Ayahs • ${surah.isMakki ? 'makki' : 'madinah'}",
-                  style: TextStyle(color: mushafMode ? const Color(0xFF8B7969) : Colors.grey, fontSize: 12),
+                  style: TextStyle(color: isDark ? const Color(0xFFB8AA98) : const Color(0xFF8B7969), fontSize: 12),
                 ),
                 const SizedBox(height: 12),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   height: 1,
-                  color: mushafMode ? const Color(0xFFE4D4C3) : const Color(0xFF1E3A2A),
+                  color: dividerColor,
                 ),
               ],
             ),
@@ -407,9 +412,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 margin: const EdgeInsets.only(top: 20),
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: mushafMode ? const Color(0xFFF0E5D8) : const Color(0xFF111A16),
+                  color: isDark ? const Color(0xFF1B2821) : const Color(0xFFF0E5D8),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: mushafMode ? const Color(0xFFE4D4C3) : const Color(0xFF22332B)),
+                  border: Border.all(color: isDark ? const Color(0xFF34483C) : const Color(0xFFE4D4C3)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -451,9 +456,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 mushafMode ? 28 : 20,
               ),
               decoration: BoxDecoration(
-                color: mushafMode ? mushafPaper : const Color(0xFF111A16),
+                color: pageBackground,
                 borderRadius: BorderRadius.circular(mushafMode ? 2 : 12),
-                border: mushafMode ? null : Border.all(color: const Color(0xFF22332B)),
+                border: isDark ? Border.all(color: const Color(0xFF34483C)) : null,
               ),
               child: showTranslation
                   ? Column(
@@ -474,7 +479,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                                   style: const TextStyle(
                                       fontSize: 27,
                                       height: 2.15,
-                                      color: mushafInk,
+                                      color: primaryText,
                                       fontWeight: FontWeight.w500,
                                       letterSpacing: 0),
                                   children: [
@@ -495,7 +500,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             Text(
                               _useAllahTerminology(englishVerses[ayahIndex].text),
                               style: const TextStyle(
-                                  color: Color(0xFF655548),
+                                  color: secondaryText,
                                   fontSize: 16,
                                   height: 1.8),
                             ),
@@ -527,7 +532,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         textDirection: TextDirection.rtl,
                         text: TextSpan(
                           style: const TextStyle(
-                            color: mushafInk,
+                            color: primaryText,
                             fontSize: 27,
                             height: 2.15,
                             fontWeight: FontWeight.w500,
@@ -656,7 +661,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         child: Text(
           label,
           style: TextStyle(
-            color: active ? Colors.white : const Color(0xFF3D3028),
+            color: active ? Colors.white : (AppSettings.isDark ? const Color(0xFFE8E0D4) : const Color(0xFF3D3028)),
             fontWeight: FontWeight.w600,
             fontSize: 13,
           ),
@@ -667,10 +672,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
 
   // ═══ NEW! Helper: Previous/Next Surah button ═══
   Widget _surahNavButton(String label, bool enabled, VoidCallback onTap) {
-    const enabledBackground = Color(0xFFE8E2D5);
-    const disabledBackground = Color(0xFFF1EDE5);
-    const enabledText = Color(0xFF000000);
-    const disabledText = Color(0xFFAAA39A);
+    final dark = AppSettings.isDark;
+    final enabledBackground = dark ? const Color(0xFF294536) : const Color(0xFFE8E2D5);
+    final disabledBackground = dark ? const Color(0xFF1B2821) : const Color(0xFFF1EDE5);
+    final enabledText = dark ? const Color(0xFFF1E9DC) : const Color(0xFF000000);
+    final disabledText = dark ? const Color(0xFF718075) : const Color(0xFFAAA39A);
 
     return GestureDetector(
       onTap: enabled ? onTap : null,
