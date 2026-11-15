@@ -188,68 +188,11 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 
   Widget _buildShareArtwork(dynamic surah) {
-    final translation = _useAllahTerminology(_englishText);
-    final translationDirection = AppSettings.language.value == 'ur'
-        ? TextDirection.rtl
-        : TextDirection.ltr;
-
-    // Reduce type size for longer verses, then measure both paragraphs so
-    // the exported image grows instead of clipping any Quranic text.
-    final arabicFontSize = _arabicText.length > 220
-        ? 18.0
-        : _arabicText.length > 150
-            ? 20.0
-            : _arabicText.length > 90
-                ? 23.0
-                : 26.0;
-    final translationFontSize = translation.length > 280
-        ? 13.0
-        : translation.length > 210
-            ? 14.0
-            : translation.length > 140
-                ? 16.0
-                : 18.0;
-
-    const arabicColor = Colors.white;
-    const translationColor = Colors.white;
-    final arabicStyle = TextStyle(
-      color: arabicColor,
-      fontSize: arabicFontSize,
-      height: 1.55,
-      fontWeight: FontWeight.w600,
-      shadows: const [Shadow(color: Colors.black87, blurRadius: 12)],
-    );
-    final translationStyle = TextStyle(
-      color: translationColor,
-      fontFamily: 'serif',
-      fontSize: translationFontSize,
-      height: 1.3,
-      fontWeight: FontWeight.w800,
-      shadows: const [Shadow(color: Colors.black, blurRadius: 12)],
-    );
-
-    final arabicPainter = TextPainter(
-      text: TextSpan(text: _arabicText, style: arabicStyle),
-      textDirection: TextDirection.rtl,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: 290);
-    final translationPainter = TextPainter(
-      text: TextSpan(text: translation, style: translationStyle),
-      textDirection: translationDirection,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: 290);
-
-    // Keep generous room for Flutter's actual font metrics, line-height
-    // rounding and the header/footer. The dialog scrolls when the card is tall.
-    final cardHeight = (365 + arabicPainter.height + translationPainter.height)
-        .clamp(560.0, double.infinity)
-        .toDouble();
-
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Container(
         width: 340,
-        height: cardHeight,
+        height: 560,
         decoration: const BoxDecoration(color: Color(0xFF101820)),
         child: Stack(
           fit: StackFit.expand,
@@ -319,27 +262,44 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                       const Icon(Icons.menu_book_rounded, color: Colors.white70, size: 25),
                     ],
                   ),
-                  const SizedBox(height: 24),
+                  const Spacer(flex: 1),
                   Directionality(
                     textDirection: TextDirection.rtl,
                     child: Text(
                       _arabicText,
                       textAlign: TextAlign.center,
-                      softWrap: true,
-                      style: arabicStyle,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
+                        height: 1.55,
+                        fontWeight: FontWeight.w600,
+                        shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const Spacer(flex: 1),
                   Text(
-                    translation,
+                    _useAllahTerminology(_englishText),
                     textAlign: TextAlign.center,
-                    textDirection: translationDirection,
-                    softWrap: true,
-                    style: translationStyle,
+                    textDirection: AppSettings.language.value == 'ur'
+                        ? TextDirection.rtl
+                        : TextDirection.ltr,
+                    maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'serif',
+                      fontSize: 18,
+                      height: 1.3,
+                      fontWeight: FontWeight.w800,
+                      shadows: [Shadow(color: Colors.black, blurRadius: 12)],
+                    ),
                   ),
                   const SizedBox(height: 7),
                   const Text(
-                    'AMAL BILLAH',
+                    'QUARN APP',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
@@ -632,7 +592,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'AMAL BILLAH',
+                    'QUARN APP',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white70,
