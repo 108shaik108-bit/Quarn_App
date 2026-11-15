@@ -178,11 +178,78 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     );
   }
 
+  double _readerShareTextHeight({
+    required String text,
+    required double maxWidth,
+    required TextStyle style,
+    required TextDirection direction,
+  }) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: direction,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: maxWidth);
+    return painter.height;
+  }
+
   Future<void> _showShareAyahCard({
     required int ayahNumber,
     required String arabic,
     required String translation,
   }) async {
+    const cardWidth = 360.0;
+    const contentWidth = cardWidth - 44;
+    const arabicStyle = TextStyle(
+      color: Color(0xFF241D18),
+      fontSize: 29,
+      height: 1.55,
+    );
+    const translationStyle = TextStyle(
+      color: Color(0xFF655548),
+      fontSize: 19,
+      height: 1.4,
+    );
+    const referenceStyle = TextStyle(
+      color: Color(0xFF9A784D),
+      fontSize: 10,
+      fontWeight: FontWeight.w600,
+    );
+    const brandStyle = TextStyle(
+      color: Color(0xFF806443),
+      fontSize: 8,
+      letterSpacing: 2,
+      fontWeight: FontWeight.w700,
+    );
+    final translationDirection = AppSettings.language.value == 'ur'
+        ? TextDirection.rtl
+        : TextDirection.ltr;
+    final arabicHeight = _readerShareTextHeight(
+      text: arabic,
+      maxWidth: contentWidth,
+      style: arabicStyle,
+      direction: TextDirection.rtl,
+    );
+    final translationHeight = _readerShareTextHeight(
+      text: translation,
+      maxWidth: contentWidth,
+      style: translationStyle,
+      direction: translationDirection,
+    );
+    final reference = '${widget.surah.nameEnglish} ${widget.surah.number}:$ayahNumber';
+    final referenceHeight = _readerShareTextHeight(
+      text: reference,
+      maxWidth: contentWidth,
+      style: referenceStyle,
+      direction: TextDirection.ltr,
+    );
+    final brandHeight = _readerShareTextHeight(
+      text: 'AMAL BILLAH',
+      maxWidth: contentWidth,
+      style: brandStyle,
+      direction: TextDirection.ltr,
+    );
+    final cardHeight = 18 + 12 + arabicHeight + 1 + 10 +
+        translationHeight + 10 + referenceHeight + 8 + brandHeight + 14;
     final cardKey = GlobalKey();
     await showDialog<void>(
       context: context,
@@ -199,8 +266,8 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    width: 320,
-                    height: 320,
+                    width: 360,
+                    height: cardHeight,
                     padding: const EdgeInsets.fromLTRB(22, 18, 22, 14),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFF8F0),
@@ -209,6 +276,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
                           'THE HOLY QURAN',
@@ -220,57 +288,32 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const SizedBox(height: 7),
-                        Expanded(
-                          flex: 5,
-                          child: _buildReaderShareText(
-                            text: arabic,
-                            textAlign: TextAlign.center,
-                            textDirection: TextDirection.rtl,
-                            style: const TextStyle(
-                              color: Color(0xFF241D18),
-                              fontSize: 29,
-                              height: 1.55,
-                            ),
-                          ),
+                        const SizedBox(height: 10),
+                        Text(
+                          arabic,
+                          textAlign: TextAlign.center,
+                          textDirection: TextDirection.rtl,
+                          style: arabicStyle,
                         ),
                         Container(height: 1, color: const Color(0xFFE4D4C3)),
-                        const SizedBox(height: 5),
-                        Expanded(
-                          flex: 4,
-                          child: _buildReaderShareText(
-                            text: translation,
-                            textAlign: TextAlign.center,
-                            textDirection: AppSettings.language.value == 'ur'
-                                ? TextDirection.rtl
-                                : TextDirection.ltr,
-                            style: const TextStyle(
-                              color: Color(0xFF655548),
-                              fontSize: 19,
-                              height: 1.4,
-                            ),
-                          ),
+                        const SizedBox(height: 10),
+                        Text(
+                          translation,
+                          textAlign: TextAlign.center,
+                          textDirection: translationDirection,
+                          style: translationStyle,
                         ),
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 10),
                         Text(
                           '${widget.surah.nameEnglish} ${widget.surah.number}:$ayahNumber',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Color(0xFF9A784D),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: referenceStyle,
                         ),
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 8),
                         const Text(
                           'AMAL BILLAH',
                           textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Color(0xFF806443),
-                            fontSize: 8,
-                            letterSpacing: 2,
-                            fontWeight: FontWeight.w700,
-                          ),
+                          style: brandStyle,
                         ),
                       ],
                     ),
