@@ -15,6 +15,8 @@ Future<void> main() async {
   await Quran.initialize();
   await AppSettings.load();
   await NotificationService.initialize();
+  // Ask for notification permission on first launch so default daily reminders can arrive.
+  await NotificationService.requestPermission();
   await NotificationService.refreshEnabledReminders();
   runApp(const QuranApp());
 }
