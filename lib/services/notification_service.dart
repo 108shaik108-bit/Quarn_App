@@ -36,6 +36,8 @@ class NotificationService {
   static const String _ayahHourKey = 'daily_ayah_hour';
   static const String _ayahMinuteKey = 'daily_ayah_minute';
 
+  static final ValueNotifier<bool> openConnectRequested = ValueNotifier(false);
+
   static bool _initialized = false;
 
   static Future<void> initialize() async {
@@ -94,6 +96,10 @@ class NotificationService {
       }),
     );
     await prefs.setStringList(_historyKey, history.take(50).toList());
+
+    if (response.payload?.split('|').first == 'Your Daily Ayah') {
+      openConnectRequested.value = true;
+    }
   }
 
   static Future<List<Map<String, dynamic>>> getHistory() async {
