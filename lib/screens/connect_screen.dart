@@ -229,13 +229,87 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     );
   }
 
+  double _shareTextHeight({
+    required String text,
+    required double maxWidth,
+    required TextStyle style,
+    required TextDirection direction,
+  }) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: direction,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: maxWidth);
+    return painter.height;
+  }
+
   Widget _buildShareArtwork(dynamic surah) {
-    const cardWidth = 320.0;
+    const cardWidth = 360.0;
+    const horizontalPadding = 22.0;
+    const contentWidth = cardWidth - horizontalPadding * 2;
+    const arabicStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 29,
+      height: 1.5,
+      fontWeight: FontWeight.w600,
+      shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
+    );
+    const translationStyle = TextStyle(
+      color: Colors.white,
+      fontFamily: 'serif',
+      fontSize: 20,
+      height: 1.35,
+      fontWeight: FontWeight.w700,
+      shadows: [Shadow(color: Colors.black, blurRadius: 12)],
+    );
+    const referenceStyle = TextStyle(
+      color: Colors.white70,
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+    );
+    const brandStyle = TextStyle(
+      color: Colors.white70,
+      fontSize: 9,
+      letterSpacing: 2.2,
+      fontWeight: FontWeight.w700,
+    );
+    final translated = _useAllahTerminology(_englishText);
+    final translationDirection = AppSettings.language.value == 'ur'
+        ? TextDirection.rtl
+        : TextDirection.ltr;
+    final arabicHeight = _shareTextHeight(
+      text: _arabicText,
+      maxWidth: contentWidth,
+      style: arabicStyle,
+      direction: TextDirection.rtl,
+    );
+    final translationHeight = _shareTextHeight(
+      text: translated,
+      maxWidth: contentWidth,
+      style: translationStyle,
+      direction: translationDirection,
+    );
+    final reference = '${surah.nameEnglish} $_surahNumber:$_ayahNumber';
+    final referenceHeight = _shareTextHeight(
+      text: reference,
+      maxWidth: contentWidth,
+      style: referenceStyle,
+      direction: TextDirection.ltr,
+    );
+    final brandHeight = _shareTextHeight(
+      text: 'AMAL BILLAH',
+      maxWidth: contentWidth,
+      style: brandStyle,
+      direction: TextDirection.ltr,
+    );
+    final cardHeight = 16 + arabicHeight + 10 + 1 + 10 +
+        translationHeight + 10 + referenceHeight + 8 + brandHeight + 13;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
       child: SizedBox(
         width: cardWidth,
-        height: cardWidth,
+        height: cardHeight,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -254,64 +328,27 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
               padding: const EdgeInsets.fromLTRB(22, 16, 22, 13),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    flex: 5,
-                    child: _buildConnectShareText(
-                      text: _arabicText,
-                      textAlign: TextAlign.center,
-                      textDirection: TextDirection.rtl,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 29,
-                        height: 1.5,
-                        fontWeight: FontWeight.w600,
-                        shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Container(height: 1, color: Colors.white38),
-                  const SizedBox(height: 5),
-                  Expanded(
-                    flex: 4,
-                    child: _buildConnectShareText(
-                      text: _useAllahTerminology(_englishText),
-                      textAlign: TextAlign.center,
-                      textDirection: AppSettings.language.value == 'ur'
-                          ? TextDirection.rtl
-                          : TextDirection.ltr,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'serif',
-                        fontSize: 20,
-                        height: 1.35,
-                        fontWeight: FontWeight.w700,
-                        shadows: [Shadow(color: Colors.black, blurRadius: 12)],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
                   Text(
-                    '${surah.nameEnglish} $_surahNumber:$_ayahNumber',
+                    _arabicText,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    textDirection: TextDirection.rtl,
+                    style: arabicStyle,
                   ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'AMAL BILLAH',
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 9,
-                      letterSpacing: 2.2,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  const SizedBox(height: 10),
+                  Container(height: 1, color: Colors.white38),
+                  const SizedBox(height: 10),
+                  Text(
+                    translated,
+                    textAlign: TextAlign.center,
+                    textDirection: translationDirection,
+                    style: translationStyle,
                   ),
+                  const SizedBox(height: 10),
+                  Text(reference, textAlign: TextAlign.center, style: referenceStyle),
+                  const SizedBox(height: 8),
+                  const Text('AMAL BILLAH', textAlign: TextAlign.right, style: brandStyle),
                 ],
               ),
             ),
