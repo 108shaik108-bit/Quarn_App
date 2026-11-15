@@ -116,12 +116,12 @@ class NotificationService {
 
   static Future<bool> isQuranEnabled() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_quranEnabledKey) ?? false;
+    return prefs.getBool(_quranEnabledKey) ?? true;
   }
 
   static Future<bool> isAyahEnabled() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_ayahEnabledKey) ?? false;
+    return prefs.getBool(_ayahEnabledKey) ?? true;
   }
 
   static Future<DateTime> getQuranTime() async {
