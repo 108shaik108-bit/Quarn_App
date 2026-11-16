@@ -173,9 +173,10 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   bool _fitsDailyAyahShareCard(String arabic, String translation) {
     const textWidth = 316.0; // 360px card less 22px padding on each side.
     final arabicPainter = TextPainter(
-      text: const TextSpan(
-        style: TextStyle(fontSize: 24, height: 1.5, fontWeight: FontWeight.w600),
-      ).copyWith(text: arabic),
+      text: TextSpan(
+        text: arabic,
+        style: const TextStyle(fontSize: 24, height: 1.5, fontWeight: FontWeight.w600),
+      ),
       textDirection: TextDirection.rtl,
       textAlign: TextAlign.center,
     )..layout(maxWidth: textWidth);
@@ -355,8 +356,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       style: brandStyle,
       direction: TextDirection.ltr,
     );
-    final cardHeight = 16 + arabicHeight + 10 + 1 + 10 +
-        translationHeight + 10 + referenceHeight + 8 + brandHeight + 13;
+    const cardHeight = 360.0;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
