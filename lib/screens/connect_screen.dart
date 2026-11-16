@@ -283,24 +283,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     );
   }
 
-  double _shareTextHeight({
-    required String text,
-    required double maxWidth,
-    required TextStyle style,
-    required TextDirection direction,
-  }) {
-    final painter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: direction,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: maxWidth);
-    return painter.height;
-  }
-
   Widget _buildShareArtwork(dynamic surah) {
     const cardWidth = 360.0;
-    const horizontalPadding = 22.0;
-    const contentWidth = cardWidth - horizontalPadding * 2;
     const arabicStyle = TextStyle(
       color: Colors.white,
       fontSize: 24,
@@ -331,31 +315,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     final translationDirection = AppSettings.language.value == 'ur'
         ? TextDirection.rtl
         : TextDirection.ltr;
-    final arabicHeight = _shareTextHeight(
-      text: _arabicText,
-      maxWidth: contentWidth,
-      style: arabicStyle,
-      direction: TextDirection.rtl,
-    );
-    final translationHeight = _shareTextHeight(
-      text: translated,
-      maxWidth: contentWidth,
-      style: translationStyle,
-      direction: translationDirection,
-    );
     final reference = '${surah.nameEnglish} $_surahNumber:$_ayahNumber';
-    final referenceHeight = _shareTextHeight(
-      text: reference,
-      maxWidth: contentWidth,
-      style: referenceStyle,
-      direction: TextDirection.ltr,
-    );
-    final brandHeight = _shareTextHeight(
-      text: 'AMAL BILLAH',
-      maxWidth: contentWidth,
-      style: brandStyle,
-      direction: TextDirection.ltr,
-    );
     const cardHeight = 360.0;
 
     return ClipRRect(
