@@ -139,7 +139,25 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     _loadedDailyDate = DateTime(today.year, today.month, today.day);
     _isSaved = false;
     final dayNumber = _loadedDailyDate.difference(DateTime(2024, 1, 1)).inDays;
-    final selected = allVerses[dayNumber % allVerses.length];
+    final startIndex = dayNumber % allVerses.length;
+
+    // Keep the daily verse complete and make sure it fits the share-card
+    // limits: at most 4 Arabic lines and 4.5 translation line-heights.
+    var selected = allVerses[startIndex];
+    for (var offset = 0; offset < allVerses.length; offset++) {
+      final candidate = allVerses[(startIndex + offset) % allVerses.length];
+      final arabic = Quran.getSurahVersesAsList(candidate.surah)[candidate.ayah - 1].text;
+      final translation = _useAllahTerminology(
+        Quran.getSurahVersesAsList(
+          candidate.surah,
+          language: AppSettings.language.value,
+        )[candidate.ayah - 1].text,
+      );
+      if (_fitsDailyAyahShareCard(arabic, translation)) {
+        selected = candidate;
+        break;
+      }
+    }
 
     _surahNumber = selected.surah;
     _ayahNumber = selected.ayah;
@@ -150,6 +168,41 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     )[_ayahNumber - 1].text;
 
     _checkBookmark();
+  }
+
+  bool _fitsDailyAyahShareCard(String arabic, String translation) {
+    const textWidth = 316.0; // 360px card less 22px padding on each side.
+    final arabicPainter = TextPainter(
+      text: const TextSpan(
+        style: TextStyle(fontSize: 24, height: 1.5, fontWeight: FontWeight.w600),
+      ).copyWith(text: arabic),
+      textDirection: TextDirection.rtl,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: textWidth);
+
+    if (arabicPainter.computeLineMetrics().length > 4) return false;
+
+    final translationDirection = AppSettings.language.value == 'ur'
+        ? TextDirection.rtl
+        : TextDirection.ltr;
+    final translationPainter = TextPainter(
+      text: TextSpan(
+        text: translation,
+        style: const TextStyle(
+          fontFamily: 'serif',
+          fontSize: 17,
+          height: 1.35,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      textDirection: translationDirection,
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: textWidth);
+
+    final lines = translationPainter.computeLineMetrics();
+    if (lines.isEmpty) return false;
+    final maxTranslationHeight = lines.first.height * 4.5;
+    return translationPainter.height <= maxTranslationHeight;
   }
 
   String _arabicDigits(int number) {
