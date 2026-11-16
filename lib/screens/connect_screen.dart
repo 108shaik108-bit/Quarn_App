@@ -176,7 +176,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       text: TextSpan(
         text: arabic,
         style: const TextStyle(
-          fontSize: 20,
+          fontSize: 23,
           height: 1.4,
           fontWeight: FontWeight.w600,
         ),
@@ -195,7 +195,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
         text: translation,
         style: const TextStyle(
           fontFamily: 'serif',
-          fontSize: 14,
+          fontSize: 15.5,
           height: 1.25,
           fontWeight: FontWeight.w700,
         ),
@@ -290,7 +290,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const cardWidth = 360.0;
     const arabicStyle = TextStyle(
       color: Colors.white,
-      fontSize: 20,
+      fontSize: 23,
       height: 1.4,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
@@ -298,20 +298,20 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const translationStyle = TextStyle(
       color: Colors.white,
       fontFamily: 'serif',
-      fontSize: 14,
+      fontSize: 15.5,
       height: 1.25,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
     );
     const referenceStyle = TextStyle(
       color: Colors.white,
-      fontSize: 11,
+      fontSize: 12,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
     );
     const brandStyle = TextStyle(
       color: Colors.white,
-      fontSize: 9,
+      fontSize: 10,
       letterSpacing: 2.2,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
