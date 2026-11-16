@@ -171,11 +171,15 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 
   bool _fitsDailyAyahShareCard(String arabic, String translation) {
-    const textWidth = 316.0; // 360px card less 22px padding on each side.
+    const textWidth = 316.0;
     final arabicPainter = TextPainter(
       text: TextSpan(
         text: arabic,
-        style: const TextStyle(fontSize: 24, height: 1.5, fontWeight: FontWeight.w600),
+        style: const TextStyle(
+          fontSize: 22,
+          height: 1.4,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       textDirection: TextDirection.rtl,
       textAlign: TextAlign.center,
@@ -191,8 +195,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
         text: translation,
         style: const TextStyle(
           fontFamily: 'serif',
-          fontSize: 17,
-          height: 1.35,
+          fontSize: 15.5,
+          height: 1.25,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -202,8 +206,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
 
     final lines = translationPainter.computeLineMetrics();
     if (lines.isEmpty) return false;
-    final maxTranslationHeight = lines.first.height * 4.5;
-    return translationPainter.height <= maxTranslationHeight;
+    return translationPainter.height <= lines.first.height * 4.5;
   }
 
   String _arabicDigits(int number) {
@@ -287,42 +290,43 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const cardWidth = 360.0;
     const arabicStyle = TextStyle(
       color: Colors.white,
-      fontSize: 24,
-      height: 1.5,
+      fontSize: 22,
+      height: 1.4,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
     );
     const translationStyle = TextStyle(
       color: Colors.white,
       fontFamily: 'serif',
-      fontSize: 17,
-      height: 1.35,
+      fontSize: 15.5,
+      height: 1.25,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
     );
     const referenceStyle = TextStyle(
-      color: Colors.white70,
+      color: Colors.white,
       fontSize: 12,
       fontWeight: FontWeight.w600,
+      shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
     );
     const brandStyle = TextStyle(
-      color: Colors.white70,
-      fontSize: 9,
+      color: Colors.white,
+      fontSize: 10,
       letterSpacing: 2.2,
       fontWeight: FontWeight.w700,
+      shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
     );
     final translated = _useAllahTerminology(_englishText);
     final translationDirection = AppSettings.language.value == 'ur'
         ? TextDirection.rtl
         : TextDirection.ltr;
     final reference = '${surah.nameEnglish} $_surahNumber:$_ayahNumber';
-    const cardHeight = 360.0;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
       child: SizedBox(
         width: cardWidth,
-        height: cardHeight,
+        height: cardWidth,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -332,16 +336,20 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0xB8000000), Color(0x30000000), Color(0xE6000000)],
+                  colors: [
+                    Color(0x78000000),
+                    Color(0x30000000),
+                    Color(0xB8000000),
+                  ],
                   stops: [0, 0.48, 1],
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(22, 16, 22, 13),
+              padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     _arabicText,
@@ -349,19 +357,22 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                     textDirection: TextDirection.rtl,
                     style: arabicStyle,
                   ),
-                  const SizedBox(height: 10),
-                  Container(height: 1, color: Colors.white38),
-                  const SizedBox(height: 10),
                   Text(
                     translated,
                     textAlign: TextAlign.center,
                     textDirection: translationDirection,
                     style: translationStyle,
                   ),
-                  const SizedBox(height: 10),
-                  Text(reference, textAlign: TextAlign.center, style: referenceStyle),
-                  const SizedBox(height: 8),
-                  const Text('AMAL BILLAH', textAlign: TextAlign.right, style: brandStyle),
+                  Text(
+                    reference,
+                    textAlign: TextAlign.center,
+                    style: referenceStyle,
+                  ),
+                  const Text(
+                    'AMAL BILLAH',
+                    textAlign: TextAlign.right,
+                    style: brandStyle,
+                  ),
                 ],
               ),
             ),
