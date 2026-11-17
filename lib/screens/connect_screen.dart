@@ -297,8 +297,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const translationStyle = TextStyle(
       color: Colors.white,
       fontFamily: 'serif',
-      fontSize: 14,
-      height: 1.18,
+      fontSize: 12,
+      height: 1.2,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
     );
