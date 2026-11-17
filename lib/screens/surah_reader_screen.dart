@@ -221,9 +221,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
               children: [
               RepaintBoundary(
                 key: cardKey,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
+                child: Container(
                     width: 360,
                     padding: const EdgeInsets.fromLTRB(22, 18, 22, 14),
                     decoration: BoxDecoration(
@@ -273,7 +271,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         ),
                       ],
                     ),
-                  ),
               ),
               const SizedBox(height: 10),
               Row(
