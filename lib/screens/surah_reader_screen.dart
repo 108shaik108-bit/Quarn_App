@@ -201,12 +201,12 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     const contentWidth = cardWidth - 44;
     const arabicStyle = TextStyle(
       color: Color(0xFF241D18),
-      fontSize: 24,
-      height: 1.55,
+      fontSize: 22,
+      height: 1.5,
     );
     const translationStyle = TextStyle(
-      color: Color(0xFF655548),
-      fontSize: 16,
+      color: Color(0xFF6B5A4A),
+      fontSize: 14,
       height: 1.4,
     );
     const referenceStyle = TextStyle(
@@ -248,8 +248,14 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
       style: brandStyle,
       direction: TextDirection.ltr,
     );
-    final cardHeight = 18 + 12 + arabicHeight + 1 + 10 +
-        translationHeight + 10 + referenceHeight + 8 + brandHeight + 14;
+    // Include every fixed gap and generous safety space so the final
+    // rendered card never clips the translation or verse reference.
+    const headingHeight = 12.0;
+    const cardVerticalPadding = 32.0; // 18 top + 14 bottom
+    const layoutSafetySpace = 24.0;
+    final cardHeight = cardVerticalPadding + headingHeight + 10 +
+        arabicHeight + 1 + 10 + translationHeight + 10 +
+        referenceHeight + 8 + brandHeight + layoutSafetySpace;
     final cardKey = GlobalKey();
     await showDialog<void>(
       context: context,
