@@ -289,7 +289,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   Widget _buildShareArtwork(dynamic surah) {
     const arabicStyle = TextStyle(
       color: Colors.white,
-      fontSize: 21,
+      fontSize: 15,
       height: 1.3,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
@@ -297,7 +297,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const translationStyle = TextStyle(
       color: Colors.white,
       fontFamily: 'serif',
-      fontSize: 12,
+      fontSize: 10,
       height: 1.2,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
