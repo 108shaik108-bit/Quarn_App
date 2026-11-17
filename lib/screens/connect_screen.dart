@@ -290,22 +290,22 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     const cardWidth = 360.0;
     const arabicStyle = TextStyle(
       color: Colors.white,
-      fontSize: 23,
-      height: 1.4,
+      fontSize: 21,
+      height: 1.3,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 12)],
     );
     const translationStyle = TextStyle(
       color: Colors.white,
       fontFamily: 'serif',
-      fontSize: 15.5,
-      height: 1.25,
+      fontSize: 14,
+      height: 1.18,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
     );
     const referenceStyle = TextStyle(
       color: Colors.white,
-      fontSize: 12,
+      fontSize: 11,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
     );
@@ -324,9 +324,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(22),
-      child: SizedBox(
-        width: cardWidth,
-        height: cardWidth,
+      child: AspectRatio(
+        aspectRatio: 1,
         child: Stack(
           fit: StackFit.expand,
           children: [
