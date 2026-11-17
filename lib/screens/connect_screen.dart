@@ -303,8 +303,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       shadows: [Shadow(color: Colors.black, blurRadius: 12)],
     );
     const referenceStyle = TextStyle(
-      color: Colors.white,
-      fontSize: 11,
+      color: Color(0xFFE4CDA5),
+      fontSize: 9,
       fontWeight: FontWeight.w600,
       shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
     );
@@ -321,11 +321,9 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
         : TextDirection.ltr;
     final reference = '${surah.nameEnglish} $_surahNumber:$_ayahNumber';
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(22),
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: Stack(
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Stack(
           fit: StackFit.expand,
           children: [
             _buildDailyBackground(),
