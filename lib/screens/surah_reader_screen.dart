@@ -178,27 +178,11 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     );
   }
 
-  double _readerShareTextHeight({
-    required String text,
-    required double maxWidth,
-    required TextStyle style,
-    required TextDirection direction,
-  }) {
-    final painter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: direction,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: maxWidth);
-    return painter.height;
-  }
-
   Future<void> _showShareAyahCard({
     required int ayahNumber,
     required String arabic,
     required String translation,
   }) async {
-    const cardWidth = 360.0;
-    const contentWidth = cardWidth - 44;
     const arabicStyle = TextStyle(
       color: Color(0xFF241D18),
       fontSize: 22,
@@ -223,39 +207,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
     final translationDirection = AppSettings.language.value == 'ur'
         ? TextDirection.rtl
         : TextDirection.ltr;
-    final arabicHeight = _readerShareTextHeight(
-      text: arabic,
-      maxWidth: contentWidth,
-      style: arabicStyle,
-      direction: TextDirection.rtl,
-    );
-    final translationHeight = _readerShareTextHeight(
-      text: translation,
-      maxWidth: contentWidth,
-      style: translationStyle,
-      direction: translationDirection,
-    );
-    final reference = '${widget.surah.nameEnglish} ${widget.surah.number}:$ayahNumber';
-    final referenceHeight = _readerShareTextHeight(
-      text: reference,
-      maxWidth: contentWidth,
-      style: referenceStyle,
-      direction: TextDirection.ltr,
-    );
-    final brandHeight = _readerShareTextHeight(
-      text: 'AMAL BILLAH',
-      maxWidth: contentWidth,
-      style: brandStyle,
-      direction: TextDirection.ltr,
-    );
-    // Include every fixed gap and generous safety space so the final
-    // rendered card never clips the translation or verse reference.
-    const headingHeight = 12.0;
-    const cardVerticalPadding = 32.0; // 18 top + 14 bottom
-    const layoutSafetySpace = 24.0;
-    final cardHeight = cardVerticalPadding + headingHeight + 10 +
-        arabicHeight + 1 + 10 + translationHeight + 10 +
-        referenceHeight + 8 + brandHeight + layoutSafetySpace;
     final cardKey = GlobalKey();
     await showDialog<void>(
       context: context,
@@ -274,12 +225,10 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
                     width: 360,
-                    height: cardHeight,
                     padding: const EdgeInsets.fromLTRB(22, 18, 22, 14),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFF8F0),
                       border: Border.all(color: const Color(0xFFD8B77A), width: 1.4),
-                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -325,7 +274,6 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                       ],
                     ),
                   ),
-                ),
               ),
               const SizedBox(height: 10),
               Row(
