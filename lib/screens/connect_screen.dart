@@ -287,7 +287,6 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 
   Widget _buildShareArtwork(dynamic surah) {
-    const cardWidth = 360.0;
     const arabicStyle = TextStyle(
       color: Colors.white,
       fontSize: 21,
