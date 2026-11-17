@@ -516,13 +516,14 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       _loadedDailyDate.month,
       _loadedDailyDate.day,
     ).difference(DateTime(2024, 1, 1)).inDays;
-    return dayNumber % 30;
+    return dayNumber % _dailyAyahBackgroundAssets.length;
   }
 
   Widget _buildDailyBackground() {
-    return CustomPaint(
-      painter: _IslamicDailyBackgroundPainter(_dailyBackgroundIndex),
-      child: const SizedBox.expand(),
+    return Image.asset(
+      _dailyAyahBackgroundAssets[_dailyBackgroundIndex],
+      fit: BoxFit.cover,
+      alignment: Alignment.center,
     );
   }
 
@@ -796,6 +797,40 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 }
 
+
+const List<String> _dailyAyahBackgroundAssets = [
+  'assets/images/daily_ayah/image-1-sunlit-forest-path.jpg',
+  'assets/images/daily_ayah/image-2-sunlit-forest-clearing.jpg',
+  'assets/images/daily_ayah/image-3-sunlit-forest-river.jpg',
+  'assets/images/daily_ayah/image-4-sunlit-evergreen-hills.jpg',
+  'assets/images/daily_ayah/image-5-autumn-forest-stream.jpg',
+  'assets/images/daily_ayah/image-6-mosque-courtyard.jpg',
+  'assets/images/daily_ayah/image-7-mosque-entrance.jpg',
+  'assets/images/daily_ayah/image-8-modern-mosque.jpg',
+  'assets/images/daily_ayah/image-9-mosque-interior.jpg',
+  'assets/images/daily_ayah/image-10-golden-sunrise-lake.jpg',
+  'assets/images/daily_ayah/image-11-golden-ocean-sunset.jpg',
+  'assets/images/daily_ayah/image-12-desert-sunrise.jpg',
+  'assets/images/daily_ayah/image-13-golden-meadow-sunset.jpg',
+  'assets/images/daily_ayah/image-14-mountain-valley-sunrise.jpg',
+  'assets/images/daily_ayah/image-15-misty-mountain-valley.jpg',
+  'assets/images/daily_ayah/image-16-alpine-lake-sunset.jpg',
+  'assets/images/daily_ayah/image-17-lush-valley-sunrise.jpg',
+  'assets/images/daily_ayah/image-18-ocean-sunrise.jpg',
+  'assets/images/daily_ayah/image-19-mountain-lake.jpg',
+  'assets/images/daily_ayah/image-20-river-valley.jpg',
+  'assets/images/daily_ayah/image-21-misty-lake.jpg',
+  'assets/images/daily_ayah/image-22-desert-moonlight.jpg',
+  'assets/images/daily_ayah/image-23-moonlit-mountain-lake.jpg',
+  'assets/images/daily_ayah/image-24-moonlit-ocean.jpg',
+  'assets/images/daily_ayah/image-25-moonlit-river-valley.jpg',
+  'assets/images/daily_ayah/image-26-golden-dunes-sunrise.jpg',
+  'assets/images/daily_ayah/image-27-desert-canyon.jpg',
+  'assets/images/daily_ayah/image-28-moonlit-desert.jpg',
+  'assets/images/daily_ayah/image-29-rainy-meadow.jpg',
+  'assets/images/daily_ayah/image-30-sunbeams-through-clouds.jpg',
+  'assets/images/daily_ayah/image-31-rainy-lake.jpg',
+];
 
 /// A lightweight, locally-rendered collection of 30 premium Islamic-inspired
 /// backgrounds. The same date always selects the same design on every device.
