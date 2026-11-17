@@ -271,8 +271,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                         ),
                       ],
                     ),
-              ),
-              const SizedBox(height: 10),
+                  ),
+                ),
+                const SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
