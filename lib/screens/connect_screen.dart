@@ -389,11 +389,10 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Image.asset(
-                                  'assets/google_play_icon.png',
-                                  width: 11,
-                                  height: 11,
-                                  fit: BoxFit.contain,
+                                const Icon(
+                                  Icons.play_arrow_rounded,
+                                  color: Color(0xFF34A853),
+                                  size: 13,
                                 ),
                                 const SizedBox(width: 4),
                                 const Text(
