@@ -139,10 +139,10 @@ class _GlowingDoorCardState extends State<GlowingDoorCard> {
           margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 9),
           decoration: BoxDecoration(
-            color: selected ? const Color(0xFFB3E5FC) : Colors.white,
+            color: selected ? const Color(0xFF897A6C) : Colors.white,
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: selected ? const Color(0xFFB3E5FC) : cream.withOpacity(0.75),
+              color: selected ? const Color(0xFF897A6C) : cream.withOpacity(0.75),
               width: selected ? 1.6 : 1,
             ),
             boxShadow: [
