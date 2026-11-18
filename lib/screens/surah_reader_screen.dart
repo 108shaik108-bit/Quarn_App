@@ -732,7 +732,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: active ? const Color(0xFF4DB8F2) : Colors.transparent,
+          color: active ? const Color(0xFF81D4FA) : Colors.transparent,
           borderRadius: BorderRadius.circular(9),
         ),
         child: Text(
