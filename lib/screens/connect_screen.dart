@@ -385,22 +385,22 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                               'AMAL BILLAH',
                               style: brandStyle,
                             ),
-                            const SizedBox(height: 3),
+                            const SizedBox(height: 2),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(
                                   Icons.play_arrow_rounded,
                                   color: Color(0xFF34A853),
-                                  size: 13,
+                                  size: 11,
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 3),
                                 const Text(
                                   'GET IT ON GOOGLE PLAY',
                                   style: TextStyle(
                                     color: Color(0xFFE4CDA5),
-                                    fontSize: 6,
-                                    letterSpacing: 0.7,
+                                    fontSize: 5,
+                                    letterSpacing: 0.5,
                                     fontWeight: FontWeight.w600,
                                     shadows: [Shadow(color: Colors.black87, blurRadius: 6)],
                                   ),
