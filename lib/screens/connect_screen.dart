@@ -364,10 +364,25 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                     textAlign: TextAlign.center,
                     style: referenceStyle,
                   ),
-                  const Text(
-                    'AMAL BILLAH',
-                    textAlign: TextAlign.right,
-                    style: brandStyle,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/app_icon.png',
+                          width: 27,
+                          height: 27,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(width: 9),
+                        const Text(
+                          'AMAL BILLAH',
+                          style: brandStyle,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
