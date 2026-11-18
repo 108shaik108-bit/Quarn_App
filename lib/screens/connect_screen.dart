@@ -382,7 +382,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'AMAL BILLAH',
+                              'Amal Billah',
                               style: brandStyle,
                             ),
                             const SizedBox(height: 2),
