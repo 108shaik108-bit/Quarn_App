@@ -517,7 +517,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                   "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: Color(0xFF4DB8F2), fontSize: 28, height: 1.8),
+                      color: Color(0xFF22C55E), fontSize: 28, height: 1.8),
                 ),
               ),
             ),
