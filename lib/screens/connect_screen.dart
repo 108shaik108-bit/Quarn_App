@@ -372,8 +372,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                       children: [
                         Image.asset(
                           'assets/app_icon.png',
-                          width: 27,
-                          height: 27,
+                          width: 20,
+                          height: 20,
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(width: 9),
