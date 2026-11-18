@@ -310,8 +310,8 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
     );
     const brandStyle = TextStyle(
       color: Colors.white,
-      fontSize: 10,
-      letterSpacing: 2.2,
+      fontSize: 9,
+      letterSpacing: 1.8,
       fontWeight: FontWeight.w700,
       shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
     );
@@ -377,9 +377,38 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(width: 9),
-                        const Text(
-                          'AMAL BILLAH',
-                          style: brandStyle,
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'AMAL BILLAH',
+                              style: brandStyle,
+                            ),
+                            const SizedBox(height: 3),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.asset(
+                                  'assets/google_play_icon.png',
+                                  width: 11,
+                                  height: 11,
+                                  fit: BoxFit.contain,
+                                ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  'GET IT ON GOOGLE PLAY',
+                                  style: TextStyle(
+                                    color: Color(0xFFE4CDA5),
+                                    fontSize: 6,
+                                    letterSpacing: 0.7,
+                                    fontWeight: FontWeight.w600,
+                                    shadows: [Shadow(color: Colors.black87, blurRadius: 6)],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ],
                     ),
