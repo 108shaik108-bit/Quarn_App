@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.quran_app"
+    namespace = "com.amalbillah.islamicapp"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -16,25 +16,18 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.quran_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        applicationId = "com.amalbillah.islamicapp"
         minSdk = flutter.minSdkVersion
         multiDexEnabled = true
         targetSdk = flutter.targetSdkVersion
-        // Uses the version code from pubspec.yaml. When using split APKs, 1000 * ABI_VERSION
-        // is added automatically by Flutter. (https://developer.android.com/studio/build/configure-apk-splits#configure-APK-versions)
-        // You can force using the value of versionCode by specifying the `-P force-version-code-ignoring-abi=true`
-        // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Release signing must be configured with a private upload keystore before publishing.
+            // Debug signing is retained temporarily so local release-mode runs continue to work.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
