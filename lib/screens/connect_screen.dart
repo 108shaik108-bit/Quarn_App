@@ -128,36 +128,34 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   void _loadDailyAyah() {
     // One stable verse per calendar day. The verse changes automatically
     // when the device's local date changes.
-    final allVerses = <({int surah, int ayah})>[];
+    final eligibleVerses = <({int surah, int ayah})>[];
     for (final surah in surahs) {
+      final arabicVerses = Quran.getSurahVersesAsList(surah.number);
+      final translatedVerses = Quran.getSurahVersesAsList(
+        surah.number,
+        language: AppSettings.language.value,
+      );
+
       for (var ayah = 1; ayah <= surah.ayahs; ayah++) {
-        allVerses.add((surah: surah.number, ayah: ayah));
+        final arabic = arabicVerses[ayah - 1].text;
+        final translation = _useAllahTerminology(
+          translatedVerses[ayah - 1].text,
+        );
+        if (_fitsDailyAyahShareCard(arabic, translation)) {
+          eligibleVerses.add((surah: surah.number, ayah: ayah));
+        }
       }
     }
 
     final today = DateTime.now();
     _loadedDailyDate = DateTime(today.year, today.month, today.day);
     _isSaved = false;
-    final dayNumber = _loadedDailyDate.difference(DateTime(2024, 1, 1)).inDays;
-    final startIndex = dayNumber % allVerses.length;
 
-    // Keep the daily verse complete and make sure it fits the share-card
-    // limits: at most 4 Arabic lines and 4.5 translation line-heights.
-    var selected = allVerses[startIndex];
-    for (var offset = 0; offset < allVerses.length; offset++) {
-      final candidate = allVerses[(startIndex + offset) % allVerses.length];
-      final arabic = Quran.getSurahVersesAsList(candidate.surah)[candidate.ayah - 1].text;
-      final translation = _useAllahTerminology(
-        Quran.getSurahVersesAsList(
-          candidate.surah,
-          language: AppSettings.language.value,
-        )[candidate.ayah - 1].text,
-      );
-      if (_fitsDailyAyahShareCard(arabic, translation)) {
-        selected = candidate;
-        break;
-      }
-    }
+    // Select directly from verses that fit the card. Advancing the calendar
+    // date advances the index, so consecutive days cannot repeat a verse.
+    final dayNumber = _loadedDailyDate.difference(DateTime(2024, 1, 1)).inDays;
+    final selectedIndex = dayNumber % eligibleVerses.length;
+    final selected = eligibleVerses[selectedIndex];
 
     _surahNumber = selected.surah;
     _ayahNumber = selected.ayah;
