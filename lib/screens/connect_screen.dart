@@ -126,44 +126,71 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
   }
 
   void _loadDailyAyah() {
-    // One stable verse per calendar day. The verse changes automatically
-    // when the device's local date changes.
-    final eligibleVerses = <({int surah, int ayah})>[];
-    for (final surah in surahs) {
-      final arabicVerses = Quran.getSurahVersesAsList(surah.number);
-      final translatedVerses = Quran.getSurahVersesAsList(
-        surah.number,
-        language: AppSettings.language.value,
-      );
-
-      for (var ayah = 1; ayah <= surah.ayahs; ayah++) {
-        final arabic = arabicVerses[ayah - 1].text;
-        final translation = _useAllahTerminology(
-          translatedVerses[ayah - 1].text,
-        );
-        if (_fitsDailyAyahShareCard(arabic, translation)) {
-          eligibleVerses.add((surah: surah.number, ayah: ayah));
-        }
-      }
-    }
-
+    // Choose a deterministic starting point in the Quran instead of scanning
+    // and measuring every verse whenever the Connect tab is opened.
     final today = DateTime.now();
     _loadedDailyDate = DateTime(today.year, today.month, today.day);
     _isSaved = false;
 
-    // Select directly from verses that fit the card. Advancing the calendar
-    // date advances the index, so consecutive days cannot repeat a verse.
+    final totalVerses = surahs.fold<int>(0, (total, surah) => total + surah.ayahs);
     final dayNumber = _loadedDailyDate.difference(DateTime(2024, 1, 1)).inDays;
-    final selectedIndex = dayNumber % eligibleVerses.length;
-    final selected = eligibleVerses[selectedIndex];
+    // A stride spreads consecutive dates across the Quran. Any candidate that
+    // does not fit the existing share-card limits is skipped.
+    final startIndex = (dayNumber * 37) % totalVerses;
+    var candidateIndex = startIndex;
 
-    _surahNumber = selected.surah;
-    _ayahNumber = selected.ayah;
-    _arabicText = Quran.getSurahVersesAsList(_surahNumber)[_ayahNumber - 1].text;
-    _englishText = Quran.getSurahVersesAsList(
-      _surahNumber,
-      language: AppSettings.language.value,
-    )[_ayahNumber - 1].text;
+    List<dynamic>? arabicVerses;
+    List<dynamic>? translatedVerses;
+    var cachedSurahNumber = -1;
+    var selected = false;
+
+    for (var checked = 0; checked < totalVerses; checked++) {
+      var remaining = candidateIndex;
+      var selectedSurah = surahs.first;
+      for (final surah in surahs) {
+        if (remaining < surah.ayahs) {
+          selectedSurah = surah;
+          break;
+        }
+        remaining -= surah.ayahs;
+      }
+      final ayahIndex = remaining;
+
+      if (cachedSurahNumber != selectedSurah.number) {
+        arabicVerses = Quran.getSurahVersesAsList(selectedSurah.number);
+        translatedVerses = Quran.getSurahVersesAsList(
+          selectedSurah.number,
+          language: AppSettings.language.value,
+        );
+        cachedSurahNumber = selectedSurah.number;
+      }
+
+      final arabic = arabicVerses![ayahIndex].text;
+      final translation = _useAllahTerminology(
+        translatedVerses![ayahIndex].text,
+      );
+      if (_fitsDailyAyahShareCard(arabic, translation)) {
+        _surahNumber = selectedSurah.number;
+        _ayahNumber = ayahIndex + 1;
+        _arabicText = arabic;
+        _englishText = translatedVerses[ayahIndex].text;
+        selected = true;
+        break;
+      }
+
+      candidateIndex = (candidateIndex + 1) % totalVerses;
+    }
+
+    // A fallback protects against unexpected translation/data issues.
+    if (!selected) {
+      _surahNumber = 1;
+      _ayahNumber = 1;
+      _arabicText = Quran.getSurahVersesAsList(1).first.text;
+      _englishText = Quran.getSurahVersesAsList(
+        1,
+        language: AppSettings.language.value,
+      ).first.text;
+    }
 
     _checkBookmark();
   }
