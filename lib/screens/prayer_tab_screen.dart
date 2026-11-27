@@ -616,8 +616,12 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: Color(0xFFF0D8A9)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             children: [
@@ -665,7 +669,8 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
                 onChanged: (value) => _setPrayerAdhan(prayer, value),
               ),
           ],
-        ],
+          ],
+        ),
       ),
     );
   }
