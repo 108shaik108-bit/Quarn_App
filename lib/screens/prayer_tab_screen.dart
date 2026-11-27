@@ -622,53 +622,53 @@ class _PrayerTabScreenState extends State<PrayerTabScreen> with WidgetsBindingOb
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.volume_up_rounded, color: green),
-              SizedBox(width: 9),
-              Expanded(
-                child: Text(
-                  'Ring Adhan',
-                  style: TextStyle(
-                    color: green,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.volume_up_rounded, color: green),
+                SizedBox(width: 9),
+                Expanded(
+                  child: Text(
+                    'Ring Adhan',
+                    style: TextStyle(
+                      color: green,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Switch(
-                value: _ringAdhanEnabled,
-                onChanged: _setRingAdhan,
-                activeColor: green,
-              ),
+                Switch(
+                  value: _ringAdhanEnabled,
+                  onChanged: _setRingAdhan,
+                  activeColor: green,
+                ),
+              ],
+            ),
+            Text(
+              _ringAdhanEnabled
+                  ? 'Adhan is enabled. Choose which prayers should ring. Alarm audio may still sound in phone silent mode.'
+                  : 'Muted by default. Turn on Ring Adhan when you want it.',
+              style: TextStyle(color: Color(0xFF52735F), fontSize: 14),
+            ),
+            if (_ringAdhanEnabled) ...[
+              SizedBox(height: 8),
+              Divider(color: Color(0xFFE9D8B8), height: 1),
+              for (final prayer in AdhanSchedulerService.prayerNames)
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    prayer,
+                    style: TextStyle(
+                      color: green,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  value: _prayerAdhanEnabled[prayer] ?? true,
+                  activeColor: green,
+                  onChanged: (value) => _setPrayerAdhan(prayer, value),
+                ),
             ],
-          ),
-          Text(
-            _ringAdhanEnabled
-                ? 'Adhan is enabled. Choose which prayers should ring. Alarm audio may still sound in phone silent mode.'
-                : 'Muted by default. Turn on Ring Adhan when you want it.',
-            style: TextStyle(color: Color(0xFF52735F), fontSize: 14),
-          ),
-          if (_ringAdhanEnabled) ...[
-            SizedBox(height: 8),
-            Divider(color: Color(0xFFE9D8B8), height: 1),
-            for (final prayer in AdhanSchedulerService.prayerNames)
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(
-                  prayer,
-                  style: TextStyle(
-                    color: green,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                value: _prayerAdhanEnabled[prayer] ?? true,
-                activeColor: green,
-                onChanged: (value) => _setPrayerAdhan(prayer, value),
-              ),
-          ],
           ],
         ),
       ),
