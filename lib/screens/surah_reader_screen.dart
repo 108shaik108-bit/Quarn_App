@@ -204,7 +204,7 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
       letterSpacing: 2,
       fontWeight: FontWeight.w700,
     );
-    final translationDirection = AppSettings.language.value == 'ur'
+    final translationDirection = AppSettings.language.value.name == 'urdu'
         ? TextDirection.rtl
         : TextDirection.ltr;
     final cardKey = GlobalKey();
