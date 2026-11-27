@@ -212,7 +212,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
 
     if (arabicPainter.computeLineMetrics().length > 4) return false;
 
-    final translationDirection = AppSettings.language.value == 'ur'
+    final translationDirection = AppSettings.language.value.name == 'urdu'
         ? TextDirection.rtl
         : TextDirection.ltr;
     final translationPainter = TextPainter(
@@ -341,7 +341,7 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
       shadows: [Shadow(color: Colors.black87, blurRadius: 8)],
     );
     final translated = _useAllahTerminology(_englishText);
-    final translationDirection = AppSettings.language.value == 'ur'
+    final translationDirection = AppSettings.language.value.name == 'urdu'
         ? TextDirection.rtl
         : TextDirection.ltr;
     final reference = '${surah.nameEnglish} $_surahNumber:$_ayahNumber';
@@ -681,10 +681,10 @@ class _ConnectScreenState extends State<ConnectScreen> with WidgetsBindingObserv
                   const Spacer(flex: 1),
                   Text(
                     _useAllahTerminology(_englishText),
-                    textAlign: AppSettings.language.value == 'ur'
+                    textAlign: AppSettings.language.value.name == 'urdu'
                         ? TextAlign.right
                         : TextAlign.left,
-                    textDirection: AppSettings.language.value == 'ur'
+                    textDirection: AppSettings.language.value.name == 'urdu'
                         ? TextDirection.rtl
                         : TextDirection.ltr,
                     maxLines: 5,
