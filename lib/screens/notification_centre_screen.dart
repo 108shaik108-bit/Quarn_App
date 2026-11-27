@@ -450,7 +450,12 @@ class _NotificationCentreScreenState extends State<NotificationCentreScreen> {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: gold.withOpacity(0.45)),
         ),
-        child: child,
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(18),
+          clipBehavior: Clip.antiAlias,
+          child: child,
+        ),
       );
 
   Widget _reminderTile({
