@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:adhan/adhan.dart';
 import 'package:alarm/alarm.dart';
@@ -12,6 +14,17 @@ class AdhanSchedulerService {
   static const String _masterKey = 'adhan_ring_enabled';
   static const String _scheduledIdsKey = 'adhan_scheduled_alarm_ids';
   static const int _daysToSchedule = 7;
+
+  // Serialize schedule changes so overlapping screen/lifecycle refreshes cannot
+  // cancel alarms while another refresh is still creating them.
+  static Future<void> _operationQueue = Future<void>.value();
+  static String? _lastScheduleKey;
+
+  static Future<void> _runSerialized(Future<void> Function() operation) {
+    final result = _operationQueue.then((_) => operation());
+    _operationQueue = result.catchError((Object _) {});
+    return result;
+  }
 
   static const List<String> prayerNames = [
     'Fajr',
@@ -68,8 +81,12 @@ class AdhanSchedulerService {
     if (key != null) await prefs.setBool(key, enabled);
   }
 
-  static Future<void> cancelScheduled() async {
-    if (kIsWeb) return;
+  static Future<void> cancelScheduled() {
+    if (kIsWeb) return Future<void>.value();
+    return _runSerialized(_cancelScheduledUnlocked);
+  }
+
+  static Future<void> _cancelScheduledUnlocked() async {
     final prefs = await SharedPreferences.getInstance();
     final ids = prefs.getStringList(_scheduledIdsKey) ?? <String>[];
     for (final value in ids) {
@@ -83,27 +100,44 @@ class AdhanSchedulerService {
       }
     }
     await prefs.remove(_scheduledIdsKey);
+    _lastScheduleKey = null;
   }
 
   static Future<void> refresh({
     required Coordinates coordinates,
-  }) async {
-    if (kIsWeb) return;
-    await cancelScheduled();
-    if (!await isRingEnabled()) return;
+  }) {
+    if (kIsWeb) return Future<void>.value();
+    return _runSerialized(() async {
+      final ringEnabled = await isRingEnabled();
+      final enabledPrayers = <String>[];
+      for (final prayer in prayerNames) {
+        if (await isPrayerEnabled(prayer)) enabledPrayers.add(prayer);
+      }
 
-    final enabledPrayers = <String>[];
-    for (final prayer in prayerNames) {
-      if (await isPrayerEnabled(prayer)) enabledPrayers.add(prayer);
-    }
-    if (enabledPrayers.isEmpty) return;
+      final now = DateTime.now();
+      // Coordinates are rounded to the same precision used by the GPS-change
+      // threshold, preventing tiny GPS fluctuations from rebuilding the alarms.
+      final scheduleKey = [
+        ringEnabled,
+        coordinates.latitude.toStringAsFixed(3),
+        coordinates.longitude.toStringAsFixed(3),
+        now.year,
+        now.month,
+        now.day,
+        enabledPrayers.join(','),
+      ].join('|');
+      if (_lastScheduleKey == scheduleKey) return;
 
-    final prefs = await SharedPreferences.getInstance();
-    final scheduledIds = <String>[];
-    final params = CalculationMethod.karachi.getParameters()
-      ..madhab = Madhab.shafi;
+      await _cancelScheduledUnlocked();
+      if (!ringEnabled || enabledPrayers.isEmpty) {
+        _lastScheduleKey = scheduleKey;
+        return;
+      }
 
-    final now = DateTime.now();
+      final prefs = await SharedPreferences.getInstance();
+      final scheduledIds = <String>[];
+      final params = CalculationMethod.karachi.getParameters()
+        ..madhab = Madhab.shafi;
     for (var dayOffset = 0; dayOffset < _daysToSchedule; dayOffset++) {
       final date = DateTime(now.year, now.month, now.day + dayOffset);
       final times = PrayerTimes(
@@ -163,6 +197,8 @@ class AdhanSchedulerService {
       }
     }
 
-    await prefs.setStringList(_scheduledIdsKey, scheduledIds);
+      await prefs.setStringList(_scheduledIdsKey, scheduledIds);
+      _lastScheduleKey = scheduleKey;
+    });
   }
 }
