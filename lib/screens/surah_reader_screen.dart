@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,47 +9,6 @@ import '../services/bookmark_service.dart';
 import '../services/app_settings.dart';
 import '../services/quran_progress_service.dart';
 
-
-Widget _buildReaderShareText({
-  required String text,
-  required TextStyle style,
-  required TextAlign textAlign,
-  required TextDirection textDirection,
-}) {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      var fontSize = style.fontSize ?? 14.0;
-      const minFontSize = 8.0;
-      final availableWidth = constraints.maxWidth;
-      final availableHeight = constraints.maxHeight;
-
-      TextPainter measure(double size) {
-        return TextPainter(
-          text: TextSpan(text: text, style: style.copyWith(fontSize: size)),
-          textAlign: textAlign,
-          textDirection: textDirection,
-        )..layout(maxWidth: availableWidth);
-      }
-
-      var painter = measure(fontSize);
-      while (painter.height > availableHeight && fontSize > minFontSize) {
-        fontSize = (fontSize - 0.5).clamp(minFontSize, fontSize).toDouble();
-        painter = measure(fontSize);
-      }
-
-      return SizedBox(
-        width: availableWidth,
-        child: Text(
-          text,
-          textAlign: textAlign,
-          textDirection: textDirection,
-          softWrap: true,
-          style: style.copyWith(fontSize: fontSize),
-        ),
-      );
-    },
-  );
-}
 
 class SurahReaderScreen extends StatefulWidget {
   final Surah surah;
@@ -307,7 +265,9 @@ class _SurahReaderScreenState extends State<SurahReaderScreen> {
                               text: '${widget.surah.nameEnglish} • Ayah $ayahNumber',
                             ),
                           );
-                          if (dialogContext.mounted) Navigator.pop(dialogContext);
+                          if (dialogContext.mounted) {
+                            Navigator.pop(dialogContext);
+                          }
                         } catch (error) {
                           if (dialogContext.mounted) {
                             ScaffoldMessenger.of(dialogContext).showSnackBar(
